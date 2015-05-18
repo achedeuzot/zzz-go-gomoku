@@ -12,6 +12,7 @@ var (
 	winWidth, winHeight int    = 800, 600
 	Window              *sdl.Window
 	Renderer            *sdl.Renderer
+	Running             bool = true
 )
 
 func StartUpGUI() *sdl.Renderer {
@@ -38,5 +39,12 @@ func ShutdownGUI() {
 	}
 	if Window != nil {
 		Window.Destroy()
+	}
+}
+
+func Run() {
+	initScenes()
+	for Running {
+		(*CurrScene).PlayScene()
 	}
 }
