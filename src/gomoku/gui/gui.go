@@ -44,6 +44,6 @@ func ShutdownGUI() {
 func Run() {
 	initScenes()
 	for Running {
-		(*CurrScene).PlayScene()
+		CurrScene.PlayScene()
 	}
 }
