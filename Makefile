@@ -10,10 +10,14 @@ export GOPATH
 
 NAME = gomoku
 
-default: build
+default: ./bin/$(NAME)
 
-build: vet
+./bin/$(NAME):
+	go vet ./src/...
 	go build -v -o ./bin/$(NAME) ./src/$(NAME)
+
+re: clean ./bin/$(NAME)
+
 
 doc:
 	godoc -http=:6060 -index
@@ -31,9 +35,6 @@ profile:
 	go build -v -o ./bin/$(NAME) ./src/$(NAME)
 	GODEBUG=gctrace=1 ./bin/$(NAME) -prof=1
 
-vet:
-	go vet ./src/...
-
 clean:
 	rm ./bin/$(NAME)
 
@@ -49,4 +50,4 @@ vendor_update: vendor_get
 	&& rm -rf `find ./_vendor/src -type d -name .hg` \
 	&& rm -rf `find ./_vendor/src -type d -name .bzr` \
 
-.PHONY: build doc fmt lint run test vet clean
+.PHONY: build doc fmt lint run test clean vendor_clean vendor_get vendor_update
