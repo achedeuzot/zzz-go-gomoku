@@ -18,7 +18,6 @@ default: ./bin/$(NAME)
 
 re: clean ./bin/$(NAME)
 
-
 doc:
 	godoc -http=:6060 -index
 
@@ -43,7 +42,11 @@ vendor_clean:
 
 vendor_get: vendor_clean
 	GOPATH=${PWD}/_vendor go get -d -u -v \
-	github.com/davecheney/profile
+	github.com/davecheney/profile \
+	github.com/veandco/go-sdl2/sdl \
+	github.com/veandco/go-sdl2/sdl_mixer \
+	github.com/veandco/go-sdl2/sdl_image \
+	github.com/veandco/go-sdl2/sdl_ttf
 
 vendor_update: vendor_get
 	rm -rf `find ./_vendor/src -type d -name .git` \
