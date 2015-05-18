@@ -13,7 +13,6 @@ const (
 
 func NewArena() *Arena {
 	return &Arena{
-		Goban:     NewGoban(),
 		hasWinner: false,
 		gameRules: standardRules,
 	}
