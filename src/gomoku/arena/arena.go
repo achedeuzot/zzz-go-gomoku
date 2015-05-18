@@ -17,3 +17,14 @@ func NewArena() *Arena {
 		gameRules: standardRules,
 	}
 }
+
+const (
+	HumanVsAIMode = iota
+	HumanVsHumanMode
+	AIVsAIMode
+)
+
+var Gomoku struct {
+	state    int
+	gameMode int
+}

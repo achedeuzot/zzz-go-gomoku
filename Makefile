@@ -35,13 +35,13 @@ profile:
 	GODEBUG=gctrace=1 ./bin/$(NAME) -prof=1
 
 clean:
-	rm ./bin/$(NAME)
+	rm -f ./bin/$(NAME)
 
 vendor_clean:
 	rm -dvRf ./_vendor/src
 
 vendor_get: vendor_clean
-	GOPATH=${PWD}/_vendor go get -d -u -v \
+	GOPATH=${PWD}/_vendor go get -u -v \
 	github.com/davecheney/profile \
 	github.com/veandco/go-sdl2/sdl \
 	github.com/veandco/go-sdl2/sdl_mixer \
@@ -54,3 +54,6 @@ vendor_update: vendor_get
 	&& rm -rf `find ./_vendor/src -type d -name .bzr` \
 
 .PHONY: build doc fmt lint run test clean vendor_clean vendor_get vendor_update
+
+# This project requires the sdl2 library to be installed
+# brew install sdl2{,_image,_ttf,_mixer}
