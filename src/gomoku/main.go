@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	gui.StartUpGUI()
+	gui.StartupGUI()
 	defer gui.ShutdownGUI()
 
 	gui.Run()

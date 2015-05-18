@@ -15,7 +15,7 @@ var (
 	Running             bool = true
 )
 
-func StartUpGUI() *sdl.Renderer {
+func StartupGUI() {
 	Window, err := sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		winWidth, winHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
@@ -23,13 +23,12 @@ func StartUpGUI() *sdl.Renderer {
 		os.Exit(1)
 	}
 
-	Renderer, err := sdl.CreateRenderer(Window, -1, sdl.RENDERER_ACCELERATED)
+	// Using := here seems to be very problematic...
+	Renderer, err = sdl.CreateRenderer(Window, -1, sdl.RENDERER_ACCELERATED)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to create renderer: %s\n", err)
 		os.Exit(2)
 	}
-
-	return Renderer
 }
 
 func ShutdownGUI() {
