@@ -53,7 +53,18 @@ func ShutdownGUI() {
 
 func Run() {
 	initScenes()
+
+	fps := 30
+	fpsMill := 1000 / fps
+
 	for Running {
+		currentFrameTime := sdl.GetTicks()
+
 		CurrScene.PlayScene()
+
+		currentSpeed := sdl.GetTicks() - currentFrameTime
+		if uint32(fpsMill) > currentSpeed {
+			sdl.Delay(uint32(fpsMill) - currentSpeed)
+		}
 	}
 }

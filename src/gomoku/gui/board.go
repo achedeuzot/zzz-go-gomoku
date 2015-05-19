@@ -50,7 +50,6 @@ func (b *Board) PlayScene() {
 	Renderer.Copy(b.Background.texture, &b.Background.size, &sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: finalW, H: finalH})
 
 	// Display content of board in top of background
-	arena.Gomoku.Arena = arena.NewArena()
 	demoArena := arena.Gomoku.Arena
 	for idx, val := range demoArena.Goban {
 		log.Printf("Goban data [%d]: %d\n", idx, val)

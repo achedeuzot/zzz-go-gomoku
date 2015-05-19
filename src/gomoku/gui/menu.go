@@ -1,6 +1,8 @@
 package gui
 
 import (
+	"gomoku/arena"
+
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_ttf"
 )
@@ -49,7 +51,9 @@ func (s *MenuMain) PlayScene() {
 				if XYInRect(s.Quit.pos, t.X, t.Y) {
 					Running = false
 				} else if XYInRect(s.Play.pos, t.X, t.Y) {
+					arena.Gomoku.Arena = arena.NewArena()
 					CurrScene = SceneMap["Board"]
+					break
 				}
 
 			}
@@ -59,7 +63,7 @@ func (s *MenuMain) PlayScene() {
 	Renderer.SetDrawColor(0, 0, 0, 255)
 	Renderer.FillRect(&sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H})
 
-	Renderer.Copy(s.Background.texture, &s.Background.size, &s.Background.size)
+	Renderer.Copy(s.Background.texture, &s.Background.size, &s.Background.pos)
 	Renderer.Copy(s.Title.texture, &s.Title.size, &s.Title.pos)
 	Renderer.FillRect(&s.Play.pos)
 	Renderer.Copy(s.Play.texture, &s.Play.size, &s.Play.pos)
