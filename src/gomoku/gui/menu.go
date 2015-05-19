@@ -50,6 +50,7 @@ func (s *MenuMain) PlayScene() {
 			if t.Button == sdl.BUTTON_LEFT {
 				if XYInRect(s.Quit.pos, t.X, t.Y) {
 					Running = false
+					break
 				} else if XYInRect(s.Play.pos, t.X, t.Y) {
 					arena.Gomoku.Arena = arena.NewArena()
 					CurrScene = SceneMap["Board"]

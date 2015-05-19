@@ -8,16 +8,38 @@ import (
 
 type Board struct {
 	Background *Texture
+	Deck       *Texture
 	WhitePawn  *Texture
 	BlackPawn  *Texture
 }
 
 func NewBoard() *Board {
-	return &Board{
-		Background: GetTextureFromImage("data/img/board.png"),
+	board := &Board{
+		Background: GetTextureFromImage("data/img/bg.jpg"),
+		Deck:       GetTextureFromImage("data/img/board.png"),
 		WhitePawn:  GetTextureFromImage("data/img/white.png"),
 		BlackPawn:  GetTextureFromImage("data/img/black.png"),
 	}
+	// Display background to the right scale
+	var ratio float64
+	var finalW int32
+	var finalH int32
+
+	if board.Deck.size.W > DisplayMode.W {
+		ratio = float64(DisplayMode.W) / float64(board.Deck.size.W)
+		finalW = int32(float64(board.Deck.size.W) * ratio)
+		finalH = int32(float64(board.Deck.size.H) * ratio)
+	}
+
+	if board.Deck.size.H > DisplayMode.H {
+		ratio = float64(DisplayMode.H) / float64(board.Deck.size.H)
+		finalW = int32(float64(board.Deck.size.W) * ratio)
+		finalH = int32(float64(board.Deck.size.H) * ratio)
+	}
+
+	board.Background.pos = sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H}
+	board.Deck.pos = sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: finalW, H: finalH}
+	return board
 }
 
 func (b *Board) PlayScene() {
@@ -33,24 +55,8 @@ func (b *Board) PlayScene() {
 	}
 	Renderer.Clear()
 
-	// Display background to the right scale
-	var ratio float64
-	var finalW int32
-	var finalH int32
-
-	if b.Background.size.W > DisplayMode.W {
-		ratio = float64(DisplayMode.W) / float64(b.Background.size.W)
-		finalW = int32(float64(b.Background.size.W) * ratio)
-		finalH = int32(float64(b.Background.size.H) * ratio)
-	}
-
-	if b.Background.size.H > DisplayMode.H {
-		ratio = float64(DisplayMode.H) / float64(b.Background.size.H)
-		finalW = int32(float64(b.Background.size.W) * ratio)
-		finalH = int32(float64(b.Background.size.H) * ratio)
-	}
-
-	Renderer.Copy(b.Background.texture, &b.Background.size, &sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: finalW, H: finalH})
+	Renderer.Copy(b.Background.texture, &b.Background.size, &b.Background.pos)
+	Renderer.Copy(b.Deck.texture, &b.Deck.size, &b.Deck.pos)
 
 	// Display content of board in top of background
 	demoArena := arena.Gomoku.Arena
