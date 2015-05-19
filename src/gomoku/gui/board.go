@@ -52,12 +52,10 @@ func (b *Board) XYInCell(x int32, y int32) (int, int) {
 		for j := 0; j < 19; j++ {
 			if x >= b.Table.pos.X+12+b.CellSize.W*int32(i) && x < b.Table.pos.X+12+b.CellSize.W*int32(i+1) &&
 				y >= b.Table.pos.Y+12+b.CellSize.H*int32(j) && y < b.Table.pos.Y+12+b.CellSize.H*int32(j+1) {
-				log.Printf("%d | %d\n", i, j)
 				return i, j
 			}
 		}
 	}
-	log.Println("error")
 	return -1, -1
 }
 
@@ -76,7 +74,6 @@ func (b *Board) PlayScene() {
 				CurrScene = SceneMap["MenuMain"]
 			}
 		case *sdl.MouseMotionEvent:
-			log.Printf("%+v\n", t)
 			if i, j := b.XYInCell(t.X, t.Y); i > 0 && j > 0 {
 				Renderer.Copy(b.Pawns[arena.WhitePlayer].texture, &b.Pawns[arena.WhitePlayer].size,
 					&sdl.Rect{
