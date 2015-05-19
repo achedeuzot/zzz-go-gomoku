@@ -5,7 +5,7 @@ import (
 )
 
 type MenuMain struct {
-	Background uint8
+	Background *sdl.Texture
 }
 
 func (s *MenuMain) PlayScene() {
@@ -21,7 +21,7 @@ func (s *MenuMain) PlayScene() {
 	}
 	Renderer.Clear()
 	var rect sdl.Rect
-	rect = sdl.Rect{X: 0, Y: 0, W: 400, H: 300}
+	rect = sdl.Rect{X: 300, Y: 300, W: 400, H: 300}
 	Renderer.SetDrawColor(255, 100, 170, 255)
 	Renderer.FillRect(&rect)
 	Renderer.Present()
