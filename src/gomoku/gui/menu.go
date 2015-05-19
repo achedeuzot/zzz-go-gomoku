@@ -39,7 +39,7 @@ func (s *MenuMain) PlayScene() {
 			}
 		case *sdl.MouseButtonEvent:
 			if t.Button == sdl.BUTTON_LEFT {
-				if XYInRect(sdl.Rect{X: 2560/2 - s.Quit.size.W/2, Y: (1440 / 7) * 5, W: s.Quit.size.W, H: s.Quit.size.H}, t.X, t.Y) {
+				if XYInRect(sdl.Rect{X: DisplayMode.W/2 - s.Quit.size.W/2, Y: (DisplayMode.H / 7) * 5, W: s.Quit.size.W, H: s.Quit.size.H}, t.X, t.Y) {
 					Running = false
 				}
 
@@ -48,13 +48,13 @@ func (s *MenuMain) PlayScene() {
 	}
 	Renderer.Clear()
 	Renderer.SetDrawColor(255, 0, 0, 255)
-	Renderer.FillRect(&sdl.Rect{X: 0, Y: 0, W: 2560, H: 1440})
+	Renderer.FillRect(&sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H})
 
 	Renderer.Copy(s.Background.texture, &s.Background.size, &s.Background.size)
-	Renderer.Copy(s.Title.texture, &s.Title.size, &sdl.Rect{X: 2560/2 - s.Title.size.W/2, Y: 1440 / 7, W: s.Title.size.W, H: s.Title.size.H})
-	Renderer.Copy(s.Play.texture, &s.Play.size, &sdl.Rect{X: 2560/2 - s.Play.size.W/2, Y: (1440 / 7) * 3, W: s.Play.size.W, H: s.Play.size.H})
-	Renderer.Copy(s.Settings.texture, &s.Settings.size, &sdl.Rect{X: 2560/2 - s.Settings.size.W/2, Y: (1440 / 7) * 4, W: s.Settings.size.W, H: s.Settings.size.H})
-	Renderer.Copy(s.Quit.texture, &s.Quit.size, &sdl.Rect{X: 2560/2 - s.Quit.size.W/2, Y: (1440 / 7) * 5, W: s.Quit.size.W, H: s.Quit.size.H})
+	Renderer.Copy(s.Title.texture, &s.Title.size, &sdl.Rect{X: DisplayMode.W/2 - s.Title.size.W/2, Y: DisplayMode.H / 7, W: s.Title.size.W, H: s.Title.size.H})
+	Renderer.Copy(s.Play.texture, &s.Play.size, &sdl.Rect{X: DisplayMode.W/2 - s.Play.size.W/2, Y: (DisplayMode.H / 7) * 3, W: s.Play.size.W, H: s.Play.size.H})
+	Renderer.Copy(s.Settings.texture, &s.Settings.size, &sdl.Rect{X: DisplayMode.W/2 - s.Settings.size.W/2, Y: (DisplayMode.H / 7) * 4, W: s.Settings.size.W, H: s.Settings.size.H})
+	Renderer.Copy(s.Quit.texture, &s.Quit.size, &sdl.Rect{X: DisplayMode.W/2 - s.Quit.size.W/2, Y: (DisplayMode.H / 7) * 5, W: s.Quit.size.W, H: s.Quit.size.H})
 
 	Renderer.Present()
 }
