@@ -11,6 +11,7 @@ import (
 type Text struct {
 	texture *sdl.Texture
 	size    sdl.Rect
+	pos     sdl.Rect
 }
 
 func GetTextureFromImage(filename string) *Text {
