@@ -2,7 +2,6 @@ package gui
 
 import (
 	"gomoku/arena"
-	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
