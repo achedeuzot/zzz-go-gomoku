@@ -7,15 +7,15 @@ import (
 	"github.com/veandco/go-sdl2/sdl_ttf"
 )
 
-func GetTextureFromFont(fontname string, text string) *Text {
+func GetTextureFromFont(fontname string, text string, size int, color sdl.Color) *Text {
 	ttf.Init()
 
-	font, err := ttf.OpenFont(fontname, 65)
+	font, err := ttf.OpenFont(fontname, size)
 	if err != nil {
 		log.Fatalf("Failed to load font: %s\n", err)
 	}
 
-	text_rendered, err := font.RenderUTF8_Blended(text, sdl.Color{R: 255, G: 0, B: 0, A: 255})
+	text_rendered, err := font.RenderUTF8_Blended(text, color)
 	if err != nil {
 		log.Fatalf("Failed to render text: %s\n", err)
 	}
