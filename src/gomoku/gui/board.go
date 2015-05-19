@@ -72,7 +72,7 @@ func (b *Board) PlayScene() {
 						W: b.WhitePawn.pos.W - 10,
 						H: b.WhitePawn.pos.H - 10,
 					})
-			} else {
+			} else if currVal == 2 {
 				Renderer.Copy(b.BlackPawn.texture, &b.BlackPawn.size,
 					&sdl.Rect{
 						X: b.Table.pos.X + 12 + b.BlackPawn.pos.W*int32(i),
@@ -84,12 +84,6 @@ func (b *Board) PlayScene() {
 		}
 	}
 
-	//    demoArena := arena.Gomoku.Arena
-	// for idx, _ := range demoArena.Goban {
-
-	// 	Renderer.Copy(b.WhitePawn.texture, &b.WhitePawn.size, &sdl.Rect{X: b.Table.pos.X + b.WhitePawn.pos.X*int32(idx),
-	// 		Y: b.Table.pos.Y + b.WhitePawn.pos.Y*int32(idx), W: b.WhitePawn.pos.W, H: b.WhitePawn.pos.H})
-	// }
 	Renderer.Present()
 
 }
