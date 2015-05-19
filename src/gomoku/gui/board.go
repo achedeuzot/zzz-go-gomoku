@@ -21,7 +21,7 @@ func (b *Board) PlayScene() {
 			Running = false
 		case *sdl.KeyUpEvent:
 			if t.Keysym.Sym == sdl.K_ESCAPE {
-				Running = false
+				CurrScene = SceneMap["MenuMain"]
 			}
 		}
 	}
