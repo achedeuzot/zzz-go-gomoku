@@ -7,12 +7,15 @@ import (
 	"github.com/veandco/go-sdl2/sdl_image"
 )
 
-func loadPng(filename string) *sdl.Texture {
+type Text struct {
+	texture *sdl.Texture
+	size    sdl.Rect
+}
+
+func GetTextureFromImage(filename string) *Text {
 	var surface *sdl.Surface
 	var texture *sdl.Texture
 	var err error
-
-	img.Init(img.INIT_PNG)
 
 	surface, err = img.Load(filename)
 	if err != nil {
@@ -20,10 +23,16 @@ func loadPng(filename string) *sdl.Texture {
 	}
 	defer surface.Free()
 
+	var text_surf_size sdl.Rect
+	surface.GetClipRect(&text_surf_size)
+
 	texture, err = Renderer.CreateTextureFromSurface(surface)
 	if err != nil {
 		log.Fatalf("Failed to create texture: %s\n", err)
 	}
 
-	return texture
+	return &Text{
+		texture: texture,
+		size:    text_surf_size,
+	}
 }

@@ -2,10 +2,20 @@ package gui
 
 import (
 	"github.com/veandco/go-sdl2/sdl"
+	"github.com/veandco/go-sdl2/sdl_ttf"
 )
 
 type MenuMain struct {
-	Background *sdl.Texture
+	Background *Text
+	Font       *ttf.Font
+	Title      *Text
+}
+
+func NewMainMenu() *MenuMain {
+	return &MenuMain{
+		Background: GetTextureFromImage("data/img/bg.jpg"),
+		Title:      GetTextureFromFont("data/fonts/TaiLeb.ttf", "Gogomoku"),
+	}
 }
 
 func (s *MenuMain) PlayScene() {
@@ -23,8 +33,11 @@ func (s *MenuMain) PlayScene() {
 	Renderer.SetDrawColor(255, 0, 0, 255)
 	Renderer.FillRect(&sdl.Rect{X: 0, Y: 0, W: 2560, H: 1440})
 
-	src := sdl.Rect{X: 0, Y: 0, W: 2560, H: 1440}
-	dst := sdl.Rect{X: 0, Y: 0, W: 2560, H: 1440}
-	Renderer.Copy(s.Background, &src, &dst)
+	// src := sdl.Rect{X: 0, Y: 0, W: 2560, H: 1440}
+	// dst := sdl.Rect{X: 0, Y: 0, W: 2560, H: 1440}
+	Renderer.Copy(s.Background.texture, &s.Background.size, &s.Background.size)
+
+	Renderer.Copy(s.Title.texture, &s.Title.size, &s.Title.size)
+
 	Renderer.Present()
 }

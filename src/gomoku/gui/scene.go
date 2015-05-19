@@ -10,8 +10,6 @@ var CurrScene Scene
 var SceneMap map[string]Scene = make(map[string]Scene)
 
 func initScenes() {
-	SceneMap["MenuMain"] = &MenuMain{
-		Background: loadPng("img/bg.jpg"),
-	}
+	SceneMap["MenuMain"] = NewMainMenu()
 	CurrScene = SceneMap["MenuMain"]
 }
