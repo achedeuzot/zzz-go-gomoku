@@ -1,15 +1,13 @@
 package gui
 
 import (
-	"fmt"
-	"os"
+	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 var (
 	winTitle            string = "Go-Gomoku"
-	winWidth, winHeight int    = 2560, 1440
 	Window              *sdl.Window
 	DisplayMode         *sdl.DisplayMode
 	Renderer            *sdl.Renderer
@@ -17,24 +15,32 @@ var (
 )
 
 func StartupGUI() {
-	Window, err := sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
-		winWidth, winHeight, sdl.WINDOW_FULLSCREEN)
+	err := sdl.VideoInit("")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to create window: %s\n", err)
-		os.Exit(1)
+		log.Fatalf("Failed to init video: %s\n", err)
+	}
+
+	var dispMode sdl.DisplayMode
+	err = sdl.GetDesktopDisplayMode(0, &dispMode)
+	if err != nil {
+		log.Fatalf("Failed to get desktop display mode: %s\n", err)
+	}
+
+	Window, err := sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
+		int(dispMode.W), int(dispMode.H), sdl.WINDOW_FULLSCREEN)
+	if err != nil {
+		log.Fatalf("Failed to create window: %s\n", err)
 	}
 
 	// Using := here seems to be very problematic...
 	Renderer, err = sdl.CreateRenderer(Window, -1, sdl.RENDERER_ACCELERATED)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to create renderer: %s\n", err)
-		os.Exit(2)
+		log.Fatalf("Failed to create renderer: %s\n", err)
 	}
 
 	dispIdx, err := Window.GetDisplayIndex()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to get display mode: %s\n", err)
-		os.Exit(2)
+		log.Fatalf("Failed to get display mode: %s\n", err)
 	}
 
 	DisplayMode = &sdl.DisplayMode{}
