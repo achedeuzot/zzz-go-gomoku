@@ -11,6 +11,7 @@ var (
 	winTitle            string = "Go-Gomoku"
 	winWidth, winHeight int    = 2560, 1440
 	Window              *sdl.Window
+	DisplayMode         *sdl.DisplayMode
 	Renderer            *sdl.Renderer
 	Running             bool = true
 )
@@ -29,6 +30,15 @@ func StartupGUI() {
 		fmt.Fprintf(os.Stderr, "Failed to create renderer: %s\n", err)
 		os.Exit(2)
 	}
+
+	dispIdx, err := Window.GetDisplayIndex()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to get display mode: %s\n", err)
+		os.Exit(2)
+	}
+
+	DisplayMode = &sdl.DisplayMode{}
+	sdl.GetCurrentDisplayMode(dispIdx, DisplayMode)
 }
 
 func ShutdownGUI() {

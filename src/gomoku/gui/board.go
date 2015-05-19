@@ -5,12 +5,12 @@ import (
 )
 
 type Board struct {
-	Background *sdl.Texture
+	Background *Text
 }
 
 func NewBoard() *Board {
 	return &Board{
-		Background: loadPng("data/img/board.png"),
+		Background: GetTextureFromImage("data/img/board.png"),
 	}
 }
 
@@ -26,9 +26,23 @@ func (b *Board) PlayScene() {
 		}
 	}
 	Renderer.Clear()
-	var rect sdl.Rect
-	rect = sdl.Rect{X: 300, Y: 300, W: 400, H: 300}
-	Renderer.SetDrawColor(255, 100, 170, 255)
-	Renderer.FillRect(&rect)
+
+	var ratio float64
+	var finalW int32
+	var finalH int32
+
+	if b.Background.size.W > DisplayMode.W {
+		ratio = float64(DisplayMode.W) / float64(b.Background.size.W)
+		finalW = int32(float64(b.Background.size.W) * ratio)
+		finalH = int32(float64(b.Background.size.H) * ratio)
+	}
+
+	if b.Background.size.H > DisplayMode.H {
+		ratio = float64(DisplayMode.H) / float64(b.Background.size.H)
+		finalW = int32(float64(b.Background.size.W) * ratio)
+		finalH = int32(float64(b.Background.size.H) * ratio)
+	}
+
+	Renderer.Copy(b.Background.texture, &b.Background.size, &sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: finalW, H: finalH})
 	Renderer.Present()
 }
