@@ -8,7 +8,7 @@ import (
 
 type Board struct {
 	Background *Texture
-	Deck       *Texture
+	Prop       *Texture
 	WhitePawn  *Texture
 	BlackPawn  *Texture
 }
@@ -16,7 +16,7 @@ type Board struct {
 func NewBoard() *Board {
 	board := &Board{
 		Background: GetTextureFromImage("data/img/bg.jpg"),
-		Deck:       GetTextureFromImage("data/img/board.png"),
+		Prop:       GetTextureFromImage("data/img/board.png"),
 		WhitePawn:  GetTextureFromImage("data/img/white.png"),
 		BlackPawn:  GetTextureFromImage("data/img/black.png"),
 	}
@@ -25,20 +25,20 @@ func NewBoard() *Board {
 	var finalW int32
 	var finalH int32
 
-	if board.Deck.size.W > DisplayMode.W {
-		ratio = float64(DisplayMode.W) / float64(board.Deck.size.W)
-		finalW = int32(float64(board.Deck.size.W) * ratio)
-		finalH = int32(float64(board.Deck.size.H) * ratio)
+	if board.Prop.size.W > DisplayMode.W {
+		ratio = float64(DisplayMode.W) / float64(board.Prop.size.W)
+		finalW = int32(float64(board.Prop.size.W) * ratio)
+		finalH = int32(float64(board.Prop.size.H) * ratio)
 	}
 
-	if board.Deck.size.H > DisplayMode.H {
-		ratio = float64(DisplayMode.H) / float64(board.Deck.size.H)
-		finalW = int32(float64(board.Deck.size.W) * ratio)
-		finalH = int32(float64(board.Deck.size.H) * ratio)
+	if board.Prop.size.H > DisplayMode.H {
+		ratio = float64(DisplayMode.H) / float64(board.Prop.size.H)
+		finalW = int32(float64(board.Prop.size.W) * ratio)
+		finalH = int32(float64(board.Prop.size.H) * ratio)
 	}
 
 	board.Background.pos = sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H}
-	board.Deck.pos = sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: finalW, H: finalH}
+	board.Prop.pos = sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: finalW, H: finalH}
 	return board
 }
 
@@ -56,12 +56,12 @@ func (b *Board) PlayScene() {
 	Renderer.Clear()
 
 	Renderer.Copy(b.Background.texture, &b.Background.size, &b.Background.pos)
-	Renderer.Copy(b.Deck.texture, &b.Deck.size, &b.Deck.pos)
+	Renderer.Copy(b.Prop.texture, &b.Prop.size, &b.Prop.pos)
 
 	// Display content of board in top of background
 	demoArena := arena.Gomoku.Arena
 	for _ = range demoArena.Goban {
-		Renderer.Copy(b.WhitePawn.texture, &b.WhitePawn.size, &sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: b.WhitePawn.size.W, H: b.WhitePawn.size.H})
+		Renderer.Copy(b.WhitePawn.texture, &b.WhitePawn.size, &sdl.Rect{X: DisplayMode.W / 2, Y: 0, W: b.WhitePawn.size.W, H: b.WhitePawn.size.H})
 	}
 	Renderer.Present()
 
