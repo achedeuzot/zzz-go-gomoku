@@ -20,9 +20,11 @@ func (s *MenuMain) PlayScene() {
 		}
 	}
 	Renderer.Clear()
-	var rect sdl.Rect
-	rect = sdl.Rect{X: 300, Y: 300, W: 400, H: 300}
-	Renderer.SetDrawColor(255, 100, 170, 255)
-	Renderer.FillRect(&rect)
+	Renderer.SetDrawColor(255, 0, 0, 255)
+	Renderer.FillRect(&sdl.Rect{X: 0, Y: 0, W: 2560, H: 1440})
+
+	src := sdl.Rect{X: 0, Y: 0, W: 2560, H: 1440}
+	dst := sdl.Rect{X: 0, Y: 0, W: 2560, H: 1440}
+	Renderer.Copy(s.Background, &src, &dst)
 	Renderer.Present()
 }

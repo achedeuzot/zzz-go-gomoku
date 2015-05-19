@@ -9,7 +9,7 @@ import (
 
 var (
 	winTitle            string = "Go-Gomoku"
-	winWidth, winHeight int    = 800, 600
+	winWidth, winHeight int    = 2560, 1440
 	Window              *sdl.Window
 	Renderer            *sdl.Renderer
 	Running             bool = true
@@ -17,7 +17,7 @@ var (
 
 func StartupGUI() {
 	Window, err := sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
-		winWidth, winHeight, sdl.WINDOW_SHOWN)
+		winWidth, winHeight, sdl.WINDOW_FULLSCREEN)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to create window: %s\n", err)
 		os.Exit(1)
