@@ -64,7 +64,7 @@ func (b *Board) PlayScene() {
 	for i := 0; i < 19; i++ {
 		for j := 0; j < 19; j++ {
 			currVal := arena.Gomoku.Arena.Goban[i+j*19]
-			if currVal == 1 {
+			if currVal == arena.ColorWhite {
 				Renderer.Copy(b.WhitePawn.texture, &b.WhitePawn.size,
 					&sdl.Rect{
 						X: b.Table.pos.X + 12 + b.WhitePawn.pos.W*int32(i),
@@ -72,7 +72,7 @@ func (b *Board) PlayScene() {
 						W: b.WhitePawn.pos.W - 10,
 						H: b.WhitePawn.pos.H - 10,
 					})
-			} else if currVal == 2 {
+			} else if currVal == arena.ColorBlack {
 				Renderer.Copy(b.BlackPawn.texture, &b.BlackPawn.size,
 					&sdl.Rect{
 						X: b.Table.pos.X + 12 + b.BlackPawn.pos.W*int32(i),

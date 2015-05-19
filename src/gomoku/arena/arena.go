@@ -11,6 +11,13 @@ func NewArena() *Arena {
 	}
 }
 
+// Set goban board values
+const (
+	_ = iota
+	ColorWhite
+	ColorBlack
+)
+
 const (
 	HumanVsAIMode = iota
 	HumanVsHumanMode
