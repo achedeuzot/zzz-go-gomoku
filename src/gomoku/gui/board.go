@@ -2,18 +2,21 @@ package gui
 
 import (
 	"gomoku/arena"
-	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 type Board struct {
-	Background *Text
+	Background *Texture
+	WhitePawn  *Texture
+	BlackPawn  *Texture
 }
 
 func NewBoard() *Board {
 	return &Board{
 		Background: GetTextureFromImage("data/img/board.png"),
+		WhitePawn:  GetTextureFromImage("data/img/white.png"),
+		BlackPawn:  GetTextureFromImage("data/img/black.png"),
 	}
 }
 
@@ -51,8 +54,8 @@ func (b *Board) PlayScene() {
 
 	// Display content of board in top of background
 	demoArena := arena.Gomoku.Arena
-	for idx, val := range demoArena.Goban {
-		log.Printf("Goban data [%d]: %d\n", idx, val)
+	for _ = range demoArena.Goban {
+		Renderer.Copy(b.WhitePawn.texture, &b.WhitePawn.size, &sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: b.WhitePawn.size.W, H: b.WhitePawn.size.H})
 	}
 	Renderer.Present()
 

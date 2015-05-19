@@ -8,12 +8,12 @@ import (
 )
 
 type MenuMain struct {
-	Background *Text
+	Background *Texture
 	Font       *ttf.Font
-	Title      *Text
-	Play       *Text
-	Settings   *Text
-	Quit       *Text
+	Title      *Texture
+	Play       *Texture
+	Settings   *Texture
+	Quit       *Texture
 }
 
 func NewMainMenu() *MenuMain {
