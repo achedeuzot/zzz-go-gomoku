@@ -11,7 +11,7 @@ var SceneMap map[string]Scene = make(map[string]Scene)
 
 func initScenes() {
 	SceneMap["MenuMain"] = &MenuMain{
-		Background: loadPng("img/test.png"),
+		Background: loadPng("img/bg.jpg"),
 	}
 	CurrScene = SceneMap["MenuMain"]
 	// XXX temporary
