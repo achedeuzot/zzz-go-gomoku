@@ -17,8 +17,6 @@ func NewBoard() *Board {
 		Background: GetTextureFromImage("data/img/bg.jpg"),
 		Table:      GetTextureFromImage("data/img/board.png"),
 		Pawns:      make([]*Texture, arena.MaxGobanValue),
-		// WhitePawn:  GetTextureFromImage("data/img/white.png"),
-		// BlackPawn:  GetTextureFromImage("data/img/black.png"),
 	}
 	// Display background to the right scale
 	var ratio float64
