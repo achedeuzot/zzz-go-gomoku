@@ -9,16 +9,16 @@ import (
 type Board struct {
 	Background *Texture
 	Table      *Texture
-	WhitePawn  *Texture
-	BlackPawn  *Texture
+	Pawns      []*Texture
 }
 
 func NewBoard() *Board {
 	board := &Board{
 		Background: GetTextureFromImage("data/img/bg.jpg"),
 		Table:      GetTextureFromImage("data/img/board.png"),
-		WhitePawn:  GetTextureFromImage("data/img/white.png"),
-		BlackPawn:  GetTextureFromImage("data/img/black.png"),
+		Pawns:      make([]*Texture, arena.MaxGobanValue),
+		// WhitePawn:  GetTextureFromImage("data/img/white.png"),
+		// BlackPawn:  GetTextureFromImage("data/img/black.png"),
 	}
 	// Display background to the right scale
 	var ratio float64
@@ -39,8 +39,10 @@ func NewBoard() *Board {
 
 	board.Background.pos = sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H}
 	board.Table.pos = sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: finalW, H: finalH}
-	board.WhitePawn.pos = sdl.Rect{X: 0, Y: 0, W: board.Table.pos.W / 19, H: board.Table.pos.H / 19}
-	board.BlackPawn.pos = sdl.Rect{X: 0, Y: 0, W: board.Table.pos.W / 19, H: board.Table.pos.H / 19}
+	board.Pawns[arena.WhitePlayer] = GetTextureFromImage("data/img/white.png")
+	board.Pawns[arena.BlackPlayer] = GetTextureFromImage("data/img/black.png")
+	board.Pawns[arena.WhitePlayer].pos = sdl.Rect{X: 0, Y: 0, W: board.Table.pos.W / 19, H: board.Table.pos.H / 19}
+	board.Pawns[arena.BlackPlayer].pos = sdl.Rect{X: 0, Y: 0, W: board.Table.pos.W / 19, H: board.Table.pos.H / 19}
 	return board
 }
 
@@ -63,22 +65,14 @@ func (b *Board) PlayScene() {
 	// Display content of board in top of background
 	for i := 0; i < 19; i++ {
 		for j := 0; j < 19; j++ {
-			currVal := arena.Gomoku.Arena.Goban[i+j*19]
-			if currVal == arena.ColorWhite {
-				Renderer.Copy(b.WhitePawn.texture, &b.WhitePawn.size,
+			currVal := arena.Gomoku.Goban[i+j*19]
+			if currVal > 0 && currVal < arena.MaxGobanValue {
+				Renderer.Copy(b.Pawns[currVal].texture, &b.Pawns[currVal].size,
 					&sdl.Rect{
-						X: b.Table.pos.X + 12 + b.WhitePawn.pos.W*int32(i),
-						Y: b.Table.pos.Y + 12 + b.WhitePawn.pos.H*int32(j),
-						W: b.WhitePawn.pos.W - 10,
-						H: b.WhitePawn.pos.H - 10,
-					})
-			} else if currVal == arena.ColorBlack {
-				Renderer.Copy(b.BlackPawn.texture, &b.BlackPawn.size,
-					&sdl.Rect{
-						X: b.Table.pos.X + 12 + b.BlackPawn.pos.W*int32(i),
-						Y: b.Table.pos.Y + 12 + b.BlackPawn.pos.H*int32(j),
-						W: b.BlackPawn.pos.W - 10,
-						H: b.BlackPawn.pos.H - 10,
+						X: b.Table.pos.X + 12 + b.Pawns[currVal].pos.W*int32(i),
+						Y: b.Table.pos.Y + 12 + b.Pawns[currVal].pos.H*int32(j),
+						W: b.Pawns[currVal].pos.W - 10,
+						H: b.Pawns[currVal].pos.H - 10,
 					})
 			}
 		}

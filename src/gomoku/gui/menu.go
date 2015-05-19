@@ -52,7 +52,7 @@ func (s *MenuMain) PlayScene() {
 					Running = false
 					break
 				} else if XYInRect(s.Play.pos, t.X, t.Y) {
-					arena.Gomoku.Arena = arena.NewArena()
+					arena.Gomoku = arena.NewArena()
 					CurrScene = SceneMap["Board"]
 					break
 				}

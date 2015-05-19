@@ -1,5 +1,13 @@
 package arena
 
+// Set goban board values
+const (
+	_ = iota
+	WhitePlayer
+	BlackPlayer
+	MaxGobanValue
+)
+
 type Goban [361]int8
 
 func NewGoban() *Goban {
