@@ -5,14 +5,18 @@ import (
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_image"
+	"github.com/veandco/go-sdl2/sdl_ttf"
 )
 
-func loadPng(filename string) *sdl.Texture {
+type Text struct {
+	texture *sdl.Texture
+	size    sdl.Rect
+}
+
+func GetTextureFromImage(filename string) *Text {
 	var surface *sdl.Surface
 	var texture *sdl.Texture
 	var err error
-
-	img.Init(img.INIT_PNG)
 
 	surface, err = img.Load(filename)
 	if err != nil {
@@ -20,10 +24,43 @@ func loadPng(filename string) *sdl.Texture {
 	}
 	defer surface.Free()
 
+	var text_surf_size sdl.Rect
+	surface.GetClipRect(&text_surf_size)
+
 	texture, err = Renderer.CreateTextureFromSurface(surface)
 	if err != nil {
 		log.Fatalf("Failed to create texture: %s\n", err)
 	}
 
-	return texture
+	return &Text{
+		texture: texture,
+		size:    text_surf_size,
+	}
+}
+
+func GetTextureFromFont(fontname string, text string, size int, color sdl.Color) *Text {
+	ttf.Init()
+
+	font, err := ttf.OpenFont(fontname, size)
+	if err != nil {
+		log.Fatalf("Failed to load font: %s\n", err)
+	}
+
+	text_rendered, err := font.RenderUTF8_Blended(text, color)
+	if err != nil {
+		log.Fatalf("Failed to render text: %s\n", err)
+	}
+
+	var text_surf_size sdl.Rect
+	text_rendered.GetClipRect(&text_surf_size)
+
+	text_texture, err := Renderer.CreateTextureFromSurface(text_rendered)
+	if err != nil {
+		log.Fatalf("Failed to create texture: %s\n", err)
+	}
+
+	return &Text{
+		texture: text_texture,
+		size:    text_surf_size,
+	}
 }
