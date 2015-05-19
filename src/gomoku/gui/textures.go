@@ -8,13 +8,13 @@ import (
 	"github.com/veandco/go-sdl2/sdl_ttf"
 )
 
-type Text struct {
+type Texture struct {
 	texture *sdl.Texture
 	size    sdl.Rect
 	pos     sdl.Rect
 }
 
-func GetTextureFromImage(filename string) *Text {
+func GetTextureFromImage(filename string) *Texture {
 	var surface *sdl.Surface
 	var texture *sdl.Texture
 	var err error
@@ -33,13 +33,13 @@ func GetTextureFromImage(filename string) *Text {
 		log.Fatalf("Failed to create texture: %s\n", err)
 	}
 
-	return &Text{
+	return &Texture{
 		texture: texture,
 		size:    text_surf_size,
 	}
 }
 
-func GetTextureFromFont(fontname string, text string, size int, color sdl.Color) *Text {
+func GetTextureFromFont(fontname string, text string, size int, color sdl.Color) *Texture {
 	ttf.Init()
 
 	font, err := ttf.OpenFont(fontname, size)
@@ -60,7 +60,7 @@ func GetTextureFromFont(fontname string, text string, size int, color sdl.Color)
 		log.Fatalf("Failed to create texture: %s\n", err)
 	}
 
-	return &Text{
+	return &Texture{
 		texture: text_texture,
 		size:    text_surf_size,
 	}
