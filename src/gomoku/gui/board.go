@@ -59,12 +59,7 @@ func (b *Board) XYInCell(x int32, y int32) (int32, int32) {
 	return -1, -1
 }
 
-func (b *Board) PlayScene() {
-	Renderer.Clear()
-
-	Renderer.Copy(b.Background.texture, &b.Background.size, &b.Background.pos)
-	Renderer.Copy(b.Table.texture, &b.Table.size, &b.Table.pos)
-
+func (b *Board) handleEvents() {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch t := event.(type) {
 		case *sdl.QuitEvent:
@@ -79,14 +74,27 @@ func (b *Board) PlayScene() {
 				b.LastMousePos.Y = j
 			}
 		case *sdl.MouseButtonEvent:
-			if arena.Gomoku.Goban[b.LastMousePos.X+b.LastMousePos.Y*19] == 0 && arena.Gomoku.CurrPlayer.IsHuman() == true && t.Type == sdl.MOUSEBUTTONUP && t.Button == sdl.BUTTON_LEFT {
+			if isMouseButtonLeftUp(t) && isHumanAndEmptyCell(b) {
 				arena.Gomoku.Goban[b.LastMousePos.X+b.LastMousePos.Y*19] = int8(arena.Gomoku.CurrPlayer.GetColor())
 				arena.Gomoku.SwitchPlayers()
 			}
 		}
 	}
+}
 
-	// Display content of board in top of background
+func (b *Board) PlayScene() {
+	Renderer.Clear()
+
+	Renderer.Copy(b.Background.texture, &b.Background.size, &b.Background.pos)
+	Renderer.Copy(b.Table.texture, &b.Table.size, &b.Table.pos)
+
+	b.handleEvents()
+	b.displayBoard()
+
+	Renderer.Present()
+}
+
+func (b *Board) displayBoard() {
 	for i := 0; i < 19; i++ {
 		for j := 0; j < 19; j++ {
 			currVal := arena.Gomoku.Goban[i+j*19]
@@ -109,7 +117,12 @@ func (b *Board) PlayScene() {
 			}
 		}
 	}
+}
 
-	Renderer.Present()
-
+func isHumanAndEmptyCell(b *Board) bool {
+	if arena.Gomoku.Goban[b.LastMousePos.X+b.LastMousePos.Y*19] == 0 &&
+		arena.Gomoku.CurrPlayer.IsHuman() == true {
+		return true
+	}
+	return false
 }

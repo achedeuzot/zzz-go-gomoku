@@ -7,11 +7,11 @@ import (
 )
 
 var (
-	winTitle            string = "Go-Gomoku"
-	Window              *sdl.Window
-	DisplayMode         *sdl.DisplayMode
-	Renderer            *sdl.Renderer
-	Running             bool = true
+	winTitle    string = "Go-Gomoku"
+	Window      *sdl.Window
+	DisplayMode *sdl.DisplayMode
+	Renderer    *sdl.Renderer
+	Running     bool = true
 )
 
 func StartupGUI() {
@@ -73,4 +73,11 @@ func Run() {
 			sdl.Delay(uint32(fpsMill) - currentSpeed)
 		}
 	}
+}
+
+func isMouseButtonLeftUp(t *sdl.MouseButtonEvent) bool {
+	if t.Type == sdl.MOUSEBUTTONUP && t.Button == sdl.BUTTON_LEFT {
+		return true
+	}
+	return false
 }

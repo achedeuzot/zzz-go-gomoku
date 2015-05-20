@@ -39,7 +39,7 @@ func XYInRect(rect sdl.Rect, x int32, y int32) bool {
 	return ((x > rect.X && x < rect.X+rect.W) && (y > rect.Y && y < rect.Y+rect.H))
 }
 
-func (s *MenuMain) PlayScene() {
+func (s *MenuMain) handleEvents() {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch t := event.(type) {
 		case *sdl.QuitEvent:
@@ -49,7 +49,7 @@ func (s *MenuMain) PlayScene() {
 				Running = false
 			}
 		case *sdl.MouseButtonEvent:
-			if t.Type == sdl.MOUSEBUTTONUP && t.Button == sdl.BUTTON_LEFT {
+			if isMouseButtonLeftUp(t) {
 				if XYInRect(s.Quit.pos, t.X, t.Y) {
 					Running = false
 					break
@@ -64,6 +64,11 @@ func (s *MenuMain) PlayScene() {
 			}
 		}
 	}
+}
+
+func (s *MenuMain) PlayScene() {
+	s.handleEvents()
+
 	Renderer.Clear()
 	Renderer.SetDrawColor(0, 0, 0, 255)
 	Renderer.FillRect(&sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H})

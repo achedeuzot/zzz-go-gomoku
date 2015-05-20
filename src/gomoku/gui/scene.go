@@ -4,6 +4,7 @@ import ()
 
 type Scene interface {
 	PlayScene()
+	handleEvents()
 }
 
 var CurrScene Scene
