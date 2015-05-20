@@ -50,8 +50,8 @@ func NewBoard() *Board {
 func (b *Board) XYInCell(x int32, y int32) (int32, int32) {
 	for i := 0; i < 19; i++ {
 		for j := 0; j < 19; j++ {
-			if x >= b.Table.pos.X+12+b.CellSize.W*int32(i) && x < b.Table.pos.X+12+b.CellSize.W*int32(i+1) &&
-				y >= b.Table.pos.Y+12+b.CellSize.H*int32(j) && y < b.Table.pos.Y+12+b.CellSize.H*int32(j+1) {
+			if x >= b.Table.pos.X+16+b.CellSize.W*int32(i) && x < b.Table.pos.X+16+b.CellSize.W*int32(i+1) &&
+				y >= b.Table.pos.Y+16+b.CellSize.H*int32(j) && y < b.Table.pos.Y+16+b.CellSize.H*int32(j+1) {
 				return int32(i), int32(j)
 			}
 		}
@@ -88,16 +88,16 @@ func (b *Board) PlayScene() {
 			if currVal > 0 && currVal < arena.MaxGobanValue {
 				Renderer.Copy(b.Pawns[currVal].texture, &b.Pawns[currVal].size,
 					&sdl.Rect{
-						X: b.Table.pos.X + 12 + b.Pawns[currVal].pos.W*int32(i),
-						Y: b.Table.pos.Y + 12 + b.Pawns[currVal].pos.H*int32(j),
+						X: b.Table.pos.X + 16 + b.Pawns[currVal].pos.W*int32(i),
+						Y: b.Table.pos.Y + 16 + b.Pawns[currVal].pos.H*int32(j),
 						W: b.Pawns[currVal].pos.W - 10,
 						H: b.Pawns[currVal].pos.H - 10,
 					})
 			} else if b.LastMousePos.X == int32(i) && b.LastMousePos.Y == int32(j) {
 				Renderer.Copy(b.Pawns[arena.WhitePlayer].texture, &b.Pawns[arena.WhitePlayer].size,
 					&sdl.Rect{
-						X: b.Table.pos.X + 12 + b.Pawns[arena.WhitePlayer].pos.W*int32(i),
-						Y: b.Table.pos.Y + 12 + b.Pawns[arena.WhitePlayer].pos.H*int32(j),
+						X: b.Table.pos.X + 16 + b.Pawns[arena.WhitePlayer].pos.W*int32(i),
+						Y: b.Table.pos.Y + 16 + b.Pawns[arena.WhitePlayer].pos.H*int32(j),
 						W: b.Pawns[arena.WhitePlayer].pos.W - 10,
 						H: b.Pawns[arena.WhitePlayer].pos.H - 10,
 					})
