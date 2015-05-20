@@ -47,7 +47,7 @@ func (s *MenuMain) PlayScene() {
 				Running = false
 			}
 		case *sdl.MouseButtonEvent:
-			if t.Button == sdl.BUTTON_LEFT {
+			if t.Type == sdl.MOUSEBUTTONUP && t.Button == sdl.BUTTON_LEFT {
 				if XYInRect(s.Quit.pos, t.X, t.Y) {
 					Running = false
 					break

@@ -78,6 +78,10 @@ func (b *Board) PlayScene() {
 				b.LastMousePos.X = i
 				b.LastMousePos.Y = j
 			}
+		case *sdl.MouseButtonEvent:
+			if t.Type == sdl.MOUSEBUTTONUP && t.Button == sdl.BUTTON_LEFT {
+				arena.Gomoku.Goban[b.LastMousePos.X+b.LastMousePos.Y*19] = arena.WhitePlayer
+			}
 		}
 	}
 
