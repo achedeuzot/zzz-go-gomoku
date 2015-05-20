@@ -9,10 +9,9 @@ type AI struct {
 	arena.DefaultPlayer
 }
 
-func NewAI(id int8, isWhite bool) *AI {
+func NewAI(isWhite bool) *AI {
 	return &AI{
 		arena.DefaultPlayer{
-			Id:      id,
 			IsHuman: false,
 			IsWhite: isWhite,
 		},

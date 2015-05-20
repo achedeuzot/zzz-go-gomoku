@@ -1,7 +1,9 @@
 package gui
 
 import (
+	"gomoku/ai"
 	"gomoku/arena"
+	"gomoku/human"
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_ttf"
@@ -52,7 +54,9 @@ func (s *MenuMain) PlayScene() {
 					Running = false
 					break
 				} else if XYInRect(s.Play.pos, t.X, t.Y) {
-					arena.Gomoku = arena.NewArena()
+					humanPlayer := human.NewHuman(true)
+					aiPlayer := ai.NewAI(false)
+					arena.Gomoku = arena.NewArena(humanPlayer, aiPlayer)
 					CurrScene = SceneMap["Board"]
 					break
 				}
