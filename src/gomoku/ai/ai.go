@@ -9,17 +9,12 @@ type AI struct {
 	arena.DefaultPlayer
 }
 
-func NewAI(isWhite bool) *AI {
+func NewAI(color int) *AI {
 	return &AI{
 		arena.DefaultPlayer{
-			IsHuman: false,
-			IsWhite: isWhite,
+			Color: color,
 		},
 	}
-}
-
-func (ai *AI) SetIsWhite(state bool) {
-	ai.IsWhite = state
 }
 
 func (ai *AI) Think(timeout time.Duration) (row int, col int) {
@@ -29,4 +24,8 @@ func (ai *AI) Think(timeout time.Duration) (row int, col int) {
 
 func (ai *AI) Play() (row int, col int) {
 	return ai.Think(500 * time.Millisecond)
+}
+
+func (ai *AI) IsHuman() bool {
+	return false
 }

@@ -9,17 +9,12 @@ type Human struct {
 	arena.DefaultPlayer
 }
 
-func NewHuman(isWhite bool) *Human {
+func NewHuman(color int) *Human {
 	return &Human{
 		arena.DefaultPlayer{
-			IsHuman: true,
-			IsWhite: isWhite,
+			Color: color,
 		},
 	}
-}
-
-func (human *Human) SetIsWhite(state bool) {
-	human.IsWhite = state
 }
 
 func (human *Human) Think(timeout time.Duration) (row int, col int) {
@@ -29,4 +24,8 @@ func (human *Human) Think(timeout time.Duration) (row int, col int) {
 
 func (human *Human) Play() (row int, col int) {
 	return human.Think(500 * time.Millisecond)
+}
+
+func (human *Human) IsHuman() bool {
+	return true
 }

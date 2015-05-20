@@ -1,5 +1,9 @@
 package arena
 
+import (
+	"log"
+)
+
 const (
 	HumanVsAIMode = iota
 	HumanVsHumanMode
@@ -14,16 +18,30 @@ type Arena struct {
 	GameMode   int
 }
 
-func NewArena(firstPlayer Player, players ...Player) *Arena {
-	firstPlayer.SetIsWhite(false) // first player is always black
+func NewArena(players ...Player) *Arena {
+	if len(players) < 2 {
+		log.Fatalf("Not enough players in arena: %d\n", len(players))
+	}
 	arena := &Arena{
 		HasWinner:  false,
-		Players:    nil,
-		CurrPlayer: firstPlayer,
+		Players:    make([]Player, len(players)),
+		CurrPlayer: nil,
 		GameMode:   HumanVsAIMode,
 	}
-	arena.Players = players
+	for idx, val := range players {
+		val.SetId(idx)
+		arena.Players[idx] = val
+	}
+	arena.CurrPlayer = arena.Players[0]
 	return arena
 }
 
 var Gomoku *Arena
+
+func (arena *Arena) SwitchPlayers() {
+	nextIdx := arena.CurrPlayer.GetId() + 1
+	if nextIdx >= len(arena.Players) {
+		nextIdx = 0
+	}
+	arena.CurrPlayer = arena.Players[nextIdx]
+}

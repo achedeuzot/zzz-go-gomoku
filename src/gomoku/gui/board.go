@@ -79,8 +79,9 @@ func (b *Board) PlayScene() {
 				b.LastMousePos.Y = j
 			}
 		case *sdl.MouseButtonEvent:
-			if t.Type == sdl.MOUSEBUTTONUP && t.Button == sdl.BUTTON_LEFT {
-				arena.Gomoku.Goban[b.LastMousePos.X+b.LastMousePos.Y*19] = arena.WhitePlayer
+			if arena.Gomoku.CurrPlayer.IsHuman() == true && t.Type == sdl.MOUSEBUTTONUP && t.Button == sdl.BUTTON_LEFT {
+				arena.Gomoku.Goban[b.LastMousePos.X+b.LastMousePos.Y*19] = int8(arena.Gomoku.CurrPlayer.GetColor())
+				arena.Gomoku.SwitchPlayers()
 			}
 		}
 	}
@@ -98,12 +99,12 @@ func (b *Board) PlayScene() {
 						H: b.Pawns[currVal].pos.H - 10,
 					})
 			} else if b.LastMousePos.X == int32(i) && b.LastMousePos.Y == int32(j) {
-				Renderer.Copy(b.Pawns[arena.WhitePlayer].texture, &b.Pawns[arena.WhitePlayer].size,
+				Renderer.Copy(b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].texture, &b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].size,
 					&sdl.Rect{
-						X: b.Table.pos.X + 16 + b.Pawns[arena.WhitePlayer].pos.W*int32(i),
-						Y: b.Table.pos.Y + 16 + b.Pawns[arena.WhitePlayer].pos.H*int32(j),
-						W: b.Pawns[arena.WhitePlayer].pos.W - 10,
-						H: b.Pawns[arena.WhitePlayer].pos.H - 10,
+						X: b.Table.pos.X + 16 + b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W*int32(i),
+						Y: b.Table.pos.Y + 16 + b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H*int32(j),
+						W: b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W - 10,
+						H: b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H - 10,
 					})
 			}
 		}
