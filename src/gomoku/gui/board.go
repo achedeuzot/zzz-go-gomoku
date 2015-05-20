@@ -79,7 +79,7 @@ func (b *Board) PlayScene() {
 				b.LastMousePos.Y = j
 			}
 		case *sdl.MouseButtonEvent:
-			if arena.Gomoku.CurrPlayer.IsHuman() == true && t.Type == sdl.MOUSEBUTTONUP && t.Button == sdl.BUTTON_LEFT {
+			if arena.Gomoku.Goban[b.LastMousePos.X+b.LastMousePos.Y*19] == 0 && arena.Gomoku.CurrPlayer.IsHuman() == true && t.Type == sdl.MOUSEBUTTONUP && t.Button == sdl.BUTTON_LEFT {
 				arena.Gomoku.Goban[b.LastMousePos.X+b.LastMousePos.Y*19] = int8(arena.Gomoku.CurrPlayer.GetColor())
 				arena.Gomoku.SwitchPlayers()
 			}
