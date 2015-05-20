@@ -20,9 +20,9 @@ func NewMainMenu() *MenuMain {
 	menu := &MenuMain{
 		Background: GetTextureFromImage("data/img/bg.jpg"),
 		Title:      GetTextureFromFont("data/fonts/TaiLeb.ttf", "Gogomoku", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
-		Play:       GetTextureFromFont("data/fonts/TaiLeb.ttf", "Play", 150, sdl.Color{R: 0, G: 255, B: 255, A: 255}),
-		Settings:   GetTextureFromFont("data/fonts/TaiLeb.ttf", "Settings", 150, sdl.Color{R: 0, G: 255, B: 255, A: 255}),
-		Quit:       GetTextureFromFont("data/fonts/TaiLeb.ttf", "Quit", 150, sdl.Color{R: 0, G: 255, B: 255, A: 255}),
+		Play:       GetTextureFromImage("data/img/button_play.png"),
+		Settings:   GetTextureFromImage("data/img/button_options.png"),
+		Quit:       GetTextureFromImage("data/img/button_exit.png"),
 	}
 
 	menu.Background.pos = sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H}
@@ -66,11 +66,8 @@ func (s *MenuMain) PlayScene() {
 
 	Renderer.Copy(s.Background.texture, &s.Background.size, &s.Background.pos)
 	Renderer.Copy(s.Title.texture, &s.Title.size, &s.Title.pos)
-	Renderer.FillRect(&s.Play.pos)
 	Renderer.Copy(s.Play.texture, &s.Play.size, &s.Play.pos)
-	Renderer.FillRect(&s.Settings.pos)
 	Renderer.Copy(s.Settings.texture, &s.Settings.size, &s.Settings.pos)
-	Renderer.FillRect(&s.Quit.pos)
 	Renderer.Copy(s.Quit.texture, &s.Quit.size, &s.Quit.pos)
 
 	Renderer.Present()
