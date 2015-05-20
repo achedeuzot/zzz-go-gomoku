@@ -9,10 +9,9 @@ type Human struct {
 	arena.DefaultPlayer
 }
 
-func NewHuman(id int8, isWhite bool) *Human {
+func NewHuman(isWhite bool) *Human {
 	return &Human{
 		arena.DefaultPlayer{
-			Id:      id,
 			IsHuman: true,
 			IsWhite: isWhite,
 		},

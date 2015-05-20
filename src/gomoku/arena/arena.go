@@ -8,15 +8,19 @@ const (
 
 type Arena struct {
 	Goban
-	hasWinner bool
-	gameMode  int
+	HasWinner bool
+	Players   []Player
+	GameMode  int
 }
 
-func NewArena() *Arena {
-	return &Arena{
-		hasWinner: false,
-		gameMode:  HumanVsAIMode,
+func NewArena(players ...Player) *Arena {
+	arena := &Arena{
+		HasWinner: false,
+		Players:   nil,
+		GameMode:  HumanVsAIMode,
 	}
+	arena.Players = players
+	return arena
 }
 
 var Gomoku *Arena
