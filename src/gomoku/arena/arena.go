@@ -8,16 +8,19 @@ const (
 
 type Arena struct {
 	Goban
-	HasWinner bool
-	Players   []Player
-	GameMode  int
+	HasWinner  bool
+	Players    []Player
+	CurrPlayer Player
+	GameMode   int
 }
 
-func NewArena(players ...Player) *Arena {
+func NewArena(firstPlayer Player, players ...Player) *Arena {
+	firstPlayer.SetIsWhite(false) // first player is always black
 	arena := &Arena{
-		HasWinner: false,
-		Players:   nil,
-		GameMode:  HumanVsAIMode,
+		HasWinner:  false,
+		Players:    nil,
+		CurrPlayer: firstPlayer,
+		GameMode:   HumanVsAIMode,
 	}
 	arena.Players = players
 	return arena

@@ -18,6 +18,10 @@ func NewAI(isWhite bool) *AI {
 	}
 }
 
+func (ai *AI) SetIsWhite(state bool) {
+	ai.IsWhite = state
+}
+
 func (ai *AI) Think(timeout time.Duration) (row int, col int) {
 	// Do stuff
 	return 0, 0

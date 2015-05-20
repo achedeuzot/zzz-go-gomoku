@@ -18,6 +18,10 @@ func NewHuman(isWhite bool) *Human {
 	}
 }
 
+func (human *Human) SetIsWhite(state bool) {
+	human.IsWhite = state
+}
+
 func (human *Human) Think(timeout time.Duration) (row int, col int) {
 	// Do stuff
 	return 0, 0

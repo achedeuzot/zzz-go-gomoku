@@ -5,6 +5,7 @@ import (
 )
 
 type Player interface {
+	SetIsWhite(bool)
 	Think(timeout time.Duration) (row int, col int)
 	Play() (row int, col int)
 }
