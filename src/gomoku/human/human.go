@@ -2,7 +2,6 @@ package human
 
 import (
 	"gomoku/arena"
-	"time"
 )
 
 type Human struct {
@@ -17,13 +16,8 @@ func NewHuman(color int) *Human {
 	}
 }
 
-func (human *Human) Think(timeout time.Duration) (row int, col int) {
-	// Do stuff
+func (human *Human) PlayMove() (row int, col int) {
 	return 0, 0
-}
-
-func (human *Human) Play() (row int, col int) {
-	return human.Think(500 * time.Millisecond)
 }
 
 func (human *Human) IsHuman() bool {

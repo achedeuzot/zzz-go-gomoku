@@ -1,12 +1,9 @@
 package arena
 
-import (
-	"time"
-)
+import ()
 
 type Player interface {
-	Think(timeout time.Duration) (row int, col int)
-	Play() (row int, col int)
+	PlayMove() (row int, col int)
 	IsHuman() bool
 	SetId(int)
 	GetId() int
