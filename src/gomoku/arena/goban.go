@@ -27,8 +27,8 @@ func (goban *Goban) Capture(row int32, col int32) {
 	if goban.canCaptureUp(row, col, currentColor, opponentColor) {
 		goban.SetElem(row-1, col, 0)
 		goban.SetElem(row-2, col, 0)
+		Gomoku.CurrPlayer.AddCaptured(2)
 	}
-	Gomoku.CurrPlayer.AddCaptured(2)
 }
 
 func (goban *Goban) canCaptureUp(row int32, col int32, currentColor int8, opponentColor int8) bool {
