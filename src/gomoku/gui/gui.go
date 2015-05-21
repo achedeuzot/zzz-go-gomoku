@@ -58,7 +58,7 @@ func StartupGUI(fullscreen bool, width int, height int) {
 
 	DisplayMode = &sdl.DisplayMode{}
 	sdl.GetCurrentDisplayMode(dispIdx, DisplayMode)
-	if width > 0 && height > 0 {
+	if width > 0 && height > 0 && fullscreen == false {
 		DisplayMode.W = int32(width)
 		DisplayMode.H = int32(height)
 	}
