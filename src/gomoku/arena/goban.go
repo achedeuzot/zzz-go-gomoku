@@ -14,6 +14,33 @@ func NewGoban() *Goban {
 	return &Goban{}
 }
 
+func getOpponentColor(color int8) int8 {
+	if color == WhitePlayer {
+		return BlackPlayer
+	}
+	return WhitePlayer
+}
+
+func (goban *Goban) Capture(row int32, col int32) {
+	currentColor := goban.GetElem(row, col)
+	opponentColor := getOpponentColor(goban.GetElem(row, col))
+	if goban.canCaptureUp(row, col, currentColor, opponentColor) {
+		goban.SetElem(row-1, col, currentColor)
+		goban.SetElem(row-2, col, currentColor)
+	}
+}
+
+func (goban *Goban) canCaptureUp(row int32, col int32, currentColor int8, opponentColor int8) bool {
+	for idx := 0; idx < 3; idx++ {
+		if idx < 2 && goban.GetTopElem(row, col) == currentColor {
+			return false
+		} else if goban.GetTopElem(row, col) == opponentColor {
+			return false
+		}
+	}
+	return true
+}
+
 func (goban *Goban) CheckFiveAlign(row int32, col int32) bool {
 	if goban.CheckFiveAlignHorizontal(row, col) ||
 		goban.CheckFiveAlignVertical(row, col) ||
@@ -25,12 +52,12 @@ func (goban *Goban) CheckFiveAlign(row int32, col int32) bool {
 }
 
 func (goban *Goban) CheckFiveAlignVertical(row int32, col int32) bool {
-	tochek := goban.GetElem(row, col)
+	currentColor := goban.GetElem(row, col)
 	count := 1
-	for goban.GetTopElem(row, col) == tochek {
+	for goban.GetTopElem(row, col) == currentColor {
 		row--
 	}
-	for goban.GetBottomElem(row, col) == tochek {
+	for goban.GetBottomElem(row, col) == currentColor {
 		count++
 		row++
 	}
@@ -41,12 +68,12 @@ func (goban *Goban) CheckFiveAlignVertical(row int32, col int32) bool {
 }
 
 func (goban *Goban) CheckFiveAlignHorizontal(row int32, col int32) bool {
-	tochek := goban.GetElem(row, col)
+	currentColor := goban.GetElem(row, col)
 	count := 1
-	for goban.GetLeftElem(row, col) == tochek {
+	for goban.GetLeftElem(row, col) == currentColor {
 		col--
 	}
-	for goban.GetRightElem(row, col) == tochek {
+	for goban.GetRightElem(row, col) == currentColor {
 		count++
 		col++
 	}
@@ -57,13 +84,13 @@ func (goban *Goban) CheckFiveAlignHorizontal(row int32, col int32) bool {
 }
 
 func (goban *Goban) CheckFiveAlignDiagonal_1(row int32, col int32) bool {
-	tochek := goban.GetElem(row, col)
+	currentColor := goban.GetElem(row, col)
 	count := 1
-	for goban.GetTopLeftElem(row, col) == tochek {
+	for goban.GetTopLeftElem(row, col) == currentColor {
 		col--
 		row--
 	}
-	for goban.GetBottomRightElem(row, col) == tochek {
+	for goban.GetBottomRightElem(row, col) == currentColor {
 		count++
 		col++
 		row++
@@ -75,13 +102,13 @@ func (goban *Goban) CheckFiveAlignDiagonal_1(row int32, col int32) bool {
 }
 
 func (goban *Goban) CheckFiveAlignDiagonal_2(row int32, col int32) bool {
-	tochek := goban.GetElem(row, col)
+	currentColor := goban.GetElem(row, col)
 	count := 1
-	for goban.GetTopRightElem(row, col) == tochek {
+	for goban.GetTopRightElem(row, col) == currentColor {
 		col++
 		row--
 	}
-	for goban.GetBottomLeftElem(row, col) == tochek {
+	for goban.GetBottomLeftElem(row, col) == currentColor {
 		count++
 		col--
 		row++
