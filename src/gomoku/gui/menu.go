@@ -1,9 +1,9 @@
 package gui
 
 import (
-	// "gomoku/ai"
 	"gomoku/arena"
 	"gomoku/human"
+	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_ttf"
@@ -27,11 +27,12 @@ func NewMainMenu() *MenuMain {
 		Quit:       GetTextureFromImage("data/img/button_exit.png"),
 	}
 
+	log.Printf("%+v\n", DisplayMode)
 	menu.Background.pos = sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H}
-	menu.Title.pos = sdl.Rect{X: DisplayMode.W/2 - menu.Title.size.W/2, Y: DisplayMode.H / 7, W: menu.Title.size.W, H: menu.Title.size.H}
-	menu.Play.pos = sdl.Rect{X: DisplayMode.W/2 - menu.Play.size.W/2, Y: (DisplayMode.H / 7) * 3, W: menu.Play.size.W, H: menu.Play.size.H}
-	menu.Settings.pos = sdl.Rect{X: DisplayMode.W/2 - menu.Settings.size.W/2, Y: (DisplayMode.H / 7) * 4, W: menu.Settings.size.W, H: menu.Settings.size.H}
-	menu.Quit.pos = sdl.Rect{X: DisplayMode.W/2 - menu.Quit.size.W/2, Y: (DisplayMode.H / 7) * 5, W: menu.Quit.size.W, H: menu.Quit.size.H}
+	menu.Title.pos = sdl.Rect{X: DisplayMode.W/2 - (menu.Title.size.W*DisplayMode.W/2560)/2, Y: DisplayMode.H / 7, W: menu.Title.size.W * DisplayMode.W / 2560, H: menu.Title.size.H * DisplayMode.H / 1440}
+	menu.Play.pos = sdl.Rect{X: DisplayMode.W/2 - (menu.Play.size.W*DisplayMode.W/2560)/2, Y: (DisplayMode.H / 7) * 3, W: menu.Play.size.W * DisplayMode.W / 2560, H: menu.Play.size.H * DisplayMode.H / 1440}
+	menu.Settings.pos = sdl.Rect{X: DisplayMode.W/2 - (menu.Settings.size.W*DisplayMode.W/2560)/2, Y: (DisplayMode.H / 7) * 4, W: menu.Settings.size.W * DisplayMode.W / 2560, H: menu.Settings.size.H * DisplayMode.H / 1440}
+	menu.Quit.pos = sdl.Rect{X: DisplayMode.W/2 - (menu.Quit.size.W*DisplayMode.W/2560)/2, Y: (DisplayMode.H / 7) * 5, W: menu.Quit.size.W * DisplayMode.W / 2560, H: menu.Quit.size.H * DisplayMode.H / 1440}
 	return menu
 }
 
