@@ -99,9 +99,16 @@ func (b *Board) PlayScene() {
 	Renderer.Copy(b.Table.texture, &b.Table.size, &b.Table.pos)
 
 	b.handleEvents()
+	b.displayCapturedPawns()
 	b.displayBoard()
 
 	Renderer.Present()
+}
+
+func (b *Board) displayCapturedPawns() {
+	for _, player := range arena.Gomoku.Players {
+		log.Printf("%+v\n", player)
+	}
 }
 
 func (b *Board) displayBoard() {

@@ -23,7 +23,7 @@ func GetOpponentColor(color int8) int8 {
 
 func (goban *Goban) Capture(row int32, col int32) {
 	currentColor := Gomoku.CurrPlayer.GetColor()
-	opponentColor := getOpponentColor(Gomoku.CurrPlayer.GetColor())
+	opponentColor := GetOpponentColor(Gomoku.CurrPlayer.GetColor())
 	if goban.canCaptureUp(row, col, currentColor, opponentColor) {
 		goban.SetElem(row-1, col, 0)
 		goban.SetElem(row-2, col, 0)
