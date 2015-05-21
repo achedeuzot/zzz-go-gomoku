@@ -14,7 +14,7 @@ var (
 	Running     bool = true
 )
 
-func StartupGUI() {
+func StartupGUI(fullscreen bool, width int, height int) {
 	err := sdl.VideoInit("")
 	if err != nil {
 		log.Fatalf("Failed to init video: %s\n", err)
@@ -26,8 +26,21 @@ func StartupGUI() {
 		log.Fatalf("Failed to get desktop display mode: %s\n", err)
 	}
 
-	Window, err := sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
-		int(dispMode.W), int(dispMode.H), sdl.WINDOW_FULLSCREEN)
+	var sdlflags uint32
+	if fullscreen == true {
+		sdlflags = sdl.WINDOW_FULLSCREEN_DESKTOP
+	} else {
+		sdlflags = sdl.WINDOW_SHOWN | sdl.WINDOW_BORDERLESS
+	}
+
+	log.Printf("%d | %d\n", width, height)
+	if width > 0 && height > 0 {
+		Window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
+			width, height, sdlflags)
+	} else {
+		Window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
+			int(dispMode.W), int(dispMode.H), sdlflags)
+	}
 	if err != nil {
 		log.Fatalf("Failed to create window: %s\n", err)
 	}
@@ -45,6 +58,10 @@ func StartupGUI() {
 
 	DisplayMode = &sdl.DisplayMode{}
 	sdl.GetCurrentDisplayMode(dispIdx, DisplayMode)
+	if width > 0 && height > 0 {
+		DisplayMode.W = int32(width)
+		DisplayMode.H = int32(height)
+	}
 }
 
 func ShutdownGUI() {
