@@ -1,7 +1,5 @@
 package arena
 
-import "log"
-
 // Set goban board values
 const (
 	_ = iota
