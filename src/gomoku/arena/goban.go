@@ -15,6 +15,16 @@ func NewGoban() *Goban {
 }
 
 func (goban *Goban) CheckFiveAlign(row int32, col int32) bool {
+	if goban.CheckFiveAlignHorizontal(row, col) ||
+		goban.CheckFiveAlignVertical(row, col) ||
+		goban.CheckFiveAlignDiagonal_1(row, col) ||
+		goban.CheckFiveAlignDiagonal_2(row, col) {
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) CheckFiveAlignVertical(row int32, col int32) bool {
 	tochek := goban.GetElem(row, col)
 	count := 1
 	for goban.GetTopElem(row, col) == tochek {
@@ -22,6 +32,58 @@ func (goban *Goban) CheckFiveAlign(row int32, col int32) bool {
 	}
 	for goban.GetBottomElem(row, col) == tochek {
 		count++
+		row++
+	}
+	if count >= 5 {
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) CheckFiveAlignHorizontal(row int32, col int32) bool {
+	tochek := goban.GetElem(row, col)
+	count := 1
+	for goban.GetLeftElem(row, col) == tochek {
+		col--
+	}
+	for goban.GetRightElem(row, col) == tochek {
+		count++
+		col++
+	}
+	if count >= 5 {
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) CheckFiveAlignDiagonal_1(row int32, col int32) bool {
+	tochek := goban.GetElem(row, col)
+	count := 1
+	for goban.GetTopLeftElem(row, col) == tochek {
+		col--
+		row--
+	}
+	for goban.GetBottomRightElem(row, col) == tochek {
+		count++
+		col++
+		row++
+	}
+	if count >= 5 {
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) CheckFiveAlignDiagonal_2(row int32, col int32) bool {
+	tochek := goban.GetElem(row, col)
+	count := 1
+	for goban.GetTopRightElem(row, col) == tochek {
+		col++
+		row--
+	}
+	for goban.GetBottomLeftElem(row, col) == tochek {
+		count++
+		col--
 		row++
 	}
 	if count >= 5 {
