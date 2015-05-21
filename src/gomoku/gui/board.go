@@ -95,22 +95,22 @@ func (b *Board) PlayScene() {
 }
 
 func (b *Board) displayBoard() {
-	for i := 0; i < 19; i++ {
-		for j := 0; j < 19; j++ {
-			currVal := arena.Gomoku.Goban[i+j*19]
+	for col := 0; col < 19; col++ {
+		for row := 0; row < 19; row++ {
+			currVal := arena.Gomoku.Goban.GetElem(int32(row), int32(col))
 			if currVal > 0 && currVal < arena.MaxGobanValue {
 				Renderer.Copy(b.Pawns[currVal].texture, &b.Pawns[currVal].size,
 					&sdl.Rect{
-						X: b.Table.pos.X + 16 + b.Pawns[currVal].pos.W*int32(i),
-						Y: b.Table.pos.Y + 16 + b.Pawns[currVal].pos.H*int32(j),
+						X: b.Table.pos.X + 16 + b.Pawns[currVal].pos.W*int32(col),
+						Y: b.Table.pos.Y + 16 + b.Pawns[currVal].pos.H*int32(row),
 						W: b.Pawns[currVal].pos.W - 10,
 						H: b.Pawns[currVal].pos.H - 10,
 					})
-			} else if b.LastMousePos.X == int32(i) && b.LastMousePos.Y == int32(j) {
+			} else if b.LastMousePos.X == int32(col) && b.LastMousePos.Y == int32(row) {
 				Renderer.Copy(b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].texture, &b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].size,
 					&sdl.Rect{
-						X: b.Table.pos.X + 16 + b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W*int32(i),
-						Y: b.Table.pos.Y + 16 + b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H*int32(j),
+						X: b.Table.pos.X + 16 + b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W*int32(col),
+						Y: b.Table.pos.Y + 16 + b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H*int32(row),
 						W: b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W - 10,
 						H: b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H - 10,
 					})
@@ -120,7 +120,7 @@ func (b *Board) displayBoard() {
 }
 
 func isHumanAndEmptyCell(b *Board) bool {
-	if arena.Gomoku.Goban[b.LastMousePos.X+b.LastMousePos.Y*19] == 0 &&
+	if arena.Gomoku.Goban.GetElem(b.LastMousePos.Y, b.LastMousePos.X) == 0 &&
 		arena.Gomoku.CurrPlayer.IsHuman() == true {
 		return true
 	}
