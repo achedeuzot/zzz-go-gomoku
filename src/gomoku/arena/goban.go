@@ -22,8 +22,8 @@ func getOpponentColor(color int8) int8 {
 }
 
 func (goban *Goban) Capture(row int32, col int32) {
-	currentColor := goban.GetElem(row, col)
-	opponentColor := getOpponentColor(goban.GetElem(row, col))
+	currentColor := Gomoku.CurrPlayer.GetColor()
+	opponentColor := getOpponentColor(Gomoku.CurrPlayer.GetColor())
 	if goban.canCaptureUp(row, col, currentColor, opponentColor) {
 		goban.SetElem(row-1, col, 0)
 		goban.SetElem(row-2, col, 0)
@@ -57,7 +57,7 @@ func (goban *Goban) CheckFiveAlign(row int32, col int32) bool {
 }
 
 func (goban *Goban) CheckFiveAlignVertical(row int32, col int32) bool {
-	currentColor := goban.GetElem(row, col)
+	currentColor := Gomoku.CurrPlayer.GetColor()
 	count := 1
 	for goban.GetTopElem(row, col) == currentColor {
 		row--
@@ -73,7 +73,7 @@ func (goban *Goban) CheckFiveAlignVertical(row int32, col int32) bool {
 }
 
 func (goban *Goban) CheckFiveAlignHorizontal(row int32, col int32) bool {
-	currentColor := goban.GetElem(row, col)
+	currentColor := Gomoku.CurrPlayer.GetColor()
 	count := 1
 	for goban.GetLeftElem(row, col) == currentColor {
 		col--
@@ -89,7 +89,7 @@ func (goban *Goban) CheckFiveAlignHorizontal(row int32, col int32) bool {
 }
 
 func (goban *Goban) CheckFiveAlignDiagonal_1(row int32, col int32) bool {
-	currentColor := goban.GetElem(row, col)
+	currentColor := Gomoku.CurrPlayer.GetColor()
 	count := 1
 	for goban.GetTopLeftElem(row, col) == currentColor {
 		col--
@@ -107,7 +107,7 @@ func (goban *Goban) CheckFiveAlignDiagonal_1(row int32, col int32) bool {
 }
 
 func (goban *Goban) CheckFiveAlignDiagonal_2(row int32, col int32) bool {
-	currentColor := goban.GetElem(row, col)
+	currentColor := Gomoku.CurrPlayer.GetColor()
 	count := 1
 	for goban.GetTopRightElem(row, col) == currentColor {
 		col++

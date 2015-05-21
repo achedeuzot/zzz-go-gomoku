@@ -8,7 +8,7 @@ type Human struct {
 	arena.DefaultPlayer
 }
 
-func NewHuman(color int) *Human {
+func NewHuman(color int8) *Human {
 	return &Human{
 		arena.DefaultPlayer{
 			Color: color,

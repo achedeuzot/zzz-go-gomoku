@@ -9,7 +9,7 @@ type AI struct {
 	arena.DefaultPlayer
 }
 
-func NewAI(color int) *AI {
+func NewAI(color int8) *AI {
 	return &AI{
 		arena.DefaultPlayer{
 			Color: color,
