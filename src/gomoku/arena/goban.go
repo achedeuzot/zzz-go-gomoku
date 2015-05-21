@@ -1,5 +1,7 @@
 package arena
 
+import "log"
+
 // Set goban board values
 const (
 	_ = iota
@@ -32,11 +34,15 @@ func (goban *Goban) Capture(row int32, col int32) {
 
 func (goban *Goban) canCaptureUp(row int32, col int32, currentColor int8, opponentColor int8) bool {
 	for idx := 0; idx < 3; idx++ {
-		if idx < 2 && goban.GetTopElem(row, col) == currentColor {
+		topElem := goban.GetTopElem(row, col)
+		if topElem == 0 {
 			return false
-		} else if goban.GetTopElem(row, col) == opponentColor {
+		} else if idx < 2 && topElem != opponentColor {
+			return false
+		} else if idx == 2 && topElem != currentColor {
 			return false
 		}
+		row--
 	}
 	return true
 }
