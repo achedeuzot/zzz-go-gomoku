@@ -107,7 +107,22 @@ func (b *Board) PlayScene() {
 
 func (b *Board) displayCapturedPawns() {
 	for _, player := range arena.Gomoku.Players {
-		log.Printf("%+v\n", player)
+		color := arena.GetOpponentColor(player.GetColor())
+		var x int32
+		if color == arena.WhitePlayer {
+			x = DisplayMode.W / 6
+		} else {
+			x = (DisplayMode.W / 6) * 5
+		}
+		for i := player.GetCaptured(); i > 0; i-- {
+			Renderer.Copy(b.Pawns[color].texture, &b.Pawns[color].size,
+				&sdl.Rect{
+					X: x,
+					Y: DisplayMode.H - b.Pawns[color].pos.W*int32(i),
+					W: b.Pawns[color].pos.W - 10,
+					H: b.Pawns[color].pos.W - 10,
+				})
+		}
 	}
 }
 
