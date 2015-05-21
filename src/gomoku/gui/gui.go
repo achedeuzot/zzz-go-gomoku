@@ -27,7 +27,7 @@ func StartupGUI() {
 	}
 
 	Window, err := sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
-		int(dispMode.W), int(dispMode.H), sdl.WINDOW_SHOWN)
+		int(dispMode.W), int(dispMode.H), sdl.WINDOW_FULLSCREEN)
 	if err != nil {
 		log.Fatalf("Failed to create window: %s\n", err)
 	}
