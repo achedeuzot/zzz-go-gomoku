@@ -18,8 +18,11 @@ func (goban *Goban) CheckFiveAlign(row int32, col int32) bool {
 	tochek := goban.GetElem(row, col)
 	count := 1
 	for goban.GetTopElem(row, col) == tochek {
-		count++
 		row--
+	}
+	for goban.GetBottomElem(row, col) == tochek {
+		count++
+		row++
 	}
 	if count >= 5 {
 		return true

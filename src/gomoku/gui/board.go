@@ -2,6 +2,7 @@ package gui
 
 import (
 	"gomoku/arena"
+	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -78,6 +79,7 @@ func (b *Board) handleEvents() {
 				arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
 				if arena.Gomoku.Goban.CheckFiveAlign(b.LastMousePos.Y, b.LastMousePos.X) {
 					arena.Gomoku.CurrPlayer.SetHasWon(true)
+					log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
 				}
 				arena.Gomoku.SwitchPlayers()
 			}
