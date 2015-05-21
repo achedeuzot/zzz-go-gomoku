@@ -27,8 +27,8 @@ func (goban *Goban) Capture(row int32, col int32) {
 	currentColor := goban.GetElem(row, col)
 	opponentColor := getOpponentColor(goban.GetElem(row, col))
 	if goban.canCaptureUp(row, col, currentColor, opponentColor) {
-		goban.SetElem(row-1, col, currentColor)
-		goban.SetElem(row-2, col, currentColor)
+		goban.SetElem(row-1, col, 0)
+		goban.SetElem(row-2, col, 0)
 	}
 }
 
