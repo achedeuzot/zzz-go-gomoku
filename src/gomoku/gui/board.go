@@ -75,14 +75,18 @@ func (b *Board) handleEvents() {
 				b.LastMousePos.Y = j
 			}
 		case *sdl.MouseButtonEvent:
-			if isMouseButtonLeftUp(t) && isHumanAndEmptyCell(b) {
-				arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
-				arena.Gomoku.Goban.Capture(b.LastMousePos.Y, b.LastMousePos.X)
-				if arena.Gomoku.Goban.CheckFiveAlign(b.LastMousePos.Y, b.LastMousePos.X) {
-					arena.Gomoku.CurrPlayer.SetHasWon(true)
-					log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
+			if isMouseButtonLeftUp(t) && isEmptyCell(b.LastMousePos.Y, b.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
+				// check forbidden moves
+				if b.isAuthorizedMove() {
+
+					arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
+					arena.Gomoku.Goban.Capture(b.LastMousePos.Y, b.LastMousePos.X)
+					if arena.Gomoku.Goban.CheckFiveAlign(b.LastMousePos.Y, b.LastMousePos.X) {
+						arena.Gomoku.CurrPlayer.SetHasWon(true)
+						log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
+					}
+					arena.Gomoku.SwitchPlayers()
 				}
-				arena.Gomoku.SwitchPlayers()
 			}
 		}
 	}
@@ -125,9 +129,42 @@ func (b *Board) displayBoard() {
 	}
 }
 
-func isHumanAndEmptyCell(b *Board) bool {
-	if arena.Gomoku.Goban.GetElem(b.LastMousePos.Y, b.LastMousePos.X) == 0 &&
-		arena.Gomoku.CurrPlayer.IsHuman() == true {
+func (b *Board) isAuthorizedMove() bool {
+	return !b.checkFreeThree()
+}
+
+func (b *Board) checkFreeThree() bool {
+	if isEmptyCell(b.LastMousePos.Y, b.LastMousePos.X) {
+		// fake move before check
+		arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
+		// check if 3 aligned without blocks on both sides
+		count := 1
+		row := b.LastMousePos.Y
+		col := b.LastMousePos.X
+		for arena.Gomoku.Goban.GetLeftElem(row, col) == int8(arena.Gomoku.CurrPlayer.GetColor()) {
+			col--
+		}
+		if arena.Gomoku.Goban.GetLeftElem(row, col-1) == arena.GetOpponentColor(int8(arena.Gomoku.CurrPlayer.GetColor())) {
+			return false
+		}
+		for arena.Gomoku.Goban.GetRightElem(row, col) == int8(arena.Gomoku.CurrPlayer.GetColor()) {
+			count++
+			col++
+		}
+		if arena.Gomoku.Goban.GetLeftElem(row, col+1) == arena.GetOpponentColor(int8(arena.Gomoku.CurrPlayer.GetColor())) {
+			return false
+		}
+		// clear move
+		arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, 0)
+		if count >= 3 {
+			return true
+		}
+	}
+	return false
+}
+
+func isEmptyCell(x int32, y int32) bool {
+	if arena.Gomoku.Goban.GetElem(x, y) == 0 {
 		return true
 	}
 	return false
