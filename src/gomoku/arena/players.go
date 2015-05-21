@@ -9,6 +9,7 @@ type Player interface {
 	GetId() int
 	SetColor(int)
 	GetColor() int
+	SetHasWon(bool)
 }
 
 type DefaultPlayer struct {
@@ -31,4 +32,8 @@ func (dp *DefaultPlayer) SetColor(color int) {
 
 func (dp *DefaultPlayer) GetColor() int {
 	return dp.Color
+}
+
+func (dp *DefaultPlayer) SetHasWon(value bool) {
+	dp.HasWon = value
 }

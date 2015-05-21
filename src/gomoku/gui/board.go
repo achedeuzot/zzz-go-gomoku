@@ -76,6 +76,9 @@ func (b *Board) handleEvents() {
 		case *sdl.MouseButtonEvent:
 			if isMouseButtonLeftUp(t) && isHumanAndEmptyCell(b) {
 				arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
+				if arena.Gomoku.Goban.CheckFiveAlign(b.LastMousePos.Y, b.LastMousePos.X) {
+					arena.Gomoku.CurrPlayer.SetHasWon(true)
+				}
 				arena.Gomoku.SwitchPlayers()
 			}
 		}
