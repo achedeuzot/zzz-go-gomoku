@@ -25,18 +25,22 @@ func (goban *Goban) Capture(row int32, col int32) {
 	currentColor := goban.GetElem(row, col)
 	opponentColor := GetOpponentColor(goban.GetElem(row, col))
 	if goban.canCaptureUp(row, col, currentColor, opponentColor) {
-		goban.SetElem(row-1, col, currentColor)
-		goban.SetElem(row-2, col, currentColor)
+		goban.SetElem(row-1, col, 0)
+		goban.SetElem(row-2, col, 0)
 	}
 }
 
 func (goban *Goban) canCaptureUp(row int32, col int32, currentColor int8, opponentColor int8) bool {
 	for idx := 0; idx < 3; idx++ {
-		if idx < 2 && goban.GetTopElem(row, col) == currentColor {
+		topElem := goban.GetTopElem(row, col)
+		if topElem == 0 {
 			return false
-		} else if goban.GetTopElem(row, col) == opponentColor {
+		} else if idx < 2 && topElem != opponentColor {
+			return false
+		} else if idx == 2 && topElem != currentColor {
 			return false
 		}
+		row--
 	}
 	return true
 }
