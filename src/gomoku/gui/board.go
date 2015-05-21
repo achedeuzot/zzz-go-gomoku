@@ -152,37 +152,7 @@ func (b *Board) displayBoard() {
 }
 
 func (b *Board) isAuthorizedMove() bool {
-	return !b.checkFreeThree()
-}
-
-func (b *Board) checkFreeThree() bool {
-	if isEmptyCell(b.LastMousePos.Y, b.LastMousePos.X) {
-		// fake move before check
-		arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
-		// check if 3 aligned without blocks on both sides
-		count := 1
-		row := b.LastMousePos.Y
-		col := b.LastMousePos.X
-		for arena.Gomoku.Goban.GetLeftElem(row, col) == int8(arena.Gomoku.CurrPlayer.GetColor()) {
-			col--
-		}
-		if arena.Gomoku.Goban.GetLeftElem(row, col-1) == arena.GetOpponentColor(int8(arena.Gomoku.CurrPlayer.GetColor())) {
-			return false
-		}
-		for arena.Gomoku.Goban.GetRightElem(row, col) == int8(arena.Gomoku.CurrPlayer.GetColor()) {
-			count++
-			col++
-		}
-		if arena.Gomoku.Goban.GetLeftElem(row, col+1) == arena.GetOpponentColor(int8(arena.Gomoku.CurrPlayer.GetColor())) {
-			return false
-		}
-		// clear move
-		arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, 0)
-		if count >= 3 {
-			return true
-		}
-	}
-	return false
+	return !arena.Gomoku.Goban.CheckTwoFreeThree(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
 }
 
 func isEmptyCell(x int32, y int32) bool {
