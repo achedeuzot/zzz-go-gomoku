@@ -23,7 +23,7 @@ func GetOpponentColor(color int8) int8 {
 
 func (goban *Goban) Capture(row int32, col int32) {
 	currentColor := Gomoku.CurrPlayer.GetColor()
-	opponentColor := getOpponentColor(Gomoku.CurrPlayer.GetColor())
+	opponentColor := GetOpponentColor(Gomoku.CurrPlayer.GetColor())
 	if goban.canCaptureUp(row, col, currentColor, opponentColor) {
 		goban.SetElem(row-1, col, 0)
 		goban.SetElem(row-2, col, 0)
@@ -44,6 +44,131 @@ func (goban *Goban) canCaptureUp(row int32, col int32, currentColor int8, oppone
 		row--
 	}
 	return true
+}
+
+func (goban *Goban) CheckTwoFreeThree(row int32, col int32, currentColor int8) bool {
+	opponentColor := GetOpponentColor(currentColor)
+	if goban.GetElem(row, col) == 0 {
+		// fake move
+		goban.SetElem(row, col, currentColor)
+		// count aligned elements
+		totalFreeTrees := 0
+		if goban.CheckFreeThreeHorizontal(row, col, currentColor, opponentColor) {
+			totalFreeTrees++
+		}
+		if goban.CheckFreeThreeVertical(row, col, currentColor, opponentColor) {
+			totalFreeTrees++
+		}
+		if goban.CheckFreeThreeDiagnoal_1(row, col, currentColor, opponentColor) {
+			totalFreeTrees++
+		}
+		if goban.CheckFreeThreeDiagnoal_2(row, col, currentColor, opponentColor) {
+			totalFreeTrees++
+		}
+		if totalFreeTrees >= 2 {
+			goban.SetElem(row, col, 0)
+			return true
+		}
+		// undo fake move
+		goban.SetElem(row, col, 0)
+	}
+	return false
+}
+
+func (goban *Goban) CheckFreeThreeHorizontal(row int32, col int32, currentColor int8, opponentColor int8) bool {
+	count := 1
+
+	for goban.GetLeftElem(row, col) == currentColor {
+		col--
+	}
+	if goban.GetLeftElem(row, col) == opponentColor {
+		return false
+	}
+	for goban.GetRightElem(row, col) == currentColor {
+		count++
+		col++
+	}
+	if goban.GetRightElem(row, col) == opponentColor {
+		return false
+	}
+
+	if count > 3 {
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) CheckFreeThreeVertical(row int32, col int32, currentColor int8, opponentColor int8) bool {
+	count := 1
+
+	for goban.GetTopElem(row, col) == currentColor {
+		row--
+	}
+	if goban.GetTopElem(row, col) == opponentColor {
+		return false
+	}
+	for goban.GetBottomElem(row, col) == currentColor {
+		count++
+		row++
+	}
+	if goban.GetBottomElem(row, col) == opponentColor {
+		return false
+	}
+
+	if count > 3 {
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) CheckFreeThreeDiagnoal_1(row int32, col int32, currentColor int8, opponentColor int8) bool {
+	count := 1
+
+	for goban.GetTopLeftElem(row, col) == currentColor {
+		col--
+		row--
+	}
+	if goban.GetTopLeftElem(row, col) == opponentColor {
+		return false
+	}
+	for goban.GetBottomRightElem(row, col) == currentColor {
+		count++
+		col++
+		row++
+	}
+	if goban.GetBottomRightElem(row, col) == opponentColor {
+		return false
+	}
+
+	if count > 3 {
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) CheckFreeThreeDiagnoal_2(row int32, col int32, currentColor int8, opponentColor int8) bool {
+	count := 1
+
+	for goban.GetTopRightElem(row, col) == currentColor {
+		col++
+		row--
+	}
+	if goban.GetTopRightElem(row, col) == opponentColor {
+		return false
+	}
+	for goban.GetBottomLeftElem(row, col) == currentColor {
+		count++
+		col--
+		row++
+	}
+	if goban.GetBottomLeftElem(row, col) == opponentColor {
+		return false
+	}
+
+	if count > 3 {
+		return true
+	}
+	return false
 }
 
 func (goban *Goban) CheckFiveAlign(row int32, col int32) bool {
