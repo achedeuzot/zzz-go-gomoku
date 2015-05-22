@@ -33,7 +33,6 @@ func StartupGUI(fullscreen bool, width int, height int) {
 		sdlflags = sdl.WINDOW_SHOWN | sdl.WINDOW_BORDERLESS
 	}
 
-	log.Printf("%d | %d\n", width, height)
 	if width > 0 && height > 0 {
 		Window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 			width, height, sdlflags)

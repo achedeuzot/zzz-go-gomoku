@@ -29,6 +29,21 @@ func (goban *Goban) Capture(row int32, col int32) {
 		goban.SetElem(row-2, col, 0)
 		Gomoku.CurrPlayer.AddCaptured(2)
 	}
+	if goban.canCaptureDown(row, col, currentColor, opponentColor) {
+		goban.SetElem(row+1, col, 0)
+		goban.SetElem(row+2, col, 0)
+		Gomoku.CurrPlayer.AddCaptured(2)
+	}
+	if goban.canCaptureLeft(row, col, currentColor, opponentColor) {
+		goban.SetElem(row, col-1, 0)
+		goban.SetElem(row, col-2, 0)
+		Gomoku.CurrPlayer.AddCaptured(2)
+	}
+	if goban.canCaptureRight(row, col, currentColor, opponentColor) {
+		goban.SetElem(row, col+1, 0)
+		goban.SetElem(row, col+2, 0)
+		Gomoku.CurrPlayer.AddCaptured(2)
+	}
 }
 
 func (goban *Goban) canCaptureUp(row int32, col int32, currentColor int8, opponentColor int8) bool {
@@ -42,6 +57,51 @@ func (goban *Goban) canCaptureUp(row int32, col int32, currentColor int8, oppone
 			return false
 		}
 		row--
+	}
+	return true
+}
+
+func (goban *Goban) canCaptureDown(row int32, col int32, currentColor int8, opponentColor int8) bool {
+	for idx := 0; idx < 3; idx++ {
+		bottomElem := goban.GetBottomElem(row, col)
+		if bottomElem == 0 {
+			return false
+		} else if idx < 2 && bottomElem != opponentColor {
+			return false
+		} else if idx == 2 && bottomElem != currentColor {
+			return false
+		}
+		row++
+	}
+	return true
+}
+
+func (goban *Goban) canCaptureLeft(row int32, col int32, currentColor int8, opponentColor int8) bool {
+	for idx := 0; idx < 3; idx++ {
+		leftElem := goban.GetLeftElem(row, col)
+		if leftElem == 0 {
+			return false
+		} else if idx < 2 && leftElem != opponentColor {
+			return false
+		} else if idx == 2 && leftElem != currentColor {
+			return false
+		}
+		col--
+	}
+	return true
+}
+
+func (goban *Goban) canCaptureRight(row int32, col int32, currentColor int8, opponentColor int8) bool {
+	for idx := 0; idx < 3; idx++ {
+		rightElem := goban.GetRightElem(row, col)
+		if rightElem == 0 {
+			return false
+		} else if idx < 2 && rightElem != opponentColor {
+			return false
+		} else if idx == 2 && rightElem != currentColor {
+			return false
+		}
+		col++
 	}
 	return true
 }

@@ -27,7 +27,6 @@ func NewMainMenu() *MenuMain {
 		Quit:       GetTextureFromImage("data/img/button_exit.png"),
 	}
 
-	log.Printf("%+v\n", DisplayMode)
 	menu.Background.pos = sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H}
 	menu.Title.pos = sdl.Rect{X: DisplayMode.W/2 - (menu.Title.size.W*DisplayMode.W/2560)/2, Y: DisplayMode.H / 7, W: menu.Title.size.W * DisplayMode.W / 2560, H: menu.Title.size.H * DisplayMode.H / 1440}
 	menu.Play.pos = sdl.Rect{X: DisplayMode.W/2 - (menu.Play.size.W*DisplayMode.W/2560)/2, Y: (DisplayMode.H / 7) * 3, W: menu.Play.size.W * DisplayMode.W / 2560, H: menu.Play.size.H * DisplayMode.H / 1440}
