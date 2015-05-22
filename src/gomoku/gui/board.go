@@ -108,9 +108,9 @@ func (b *Board) PlayScene() {
 
 func (b *Board) applyMove(row int32, col int32) {
 	if isAuthorizedMove(row, col) {
-		arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
-		arena.Gomoku.Goban.Capture(b.LastMousePos.Y, b.LastMousePos.X)
-		if arena.Gomoku.Goban.IsWinningMove(b.LastMousePos.Y, b.LastMousePos.X) {
+		arena.Gomoku.Goban.SetElem(row, col, int8(arena.Gomoku.CurrPlayer.GetColor()))
+		arena.Gomoku.Goban.Capture(row, col)
+		if arena.Gomoku.Goban.IsWinningMove(row, col) {
 			arena.Gomoku.CurrPlayer.SetHasWon(true)
 			log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
 		}
@@ -151,7 +151,7 @@ func (b *Board) displayBoard() {
 						W: b.Pawns[currVal].pos.W - 10,
 						H: b.Pawns[currVal].pos.H - 10,
 					})
-			} else if b.LastMousePos.X == int32(col) && b.LastMousePos.Y == int32(row) {
+			} else if arena.Gomoku.CurrPlayer.IsHuman() == true && b.LastMousePos.X == int32(col) && b.LastMousePos.Y == int32(row) {
 				Renderer.Copy(b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].texture, &b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].size,
 					&sdl.Rect{
 						X: b.Table.pos.X + 16 + b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W*int32(col),
@@ -165,7 +165,7 @@ func (b *Board) displayBoard() {
 }
 
 func isAuthorizedMove(row int32, col int32) bool {
-	return !arena.Gomoku.Goban.CheckTwoFreeThree(row, col, int8(arena.Gomoku.CurrPlayer.GetColor()))
+	return arena.Gomoku.Goban.GetElem(row, col) == 0 && !arena.Gomoku.Goban.CheckTwoFreeThree(row, col, int8(arena.Gomoku.CurrPlayer.GetColor()))
 }
 
 func isEmptyCell(x int32, y int32) bool {
