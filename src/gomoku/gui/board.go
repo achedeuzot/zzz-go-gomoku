@@ -77,8 +77,9 @@ func (b *Board) handleEvents() {
 		case *sdl.MouseButtonEvent:
 			if isMouseButtonLeftUp(t) && isEmptyCell(b.LastMousePos.Y, b.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
 				// check forbidden moves
-				if b.isAuthorizedMove() {
-
+				row := b.LastMousePos.Y
+				col := b.LastMousePos.X
+				if b.isAuthorizedMove(row, col) {
 					arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
 					arena.Gomoku.Goban.Capture(b.LastMousePos.Y, b.LastMousePos.X)
 					if arena.Gomoku.Goban.CheckFiveAlign(b.LastMousePos.Y, b.LastMousePos.X) {
@@ -155,8 +156,8 @@ func (b *Board) displayBoard() {
 	}
 }
 
-func (b *Board) isAuthorizedMove() bool {
-	return !arena.Gomoku.Goban.CheckTwoFreeThree(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
+func isAuthorizedMove(row int32, col int32) bool {
+	return !arena.Gomoku.Goban.CheckTwoFreeThree(row, col, int8(arena.Gomoku.CurrPlayer.GetColor()))
 }
 
 func isEmptyCell(x int32, y int32) bool {
