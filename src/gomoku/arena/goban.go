@@ -185,8 +185,8 @@ func (goban *Goban) CheckTwoFreeThree(row int32, col int32, currentColor int8) b
 		totalFreeTrees := 0
 		totalFreeTrees += goban.checkFreeThreeHorizontal(row, col, currentColor, opponentColor)
 		totalFreeTrees += goban.checkFreeThreeVertical(row, col, currentColor, opponentColor)
-		totalFreeTrees += goban.checkFreeThreeDiagnoal_1(row, col, currentColor, opponentColor)
-		totalFreeTrees += goban.checkFreeThreeDiagnoal_2(row, col, currentColor, opponentColor)
+		totalFreeTrees += goban.checkFreeThreeDiagonal_1(row, col, currentColor, opponentColor)
+		totalFreeTrees += goban.checkFreeThreeDiagonal_2(row, col, currentColor, opponentColor)
 		if totalFreeTrees >= 2 {
 			goban.SetElem(row, col, 0)
 			return true
@@ -265,7 +265,7 @@ func (goban *Goban) checkFreeThreeVertical(row int32, col int32, currentColor in
 	return 0
 }
 
-func (goban *Goban) checkFreeThreeDiagnoal_1(row int32, col int32, currentColor int8, opponentColor int8) int {
+func (goban *Goban) checkFreeThreeDiagonal_1(row int32, col int32, currentColor int8, opponentColor int8) int {
 	count := 0
 	allowedEmpty := true
 
@@ -304,7 +304,7 @@ func (goban *Goban) checkFreeThreeDiagnoal_1(row int32, col int32, currentColor 
 	return 0
 }
 
-func (goban *Goban) checkFreeThreeDiagnoal_2(row int32, col int32, currentColor int8, opponentColor int8) int {
+func (goban *Goban) checkFreeThreeDiagonal_2(row int32, col int32, currentColor int8, opponentColor int8) int {
 	count := 0
 	allowedEmpty := true
 
