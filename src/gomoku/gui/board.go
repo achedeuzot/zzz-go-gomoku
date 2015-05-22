@@ -79,7 +79,7 @@ func (b *Board) handleEvents() {
 				// check forbidden moves
 				row := b.LastMousePos.Y
 				col := b.LastMousePos.X
-				if b.isAuthorizedMove(row, col) {
+				if isAuthorizedMove(row, col) {
 					arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
 					arena.Gomoku.Goban.Capture(b.LastMousePos.Y, b.LastMousePos.X)
 					if arena.Gomoku.Goban.CheckFiveAlign(b.LastMousePos.Y, b.LastMousePos.X) {
