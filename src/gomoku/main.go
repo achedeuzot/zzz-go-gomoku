@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"gomoku/gui"
-	"log"
 	"runtime"
 )
 
@@ -23,7 +22,6 @@ func init() {
 }
 
 func main() {
-	log.Printf("%+v | %+v | %+v\n", flag_fullscreen, flag_width, flag_height)
 	gui.StartupGUI(flag_fullscreen, flag_width, flag_height)
 	defer gui.ShutdownGUI()
 
