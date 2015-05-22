@@ -7,7 +7,7 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-type Board struct {
+type Game struct {
 	Background   *Texture
 	Table        *Texture
 	Pawns        []*Texture
@@ -15,8 +15,8 @@ type Board struct {
 	LastMousePos sdl.Rect
 }
 
-func NewBoard() *Board {
-	board := &Board{
+func NewBoard() *Game {
+	game := &Game{
 		Background: GetTextureFromImage("data/img/bg.jpg"),
 		Table:      GetTextureFromImage("data/img/board.png"),
 		Pawns:      make([]*Texture, arena.MaxGobanValue),
@@ -26,33 +26,33 @@ func NewBoard() *Board {
 	var finalW int32
 	var finalH int32
 
-	if board.Table.size.W > DisplayMode.W {
-		ratio = float64(DisplayMode.W) / float64(board.Table.size.W)
-		finalW = int32(float64(board.Table.size.W) * ratio)
-		finalH = int32(float64(board.Table.size.H) * ratio)
+	if game.Table.size.W > DisplayMode.W {
+		ratio = float64(DisplayMode.W) / float64(game.Table.size.W)
+		finalW = int32(float64(game.Table.size.W) * ratio)
+		finalH = int32(float64(game.Table.size.H) * ratio)
 	}
 
-	if board.Table.size.H > DisplayMode.H {
-		ratio = float64(DisplayMode.H) / float64(board.Table.size.H)
-		finalW = int32(float64(board.Table.size.W) * ratio)
-		finalH = int32(float64(board.Table.size.H) * ratio)
+	if game.Table.size.H > DisplayMode.H {
+		ratio = float64(DisplayMode.H) / float64(game.Table.size.H)
+		finalW = int32(float64(game.Table.size.W) * ratio)
+		finalH = int32(float64(game.Table.size.H) * ratio)
 	}
 
-	board.Background.pos = sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H}
-	board.Table.pos = sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: finalW, H: finalH}
-	board.Pawns[arena.WhitePlayer] = GetTextureFromImage("data/img/white.png")
-	board.Pawns[arena.BlackPlayer] = GetTextureFromImage("data/img/black.png")
-	board.CellSize = sdl.Rect{X: 0, Y: 0, W: board.Table.pos.W / 19, H: board.Table.pos.H / 19}
-	board.Pawns[arena.WhitePlayer].pos = board.CellSize
-	board.Pawns[arena.BlackPlayer].pos = board.CellSize
-	return board
+	game.Background.pos = sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H}
+	game.Table.pos = sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: finalW, H: finalH}
+	game.Pawns[arena.WhitePlayer] = GetTextureFromImage("data/img/white.png")
+	game.Pawns[arena.BlackPlayer] = GetTextureFromImage("data/img/black.png")
+	game.CellSize = sdl.Rect{X: 0, Y: 0, W: game.Table.pos.W / 19, H: game.Table.pos.H / 19}
+	game.Pawns[arena.WhitePlayer].pos = game.CellSize
+	game.Pawns[arena.BlackPlayer].pos = game.CellSize
+	return game
 }
 
-func (b *Board) XYInCell(x int32, y int32) (int32, int32) {
+func (g *Game) XYInCell(x int32, y int32) (int32, int32) {
 	for i := 0; i < 19; i++ {
 		for j := 0; j < 19; j++ {
-			if x >= b.Table.pos.X+16+b.CellSize.W*int32(i) && x < b.Table.pos.X+16+b.CellSize.W*int32(i+1) &&
-				y >= b.Table.pos.Y+16+b.CellSize.H*int32(j) && y < b.Table.pos.Y+16+b.CellSize.H*int32(j+1) {
+			if x >= g.Table.pos.X+16+g.CellSize.W*int32(i) && x < g.Table.pos.X+16+g.CellSize.W*int32(i+1) &&
+				y >= g.Table.pos.Y+16+g.CellSize.H*int32(j) && y < g.Table.pos.Y+16+g.CellSize.H*int32(j+1) {
 				return int32(i), int32(j)
 			}
 		}
@@ -60,7 +60,7 @@ func (b *Board) XYInCell(x int32, y int32) (int32, int32) {
 	return -1, -1
 }
 
-func (b *Board) handleEvents() {
+func (g *Game) handleEvents() {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch t := event.(type) {
 		case *sdl.QuitEvent:
@@ -70,16 +70,16 @@ func (b *Board) handleEvents() {
 				CurrScene = SceneMap["MenuMain"]
 			}
 		case *sdl.MouseMotionEvent:
-			if i, j := b.XYInCell(t.X, t.Y); i >= 0 && j >= 0 {
-				b.LastMousePos.X = i
-				b.LastMousePos.Y = j
+			if i, j := g.XYInCell(t.X, t.Y); i >= 0 && j >= 0 {
+				g.LastMousePos.X = i
+				g.LastMousePos.Y = j
 			}
 		case *sdl.MouseButtonEvent:
-			if isMouseButtonLeftUp(t) && isEmptyCell(b.LastMousePos.Y, b.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
+			if isMouseButtonLeftUp(t) && isEmptyCell(g.LastMousePos.Y, g.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
 				// check forbidden moves
-				row := b.LastMousePos.Y
-				col := b.LastMousePos.X
-				b.applyMove(row, col)
+				row := g.LastMousePos.Y
+				col := g.LastMousePos.X
+				g.applyMove(row, col)
 			}
 		case *sdl.MouseWheelEvent:
 			if t.Type == sdl.MOUSEWHEEL {
@@ -89,24 +89,24 @@ func (b *Board) handleEvents() {
 	}
 }
 
-func (b *Board) PlayScene() {
+func (g *Game) PlayScene() {
 	Renderer.Clear()
 
-	Renderer.Copy(b.Background.texture, &b.Background.size, &b.Background.pos)
-	Renderer.Copy(b.Table.texture, &b.Table.size, &b.Table.pos)
+	Renderer.Copy(g.Background.texture, &g.Background.size, &g.Background.pos)
+	Renderer.Copy(g.Table.texture, &g.Table.size, &g.Table.pos)
 
-	b.handleEvents()
+	g.handleEvents()
 	if arena.Gomoku.CurrPlayer.IsHuman() == false {
 		row, col := arena.Gomoku.CurrPlayer.PlayMove()
-		b.applyMove(row, col)
+		g.applyMove(row, col)
 	}
-	b.displayCapturedPawns()
-	b.displayBoard()
+	g.displayCapturedPawns()
+	g.displayBoard()
 
 	Renderer.Present()
 }
 
-func (b *Board) applyMove(row int32, col int32) {
+func (g *Game) applyMove(row int32, col int32) {
 	if isAuthorizedMove(row, col) {
 		arena.Gomoku.Goban.SetElem(row, col, int8(arena.Gomoku.CurrPlayer.GetColor()))
 		arena.Gomoku.Goban.Capture(row, col)
@@ -118,7 +118,7 @@ func (b *Board) applyMove(row int32, col int32) {
 	}
 }
 
-func (b *Board) displayCapturedPawns() {
+func (g *Game) displayCapturedPawns() {
 	for _, player := range arena.Gomoku.Players {
 		color := arena.GetOpponentColor(player.GetColor())
 		var x int32
@@ -128,36 +128,36 @@ func (b *Board) displayCapturedPawns() {
 			x = (DisplayMode.W / 6) * 5
 		}
 		for i := player.GetCaptured(); i > 0; i-- {
-			Renderer.Copy(b.Pawns[color].texture, &b.Pawns[color].size,
+			Renderer.Copy(g.Pawns[color].texture, &g.Pawns[color].size,
 				&sdl.Rect{
 					X: x,
-					Y: DisplayMode.H - b.Pawns[color].pos.W*int32(i),
-					W: b.Pawns[color].pos.W - 10,
-					H: b.Pawns[color].pos.W - 10,
+					Y: DisplayMode.H - g.Pawns[color].pos.W*int32(i),
+					W: g.Pawns[color].pos.W - 10,
+					H: g.Pawns[color].pos.W - 10,
 				})
 		}
 	}
 }
 
-func (b *Board) displayBoard() {
+func (g *Game) displayBoard() {
 	for col := 0; col < 19; col++ {
 		for row := 0; row < 19; row++ {
 			currVal := arena.Gomoku.Goban.GetElem(int32(row), int32(col))
 			if currVal > 0 && currVal < arena.MaxGobanValue {
-				Renderer.Copy(b.Pawns[currVal].texture, &b.Pawns[currVal].size,
+				Renderer.Copy(g.Pawns[currVal].texture, &g.Pawns[currVal].size,
 					&sdl.Rect{
-						X: b.Table.pos.X + 16 + b.Pawns[currVal].pos.W*int32(col),
-						Y: b.Table.pos.Y + 16 + b.Pawns[currVal].pos.H*int32(row),
-						W: b.Pawns[currVal].pos.W - 10,
-						H: b.Pawns[currVal].pos.H - 10,
+						X: g.Table.pos.X + 16 + g.Pawns[currVal].pos.W*int32(col),
+						Y: g.Table.pos.Y + 16 + g.Pawns[currVal].pos.H*int32(row),
+						W: g.Pawns[currVal].pos.W - 10,
+						H: g.Pawns[currVal].pos.H - 10,
 					})
-			} else if arena.Gomoku.CurrPlayer.IsHuman() == true && b.LastMousePos.X == int32(col) && b.LastMousePos.Y == int32(row) {
-				Renderer.Copy(b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].texture, &b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].size,
+			} else if arena.Gomoku.CurrPlayer.IsHuman() == true && g.LastMousePos.X == int32(col) && g.LastMousePos.Y == int32(row) {
+				Renderer.Copy(g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].texture, &g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].size,
 					&sdl.Rect{
-						X: b.Table.pos.X + 16 + b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W*int32(col),
-						Y: b.Table.pos.Y + 16 + b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H*int32(row),
-						W: b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W - 10,
-						H: b.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H - 10,
+						X: g.Table.pos.X + 16 + g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W*int32(col),
+						Y: g.Table.pos.Y + 16 + g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H*int32(row),
+						W: g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W - 10,
+						H: g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H - 10,
 					})
 			}
 		}
