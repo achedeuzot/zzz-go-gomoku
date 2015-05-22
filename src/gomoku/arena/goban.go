@@ -76,63 +76,96 @@ func (goban *Goban) CheckTwoFreeThree(row int32, col int32, currentColor int8) b
 }
 
 func (goban *Goban) CheckFreeThreeHorizontal(row int32, col int32, currentColor int8, opponentColor int8) bool {
-	count := 1
+	count := 0
+	allowedEmpty := true
 
-	for goban.GetLeftElem(row, col) == currentColor {
+	for goban.GetLeftElem(row, col) != -1 &&
+		(goban.GetLeftElem(row, col) == currentColor || allowedEmpty == true) {
+		if goban.GetLeftElem(row, col) == 0 {
+			allowedEmpty = false
+		}
 		col--
 	}
 	if goban.GetLeftElem(row, col) == opponentColor {
 		return false
 	}
-	for goban.GetRightElem(row, col) == currentColor {
-		count++
+	allowedEmpty = true
+	for goban.GetRightElem(row, col) != -1 &&
+		(goban.GetRightElem(row, col) == currentColor || allowedEmpty == true) {
+		if goban.GetRightElem(row, col) == 0 {
+			allowedEmpty = false
+		} else if goban.GetRightElem(row, col) == currentColor {
+			count++
+		}
 		col++
 	}
 	if goban.GetRightElem(row, col) == opponentColor {
 		return false
 	}
 
-	if count > 3 {
+	if count > 2 {
 		return true
 	}
 	return false
 }
 
 func (goban *Goban) CheckFreeThreeVertical(row int32, col int32, currentColor int8, opponentColor int8) bool {
-	count := 1
+	count := 0
+	allowedEmpty := true
 
-	for goban.GetTopElem(row, col) == currentColor {
+	for goban.GetTopElem(row, col) != -1 &&
+		(goban.GetTopElem(row, col) == currentColor || allowedEmpty == true) {
+		if goban.GetTopElem(row, col) == 0 {
+			allowedEmpty = false
+		}
 		row--
 	}
 	if goban.GetTopElem(row, col) == opponentColor {
 		return false
 	}
-	for goban.GetBottomElem(row, col) == currentColor {
-		count++
+	allowedEmpty = true
+	for goban.GetBottomElem(row, col) != -1 &&
+		(goban.GetBottomElem(row, col) == currentColor || allowedEmpty == true) {
+		if goban.GetBottomElem(row, col) == 0 {
+			allowedEmpty = false
+		} else if goban.GetBottomElem(row, col) == currentColor {
+			count++
+		}
 		row++
 	}
 	if goban.GetBottomElem(row, col) == opponentColor {
 		return false
 	}
 
-	if count > 3 {
+	if count > 2 {
 		return true
 	}
 	return false
 }
 
 func (goban *Goban) CheckFreeThreeDiagnoal_1(row int32, col int32, currentColor int8, opponentColor int8) bool {
-	count := 1
+	count := 0
+	allowedEmpty := true
 
-	for goban.GetTopLeftElem(row, col) == currentColor {
+	for goban.GetTopLeftElem(row, col) != -1 &&
+		(goban.GetTopLeftElem(row, col) == currentColor || allowedEmpty == true) {
+		if goban.GetTopLeftElem(row, col) == 0 {
+			allowedEmpty = false
+		}
 		col--
 		row--
 	}
 	if goban.GetTopLeftElem(row, col) == opponentColor {
 		return false
 	}
-	for goban.GetBottomRightElem(row, col) == currentColor {
-		count++
+	allowedEmpty = true
+	for goban.GetBottomRightElem(row, col) != -1 &&
+		(goban.GetBottomRightElem(row, col) == currentColor || allowedEmpty == true) {
+		if goban.GetBottomRightElem(row, col) == 0 {
+			allowedEmpty = false
+		} else if goban.GetBottomRightElem(row, col) == currentColor {
+			count++
+		}
 		col++
 		row++
 	}
@@ -140,24 +173,35 @@ func (goban *Goban) CheckFreeThreeDiagnoal_1(row int32, col int32, currentColor 
 		return false
 	}
 
-	if count > 3 {
+	if count > 2 {
 		return true
 	}
 	return false
 }
 
 func (goban *Goban) CheckFreeThreeDiagnoal_2(row int32, col int32, currentColor int8, opponentColor int8) bool {
-	count := 1
+	count := 0
+	allowedEmpty := true
 
-	for goban.GetTopRightElem(row, col) == currentColor {
+	for goban.GetTopRightElem(row, col) != -1 &&
+		(goban.GetTopRightElem(row, col) == currentColor || allowedEmpty == true) {
+		if goban.GetTopRightElem(row, col) == 0 {
+			allowedEmpty = false
+		}
 		col++
 		row--
 	}
 	if goban.GetTopRightElem(row, col) == opponentColor {
 		return false
 	}
-	for goban.GetBottomLeftElem(row, col) == currentColor {
-		count++
+	allowedEmpty = true
+	for goban.GetBottomLeftElem(row, col) != -1 &&
+		(goban.GetBottomLeftElem(row, col) == currentColor || allowedEmpty == true) {
+		if goban.GetBottomLeftElem(row, col) == 0 {
+			allowedEmpty = false
+		} else if goban.GetBottomLeftElem(row, col) == currentColor {
+			count++
+		}
 		col--
 		row++
 	}
@@ -165,7 +209,7 @@ func (goban *Goban) CheckFreeThreeDiagnoal_2(row int32, col int32, currentColor 
 		return false
 	}
 
-	if count > 3 {
+	if count > 2 {
 		return true
 	}
 	return false
@@ -250,60 +294,63 @@ func (goban *Goban) CheckFiveAlignDiagonal_2(row int32, col int32) bool {
 }
 
 func (goban *Goban) GetElem(row int32, col int32) int8 {
+	if row*19+col > 361 || row*19+col < 0 {
+		return -1
+	}
 	return goban[row*19+col]
 }
 
 func (goban *Goban) GetTopElem(row int32, col int32) int8 {
-	if row > 0 {
+	if row > 0 && row < 19 && col > 0 && col < 19 {
 		return goban[(row-1)*19+col]
 	}
 	return -1
 }
 
 func (goban *Goban) GetBottomElem(row int32, col int32) int8 {
-	if row < 17 {
+	if row > 0 && row < 18 && col > 0 && col < 19 {
 		return goban[(row+1)*19+col]
 	}
 	return -1
 }
 
 func (goban *Goban) GetLeftElem(row int32, col int32) int8 {
-	if col > 0 {
+	if row > 0 && row < 19 && col > 0 && col < 19 {
 		return goban[row*19+(col-1)]
 	}
 	return -1
 }
 
 func (goban *Goban) GetRightElem(row int32, col int32) int8 {
-	if col < 17 {
+	if row > 0 && row < 19 && col > 0 && col < 18 {
 		return goban[row*19+(col+1)]
 	}
 	return -1
 }
 
 func (goban *Goban) GetTopLeftElem(row int32, col int32) int8 {
-	if row > 0 && col > 0 {
+	if row > 0 && row < 19 && col > 0 && col < 19 {
 		return goban[(row-1)*19+(col-1)]
 	}
 	return -1
 }
 
 func (goban *Goban) GetTopRightElem(row int32, col int32) int8 {
-	if row > 0 && col < 17 {
+	if row > 0 && row < 19 && col > 0 && col < 18 {
 		return goban[(row-1)*19+(col+1)]
 	}
 	return -1
 }
 
 func (goban *Goban) GetBottomLeftElem(row int32, col int32) int8 {
-	if row < 17 && col > 0 {
+	if row > 0 && row < 18 && col > 0 && col < 19 {
 		return goban[(row+1)*19+(col-1)]
 	}
 	return -1
 }
 
 func (goban *Goban) GetBottomRightElem(row int32, col int32) int8 {
-	if row < 17 && col < 17 {
+	if row > 0 && row < 18 && col > 0 && col < 18 {
 		return goban[(row+1)*19+(col+1)]
 	}
 	return -1
