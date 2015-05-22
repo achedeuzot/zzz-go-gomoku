@@ -27,6 +27,9 @@ fmt:
 run: build
 	./bin/$(NAME)
 
+windowed: build
+	./bin/gomoku -f=0 -w 1440 -h 900
+
 test:
 	go test ./src/...
 
