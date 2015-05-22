@@ -81,7 +81,7 @@ func (b *Board) handleEvents() {
 
 					arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
 					arena.Gomoku.Goban.Capture(b.LastMousePos.Y, b.LastMousePos.X)
-					if arena.Gomoku.Goban.CheckFiveAlign(b.LastMousePos.Y, b.LastMousePos.X) {
+					if arena.Gomoku.Goban.IsWinningMove(b.LastMousePos.Y, b.LastMousePos.X) {
 						arena.Gomoku.CurrPlayer.SetHasWon(true)
 						log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
 					}

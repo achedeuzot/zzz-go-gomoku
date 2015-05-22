@@ -1,5 +1,7 @@
 package arena
 
+import "log"
+
 // Set goban board values
 const (
 	_ = iota
@@ -343,17 +345,107 @@ func (goban *Goban) checkFreeThreeDiagonal_2(row int32, col int32, currentColor 
 	return 0
 }
 
-func (goban *Goban) CheckFiveAlign(row int32, col int32) bool {
-	if goban.CheckFiveAlignHorizontal(row, col) ||
-		goban.CheckFiveAlignVertical(row, col) ||
-		goban.CheckFiveAlignDiagonal_1(row, col) ||
-		goban.CheckFiveAlignDiagonal_2(row, col) {
+func (goban *Goban) IsWinningMove(row int32, col int32) bool {
+	if goban.IsWinningHorizontal(row, col) ||
+		goban.IsWinningVertical(row, col) ||
+		goban.IsWinningDiagonal_1(row, col) ||
+		goban.IsWinningDiagonal_2(row, col) {
 		return true
 	}
 	return false
 }
 
-func (goban *Goban) CheckFiveAlignVertical(row int32, col int32) bool {
+func (goban *Goban) canBeCaptured(row int32, col int32, currentColor int8) bool {
+	if goban.canBeCapturedVertical(row, col, currentColor) ||
+		goban.canBeCapturedHorizontal(row, col, currentColor) ||
+		goban.canBeCapturedDiagonal_1(row, col, currentColor) ||
+		goban.canBeCapturedDiagonal_2(row, col, currentColor) {
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) canBeCapturedVertical(row int32, col int32, currentColor int8) bool {
+	opponentColor := GetOpponentColor(currentColor)
+	count := 1
+	for goban.GetTopElem(row, col) == currentColor {
+		row--
+	}
+	upperCell := goban.GetTopElem(row, col)
+	for goban.GetBottomElem(row, col) == currentColor {
+		count++
+		row++
+	}
+	bottomCell := goban.GetBottomElem(row, col)
+	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
+		log.Println("Vertical capture")
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) canBeCapturedHorizontal(row int32, col int32, currentColor int8) bool {
+	opponentColor := GetOpponentColor(currentColor)
+	count := 1
+	for goban.GetLeftElem(row, col) == currentColor {
+		col--
+	}
+	upperCell := goban.GetLeftElem(row, col)
+	for goban.GetRightElem(row, col) == currentColor {
+		count++
+		col++
+	}
+	bottomCell := goban.GetRightElem(row, col)
+	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
+		log.Println("Horizontal capture")
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) canBeCapturedDiagonal_1(row int32, col int32, currentColor int8) bool {
+	opponentColor := GetOpponentColor(currentColor)
+	count := 1
+	for goban.GetTopLeftElem(row, col) == currentColor {
+		col--
+		row--
+	}
+	upperCell := goban.GetTopLeftElem(row, col)
+	for goban.GetBottomRightElem(row, col) == currentColor {
+		count++
+		col++
+		row++
+	}
+	bottomCell := goban.GetBottomRightElem(row, col)
+	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
+		log.Println("Diag_1 \\ capture")
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) canBeCapturedDiagonal_2(row int32, col int32, currentColor int8) bool {
+	opponentColor := GetOpponentColor(currentColor)
+	count := 1
+	for goban.GetTopRightElem(row, col) == currentColor {
+		col++
+		row--
+	}
+	upperCell := goban.GetTopRightElem(row, col)
+	for goban.GetBottomLeftElem(row, col) == currentColor {
+		count++
+		col--
+		row++
+	}
+	bottomCell := goban.GetBottomLeftElem(row, col)
+	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
+		log.Println("Diag_2 / capture")
+		return true
+	}
+	return false
+}
+
+func (goban *Goban) IsWinningVertical(row int32, col int32) bool {
 	currentColor := Gomoku.CurrPlayer.GetColor()
 	count := 1
 	for goban.GetTopElem(row, col) == currentColor {
@@ -362,6 +454,9 @@ func (goban *Goban) CheckFiveAlignVertical(row int32, col int32) bool {
 	for goban.GetBottomElem(row, col) == currentColor {
 		count++
 		row++
+		if goban.canBeCaptured(row, col, currentColor) {
+			return false
+		}
 	}
 	if count >= 5 {
 		return true
@@ -369,7 +464,7 @@ func (goban *Goban) CheckFiveAlignVertical(row int32, col int32) bool {
 	return false
 }
 
-func (goban *Goban) CheckFiveAlignHorizontal(row int32, col int32) bool {
+func (goban *Goban) IsWinningHorizontal(row int32, col int32) bool {
 	currentColor := Gomoku.CurrPlayer.GetColor()
 	count := 1
 	for goban.GetLeftElem(row, col) == currentColor {
@@ -378,6 +473,9 @@ func (goban *Goban) CheckFiveAlignHorizontal(row int32, col int32) bool {
 	for goban.GetRightElem(row, col) == currentColor {
 		count++
 		col++
+		if goban.canBeCaptured(row, col, currentColor) == true {
+			return false
+		}
 	}
 	if count >= 5 {
 		return true
@@ -385,7 +483,7 @@ func (goban *Goban) CheckFiveAlignHorizontal(row int32, col int32) bool {
 	return false
 }
 
-func (goban *Goban) CheckFiveAlignDiagonal_1(row int32, col int32) bool {
+func (goban *Goban) IsWinningDiagonal_1(row int32, col int32) bool {
 	currentColor := Gomoku.CurrPlayer.GetColor()
 	count := 1
 	for goban.GetTopLeftElem(row, col) == currentColor {
@@ -396,6 +494,9 @@ func (goban *Goban) CheckFiveAlignDiagonal_1(row int32, col int32) bool {
 		count++
 		col++
 		row++
+		if goban.canBeCaptured(row, col, currentColor) {
+			return false
+		}
 	}
 	if count >= 5 {
 		return true
@@ -403,7 +504,7 @@ func (goban *Goban) CheckFiveAlignDiagonal_1(row int32, col int32) bool {
 	return false
 }
 
-func (goban *Goban) CheckFiveAlignDiagonal_2(row int32, col int32) bool {
+func (goban *Goban) IsWinningDiagonal_2(row int32, col int32) bool {
 	currentColor := Gomoku.CurrPlayer.GetColor()
 	count := 1
 	for goban.GetTopRightElem(row, col) == currentColor {
@@ -414,6 +515,9 @@ func (goban *Goban) CheckFiveAlignDiagonal_2(row int32, col int32) bool {
 		count++
 		col--
 		row++
+		if goban.canBeCaptured(row, col, currentColor) {
+			return false
+		}
 	}
 	if count >= 5 {
 		return true
