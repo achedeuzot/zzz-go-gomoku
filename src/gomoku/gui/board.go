@@ -88,6 +88,10 @@ func (b *Board) handleEvents() {
 					arena.Gomoku.SwitchPlayers()
 				}
 			}
+		case *sdl.MouseWheelEvent:
+			if t.Type == sdl.MOUSEWHEEL {
+				arena.Gomoku.SwitchPlayers()
+			}
 		}
 	}
 }

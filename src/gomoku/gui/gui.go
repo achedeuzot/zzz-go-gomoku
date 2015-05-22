@@ -30,7 +30,7 @@ func StartupGUI(fullscreen bool, width int, height int) {
 	if fullscreen == true {
 		sdlflags = sdl.WINDOW_FULLSCREEN_DESKTOP
 	} else {
-		sdlflags = sdl.WINDOW_SHOWN | sdl.WINDOW_BORDERLESS
+		sdlflags = sdl.WINDOW_SHOWN
 	}
 
 	if width > 0 && height > 0 {
