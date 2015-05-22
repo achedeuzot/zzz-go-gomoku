@@ -1,7 +1,5 @@
 package arena
 
-import "log"
-
 // Set goban board values
 const (
 	_ = iota
@@ -378,7 +376,6 @@ func (goban *Goban) canBeCapturedVertical(row int32, col int32, currentColor int
 	}
 	bottomCell := goban.GetBottomElem(row, col)
 	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
-		log.Println("Vertical capture")
 		return true
 	}
 	return false
@@ -397,7 +394,6 @@ func (goban *Goban) canBeCapturedHorizontal(row int32, col int32, currentColor i
 	}
 	bottomCell := goban.GetRightElem(row, col)
 	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
-		log.Println("Horizontal capture")
 		return true
 	}
 	return false
@@ -418,7 +414,6 @@ func (goban *Goban) canBeCapturedDiagonal_1(row int32, col int32, currentColor i
 	}
 	bottomCell := goban.GetBottomRightElem(row, col)
 	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
-		log.Println("Diag_1 \\ capture")
 		return true
 	}
 	return false
@@ -439,7 +434,6 @@ func (goban *Goban) canBeCapturedDiagonal_2(row int32, col int32, currentColor i
 	}
 	bottomCell := goban.GetBottomLeftElem(row, col)
 	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
-		log.Println("Diag_2 / capture")
 		return true
 	}
 	return false
