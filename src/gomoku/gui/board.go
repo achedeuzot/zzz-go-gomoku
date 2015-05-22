@@ -104,6 +104,18 @@ func (b *Board) PlayScene() {
 	Renderer.Copy(b.Table.texture, &b.Table.size, &b.Table.pos)
 
 	b.handleEvents()
+	if arena.Gomoku.CurrPlayer.IsHuman() == false {
+		row, col := arena.Gomoku.CurrPlayer.PlayMove()
+		if isAuthorizedMove(row, col) {
+			arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
+			arena.Gomoku.Goban.Capture(b.LastMousePos.Y, b.LastMousePos.X)
+			if arena.Gomoku.Goban.IsWinningMove(b.LastMousePos.Y, b.LastMousePos.X) {
+				arena.Gomoku.CurrPlayer.SetHasWon(true)
+				log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
+			}
+			arena.Gomoku.SwitchPlayers()
+		}
+	}
 	b.displayCapturedPawns()
 	b.displayBoard()
 
