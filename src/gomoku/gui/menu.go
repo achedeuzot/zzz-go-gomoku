@@ -3,7 +3,6 @@ package gui
 import (
 	"gomoku/arena"
 	"gomoku/human"
-	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_ttf"
