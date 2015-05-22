@@ -151,7 +151,7 @@ func (g *Game) displayBoard() {
 						W: g.Pawns[currVal].pos.W - 10,
 						H: g.Pawns[currVal].pos.H - 10,
 					})
-			} else if arena.Gomoku.CurrPlayer.IsHuman() == true && g.LastMousePos.X == int32(col) && g.LastMousePos.Y == int32(row) {
+			} else if arena.Gomoku.CurrPlayer.IsHuman() == true && g.LastMousePos.X == int32(col) && g.LastMousePos.Y == int32(row) && isAuthorizedMove(g.LastMousePos.Y, g.LastMousePos.X) {
 				Renderer.Copy(g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].texture, &g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].size,
 					&sdl.Rect{
 						X: g.Table.pos.X + 16 + g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W*int32(col),

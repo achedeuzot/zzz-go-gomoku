@@ -1,9 +1,9 @@
 package gui
 
 import (
+	"gomoku/ai"
 	"gomoku/arena"
 	"gomoku/human"
-	"gomoku/ai"
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_ttf"
