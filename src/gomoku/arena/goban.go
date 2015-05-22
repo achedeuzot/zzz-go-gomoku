@@ -1,7 +1,5 @@
 package arena
 
-import "log"
-
 // Set goban board values
 const (
 	_ = iota
@@ -228,7 +226,6 @@ func (goban *Goban) checkFreeThreeHorizontal(row int32, col int32, currentColor 
 	}
 
 	if count > 2 {
-		log.Println("Horizontal Three Free")
 		return 1
 	}
 	return 0
@@ -263,7 +260,6 @@ func (goban *Goban) checkFreeThreeVertical(row int32, col int32, currentColor in
 	}
 
 	if count > 2 {
-		log.Println("Vertical Three Free")
 		return 1
 	}
 	return 0
@@ -303,10 +299,8 @@ func (goban *Goban) checkFreeThreeDiagnoal_1(row int32, col int32, currentColor 
 	}
 
 	if count > 2 {
-		log.Printf("Diagonal_1 Three Free: %d\n", count)
 		return 1
 	}
-	log.Printf("No Diagonal_1: %d\n", count)
 	return 0
 }
 
@@ -344,7 +338,6 @@ func (goban *Goban) checkFreeThreeDiagnoal_2(row int32, col int32, currentColor 
 	}
 
 	if count > 2 {
-		log.Println("Diagonal_2 Three Free")
 		return 1
 	}
 	return 0
