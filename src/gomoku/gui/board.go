@@ -79,15 +79,7 @@ func (b *Board) handleEvents() {
 				// check forbidden moves
 				row := b.LastMousePos.Y
 				col := b.LastMousePos.X
-				if isAuthorizedMove(row, col) {
-					arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
-					arena.Gomoku.Goban.Capture(b.LastMousePos.Y, b.LastMousePos.X)
-					if arena.Gomoku.Goban.IsWinningMove(b.LastMousePos.Y, b.LastMousePos.X) {
-						arena.Gomoku.CurrPlayer.SetHasWon(true)
-						log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
-					}
-					arena.Gomoku.SwitchPlayers()
-				}
+				b.applyMove(row, col)
 			}
 		case *sdl.MouseWheelEvent:
 			if t.Type == sdl.MOUSEWHEEL {
@@ -106,20 +98,24 @@ func (b *Board) PlayScene() {
 	b.handleEvents()
 	if arena.Gomoku.CurrPlayer.IsHuman() == false {
 		row, col := arena.Gomoku.CurrPlayer.PlayMove()
-		if isAuthorizedMove(row, col) {
-			arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
-			arena.Gomoku.Goban.Capture(b.LastMousePos.Y, b.LastMousePos.X)
-			if arena.Gomoku.Goban.IsWinningMove(b.LastMousePos.Y, b.LastMousePos.X) {
-				arena.Gomoku.CurrPlayer.SetHasWon(true)
-				log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
-			}
-			arena.Gomoku.SwitchPlayers()
-		}
+		b.applyMove(row, col)
 	}
 	b.displayCapturedPawns()
 	b.displayBoard()
 
 	Renderer.Present()
+}
+
+func (b *Board) applyMove(row int32, col int32) {
+	if isAuthorizedMove(row, col) {
+		arena.Gomoku.Goban.SetElem(b.LastMousePos.Y, b.LastMousePos.X, int8(arena.Gomoku.CurrPlayer.GetColor()))
+		arena.Gomoku.Goban.Capture(b.LastMousePos.Y, b.LastMousePos.X)
+		if arena.Gomoku.Goban.IsWinningMove(b.LastMousePos.Y, b.LastMousePos.X) {
+			arena.Gomoku.CurrPlayer.SetHasWon(true)
+			log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
+		}
+		arena.Gomoku.SwitchPlayers()
+	}
 }
 
 func (b *Board) displayCapturedPawns() {

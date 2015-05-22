@@ -3,7 +3,7 @@ package arena
 import ()
 
 type Player interface {
-	PlayMove() (row int, col int)
+	PlayMove() (row int32, col int32)
 	IsHuman() bool
 	SetId(int)
 	GetId() int
