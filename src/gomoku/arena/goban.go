@@ -344,7 +344,8 @@ func (goban *Goban) checkFreeThreeDiagonal_2(row int32, col int32, currentColor 
 }
 
 func (goban *Goban) IsWinningMove(row int32, col int32) bool {
-	if goban.IsWinningHorizontal(row, col) ||
+	if Gomoku.CurrPlayer.GetCaptured() >= 10 ||
+		goban.IsWinningHorizontal(row, col) ||
 		goban.IsWinningVertical(row, col) ||
 		goban.IsWinningDiagonal_1(row, col) ||
 		goban.IsWinningDiagonal_2(row, col) {
