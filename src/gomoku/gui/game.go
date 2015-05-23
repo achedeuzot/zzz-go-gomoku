@@ -15,7 +15,7 @@ type Game struct {
 	LastMousePos sdl.Rect
 }
 
-func NewBoard() *Game {
+func NewGame() *Game {
 	game := &Game{
 		Background: GetTextureFromImage("data/img/bg.jpg"),
 		Table:      GetTextureFromImage("data/img/board.png"),
@@ -101,7 +101,7 @@ func (s *Game) PlayScene() {
 		s.applyMove(row, col)
 	}
 	s.displayCapturedPawns()
-	s.displayBoard()
+	s.displayGame()
 
 	Renderer.Present()
 }
@@ -139,7 +139,7 @@ func (s *Game) displayCapturedPawns() {
 	}
 }
 
-func (s *Game) displayBoard() {
+func (s *Game) displayGame() {
 	for col := 0; col < 19; col++ {
 		for row := 0; row < 19; row++ {
 			currVal := arena.Gomoku.Goban.GetElem(int32(row), int32(col))
