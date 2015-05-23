@@ -1,9 +1,9 @@
 package gui
 
 import (
-	// "gomoku/ai"
-	// "gomoku/arena"
-	// "gomoku/human"
+	"gomoku/ai"
+	"gomoku/arena"
+	"gomoku/human"
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_ttf"
@@ -42,11 +42,29 @@ func (s *Options) handleEvents() {
 			Running = false
 		case *sdl.KeyUpEvent:
 			if t.Keysym.Sym == sdl.K_ESCAPE {
-				Running = false
+				CurrScene = SceneMap["MenuMain"]
 			}
 		case *sdl.MouseButtonEvent:
 			if isMouseButtonLeftUp(t) {
-
+				if XYInRect(s.AIvsHuman.pos, t.X, t.Y) {
+					player1 := human.NewHuman(arena.BlackPlayer)
+					player2 := ai.NewAI(arena.WhitePlayer)
+					arena.Gomoku = arena.NewArena(player1, player2)
+					CurrScene = SceneMap["Game"]
+					break
+				} else if XYInRect(s.HumanvsHuman.pos, t.X, t.Y) {
+					player1 := human.NewHuman(arena.BlackPlayer)
+					player2 := human.NewHuman(arena.WhitePlayer)
+					arena.Gomoku = arena.NewArena(player1, player2)
+					CurrScene = SceneMap["Game"]
+					break
+				} else if XYInRect(s.AIvsAI.pos, t.X, t.Y) {
+					player1 := ai.NewAI(arena.BlackPlayer)
+					player2 := ai.NewAI(arena.WhitePlayer)
+					arena.Gomoku = arena.NewArena(player1, player2)
+					CurrScene = SceneMap["Game"]
+					break
+				}
 			}
 		}
 	}

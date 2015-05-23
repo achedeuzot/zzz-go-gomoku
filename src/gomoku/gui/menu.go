@@ -1,10 +1,6 @@
 package gui
 
 import (
-	"gomoku/ai"
-	"gomoku/arena"
-	"gomoku/human"
-
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/sdl_ttf"
 )
@@ -23,14 +19,12 @@ func NewMainMenu() *MenuMain {
 		Background: GetTextureFromImage("data/img/bg.jpg"),
 		Title:      GetTextureFromFont("data/fonts/TaiLeb.ttf", "Gogomoku", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
 		Play:       GetTextureFromImage("data/img/button_play.png"),
-		Options:    GetTextureFromImage("data/img/button_options.png"),
 		Quit:       GetTextureFromImage("data/img/button_exit.png"),
 	}
 
 	menu.Background.pos = sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H}
 	menu.Title.pos = sdl.Rect{X: DisplayMode.W/2 - (menu.Title.size.W*DisplayMode.W/2560)/2, Y: DisplayMode.H / 7, W: menu.Title.size.W * DisplayMode.W / 2560, H: menu.Title.size.H * DisplayMode.H / 1440}
 	menu.Play.pos = sdl.Rect{X: DisplayMode.W/2 - (menu.Play.size.W*DisplayMode.W/2560)/2, Y: (DisplayMode.H / 7) * 3, W: menu.Play.size.W * DisplayMode.W / 2560, H: menu.Play.size.H * DisplayMode.H / 1440}
-	menu.Options.pos = sdl.Rect{X: DisplayMode.W/2 - (menu.Options.size.W*DisplayMode.W/2560)/2, Y: (DisplayMode.H / 7) * 4, W: menu.Options.size.W * DisplayMode.W / 2560, H: menu.Options.size.H * DisplayMode.H / 1440}
 	menu.Quit.pos = sdl.Rect{X: DisplayMode.W/2 - (menu.Quit.size.W*DisplayMode.W/2560)/2, Y: (DisplayMode.H / 7) * 5, W: menu.Quit.size.W * DisplayMode.W / 2560, H: menu.Quit.size.H * DisplayMode.H / 1440}
 	return menu
 }
@@ -49,17 +43,10 @@ func (s *MenuMain) handleEvents() {
 				if XYInRect(s.Quit.pos, t.X, t.Y) {
 					Running = false
 					break
-				} else if XYInRect(s.Options.pos, t.X, t.Y) {
+				} else if XYInRect(s.Play.pos, t.X, t.Y) {
 					CurrScene = SceneMap["Options"]
 					break
-				} else if XYInRect(s.Play.pos, t.X, t.Y) {
-					humanPlayer := human.NewHuman(arena.BlackPlayer)
-					aiPlayer := ai.NewAI(arena.WhitePlayer)
-					arena.Gomoku = arena.NewArena(humanPlayer, aiPlayer)
-					CurrScene = SceneMap["Board"]
-					break
 				}
-
 			}
 		}
 	}
@@ -75,7 +62,6 @@ func (s *MenuMain) PlayScene() {
 	Renderer.Copy(s.Background.texture, &s.Background.size, &s.Background.pos)
 	Renderer.Copy(s.Title.texture, &s.Title.size, &s.Title.pos)
 	Renderer.Copy(s.Play.texture, &s.Play.size, &s.Play.pos)
-	Renderer.Copy(s.Options.texture, &s.Options.size, &s.Options.pos)
 	Renderer.Copy(s.Quit.texture, &s.Quit.size, &s.Quit.pos)
 
 	Renderer.Present()
