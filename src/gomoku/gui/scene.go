@@ -12,9 +12,7 @@ var SceneMap map[string]Scene = make(map[string]Scene)
 
 func initScenes() {
 	SceneMap["MenuMain"] = NewMainMenu()
-	CurrScene = SceneMap["MenuMain"]
-	// XXX temporary
 	SceneMap["Game"] = NewGame()
 	SceneMap["Options"] = NewOptions()
-	// CurrScene = SceneMap["Board"]
+	CurrScene = SceneMap["MenuMain"]
 }
