@@ -15,5 +15,6 @@ func initScenes() {
 	CurrScene = SceneMap["MenuMain"]
 	// XXX temporary
 	SceneMap["Board"] = NewBoard()
+	SceneMap["Options"] = NewOptions()
 	// CurrScene = SceneMap["Board"]
 }

@@ -91,6 +91,10 @@ func Run() {
 	}
 }
 
+func XYInRect(rect sdl.Rect, x int32, y int32) bool {
+	return ((x > rect.X && x < rect.X+rect.W) && (y > rect.Y && y < rect.Y+rect.H))
+}
+
 func isMouseButtonLeftUp(t *sdl.MouseButtonEvent) bool {
 	if t.Type == sdl.MOUSEBUTTONUP && t.Button == sdl.BUTTON_LEFT {
 		return true

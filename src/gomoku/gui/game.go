@@ -48,11 +48,11 @@ func NewBoard() *Game {
 	return game
 }
 
-func (g *Game) XYInCell(x int32, y int32) (int32, int32) {
+func (s *Game) XYInCell(x int32, y int32) (int32, int32) {
 	for i := 0; i < 19; i++ {
 		for j := 0; j < 19; j++ {
-			if x >= g.Table.pos.X+16+g.CellSize.W*int32(i) && x < g.Table.pos.X+16+g.CellSize.W*int32(i+1) &&
-				y >= g.Table.pos.Y+16+g.CellSize.H*int32(j) && y < g.Table.pos.Y+16+g.CellSize.H*int32(j+1) {
+			if x >= s.Table.pos.X+16+s.CellSize.W*int32(i) && x < s.Table.pos.X+16+s.CellSize.W*int32(i+1) &&
+				y >= s.Table.pos.Y+16+s.CellSize.H*int32(j) && y < s.Table.pos.Y+16+s.CellSize.H*int32(j+1) {
 				return int32(i), int32(j)
 			}
 		}
@@ -60,7 +60,7 @@ func (g *Game) XYInCell(x int32, y int32) (int32, int32) {
 	return -1, -1
 }
 
-func (g *Game) handleEvents() {
+func (s *Game) handleEvents() {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch t := event.(type) {
 		case *sdl.QuitEvent:
@@ -70,16 +70,16 @@ func (g *Game) handleEvents() {
 				CurrScene = SceneMap["MenuMain"]
 			}
 		case *sdl.MouseMotionEvent:
-			if i, j := g.XYInCell(t.X, t.Y); i >= 0 && j >= 0 {
-				g.LastMousePos.X = i
-				g.LastMousePos.Y = j
+			if i, j := s.XYInCell(t.X, t.Y); i >= 0 && j >= 0 {
+				s.LastMousePos.X = i
+				s.LastMousePos.Y = j
 			}
 		case *sdl.MouseButtonEvent:
-			if isMouseButtonLeftUp(t) && isEmptyCell(g.LastMousePos.Y, g.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
+			if isMouseButtonLeftUp(t) && isEmptyCell(s.LastMousePos.Y, s.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
 				// check forbidden moves
-				row := g.LastMousePos.Y
-				col := g.LastMousePos.X
-				g.applyMove(row, col)
+				row := s.LastMousePos.Y
+				col := s.LastMousePos.X
+				s.applyMove(row, col)
 			}
 		case *sdl.MouseWheelEvent:
 			if t.Type == sdl.MOUSEWHEEL {
@@ -89,24 +89,24 @@ func (g *Game) handleEvents() {
 	}
 }
 
-func (g *Game) PlayScene() {
+func (s *Game) PlayScene() {
 	Renderer.Clear()
 
-	Renderer.Copy(g.Background.texture, &g.Background.size, &g.Background.pos)
-	Renderer.Copy(g.Table.texture, &g.Table.size, &g.Table.pos)
+	Renderer.Copy(s.Background.texture, &s.Background.size, &s.Background.pos)
+	Renderer.Copy(s.Table.texture, &s.Table.size, &s.Table.pos)
 
-	g.handleEvents()
+	s.handleEvents()
 	if arena.Gomoku.CurrPlayer.IsHuman() == false {
 		row, col := arena.Gomoku.CurrPlayer.PlayMove()
-		g.applyMove(row, col)
+		s.applyMove(row, col)
 	}
-	g.displayCapturedPawns()
-	g.displayBoard()
+	s.displayCapturedPawns()
+	s.displayBoard()
 
 	Renderer.Present()
 }
 
-func (g *Game) applyMove(row int32, col int32) {
+func (s *Game) applyMove(row int32, col int32) {
 	if isAuthorizedMove(row, col) {
 		arena.Gomoku.Goban.SetElem(row, col, int8(arena.Gomoku.CurrPlayer.GetColor()))
 		arena.Gomoku.Goban.Capture(row, col)
@@ -118,7 +118,7 @@ func (g *Game) applyMove(row int32, col int32) {
 	}
 }
 
-func (g *Game) displayCapturedPawns() {
+func (s *Game) displayCapturedPawns() {
 	for _, player := range arena.Gomoku.Players {
 		color := arena.GetOpponentColor(player.GetColor())
 		var x int32
@@ -128,36 +128,36 @@ func (g *Game) displayCapturedPawns() {
 			x = (DisplayMode.W / 6) * 5
 		}
 		for i := player.GetCaptured(); i > 0; i-- {
-			Renderer.Copy(g.Pawns[color].texture, &g.Pawns[color].size,
+			Renderer.Copy(s.Pawns[color].texture, &s.Pawns[color].size,
 				&sdl.Rect{
 					X: x,
-					Y: DisplayMode.H - g.Pawns[color].pos.W*int32(i),
-					W: g.Pawns[color].pos.W - 10,
-					H: g.Pawns[color].pos.W - 10,
+					Y: DisplayMode.H - s.Pawns[color].pos.W*int32(i),
+					W: s.Pawns[color].pos.W - 10,
+					H: s.Pawns[color].pos.W - 10,
 				})
 		}
 	}
 }
 
-func (g *Game) displayBoard() {
+func (s *Game) displayBoard() {
 	for col := 0; col < 19; col++ {
 		for row := 0; row < 19; row++ {
 			currVal := arena.Gomoku.Goban.GetElem(int32(row), int32(col))
 			if currVal > 0 && currVal < arena.MaxGobanValue {
-				Renderer.Copy(g.Pawns[currVal].texture, &g.Pawns[currVal].size,
+				Renderer.Copy(s.Pawns[currVal].texture, &s.Pawns[currVal].size,
 					&sdl.Rect{
-						X: g.Table.pos.X + 16 + g.Pawns[currVal].pos.W*int32(col),
-						Y: g.Table.pos.Y + 16 + g.Pawns[currVal].pos.H*int32(row),
-						W: g.Pawns[currVal].pos.W - 10,
-						H: g.Pawns[currVal].pos.H - 10,
+						X: s.Table.pos.X + 16 + s.Pawns[currVal].pos.W*int32(col),
+						Y: s.Table.pos.Y + 16 + s.Pawns[currVal].pos.H*int32(row),
+						W: s.Pawns[currVal].pos.W - 10,
+						H: s.Pawns[currVal].pos.H - 10,
 					})
-			} else if arena.Gomoku.CurrPlayer.IsHuman() == true && g.LastMousePos.X == int32(col) && g.LastMousePos.Y == int32(row) && isAuthorizedMove(g.LastMousePos.Y, g.LastMousePos.X) {
-				Renderer.Copy(g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].texture, &g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].size,
+			} else if arena.Gomoku.CurrPlayer.IsHuman() == true && s.LastMousePos.X == int32(col) && s.LastMousePos.Y == int32(row) && isAuthorizedMove(s.LastMousePos.Y, s.LastMousePos.X) {
+				Renderer.Copy(s.Pawns[arena.Gomoku.CurrPlayer.GetColor()].texture, &s.Pawns[arena.Gomoku.CurrPlayer.GetColor()].size,
 					&sdl.Rect{
-						X: g.Table.pos.X + 16 + g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W*int32(col),
-						Y: g.Table.pos.Y + 16 + g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H*int32(row),
-						W: g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W - 10,
-						H: g.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H - 10,
+						X: s.Table.pos.X + 16 + s.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W*int32(col),
+						Y: s.Table.pos.Y + 16 + s.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H*int32(row),
+						W: s.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W - 10,
+						H: s.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H - 10,
 					})
 			}
 		}
