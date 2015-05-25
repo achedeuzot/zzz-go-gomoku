@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	minimax_depth = 4
+	minimax_depth = 1
 )
 
 const (
@@ -84,9 +84,16 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int) {
 }
 
 func generateNeighbors() [][]int32 {
-	tab := make([][]int32, 2)
-	for idx := range tab {
-		tab[idx] = make([]int32, 2)
+	tab := make([][]int32, 0)
+	for col := 0; col < 19; col++ {
+		for row := 0; row < 19; row++ {
+			if arena.Gomoku.Goban.GetElem(int32(row), int32(col)) == 0 {
+				move := make([]int32, 2)
+				move[0] = int32(row)
+				move[1] = int32(col)
+				tab = append(tab, move)
+			}
+		}
 	}
 	return tab
 }
