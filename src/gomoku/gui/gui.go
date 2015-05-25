@@ -61,6 +61,9 @@ func StartupGUI(fullscreen bool, width int, height int) {
 		DisplayMode.W = int32(width)
 		DisplayMode.H = int32(height)
 	}
+
+	// Setup scaling quality to linear
+	sdl.SetHintWithPriority(sdl.HINT_RENDER_SCALE_QUALITY, "1", sdl.HINT_OVERRIDE)
 }
 
 func ShutdownGUI() {

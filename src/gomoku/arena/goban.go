@@ -5,6 +5,7 @@ const (
 	_ = iota
 	WhitePlayer
 	BlackPlayer
+	RedPawn
 	MaxGobanValue
 )
 
