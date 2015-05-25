@@ -42,9 +42,11 @@ func NewGame() *Game {
 	game.Table.pos = sdl.Rect{X: DisplayMode.W/2 - finalW/2, Y: 0, W: finalW, H: finalH}
 	game.Pawns[arena.WhitePlayer] = GetTextureFromImage("data/img/white.png")
 	game.Pawns[arena.BlackPlayer] = GetTextureFromImage("data/img/black.png")
+	game.Pawns[arena.RedPawn] = GetTextureFromImage("data/img/red.png")
 	game.CellSize = sdl.Rect{X: 0, Y: 0, W: game.Table.pos.W / 19, H: game.Table.pos.H / 19}
 	game.Pawns[arena.WhitePlayer].pos = game.CellSize
 	game.Pawns[arena.BlackPlayer].pos = game.CellSize
+	game.Pawns[arena.RedPawn].pos = game.CellSize
 	return game
 }
 
@@ -158,6 +160,14 @@ func (s *Game) displayGame() {
 						Y: s.Table.pos.Y + 16 + s.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H*int32(row),
 						W: s.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.W - 10,
 						H: s.Pawns[arena.Gomoku.CurrPlayer.GetColor()].pos.H - 10,
+					})
+			} else if arena.Gomoku.CurrPlayer.IsHuman() == true && currVal == 0 && !isAuthorizedMove(int32(row), int32(col)) {
+				Renderer.Copy(s.Pawns[arena.RedPawn].texture, &s.Pawns[arena.RedPawn].size,
+					&sdl.Rect{
+						X: s.Table.pos.X + 16 + s.Pawns[arena.RedPawn].pos.W*int32(col),
+						Y: s.Table.pos.Y + 16 + s.Pawns[arena.RedPawn].pos.H*int32(row),
+						W: s.Pawns[arena.RedPawn].pos.W - 10,
+						H: s.Pawns[arena.RedPawn].pos.H - 10,
 					})
 			}
 		}
