@@ -21,6 +21,14 @@ func GetOpponentColor(color int8) int8 {
 	return WhitePlayer
 }
 
+func (goban *Goban) Copy() *Goban {
+	var newgoban Goban
+	for idx, val := range newgoban {
+		newgoban[idx] = val
+	}
+	return &newgoban
+}
+
 func (goban *Goban) GetElem(row int32, col int32) int8 {
 	if row*19+col > 361 || row*19+col < 0 {
 		return -1

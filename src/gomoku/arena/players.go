@@ -12,6 +12,7 @@ type Player interface {
 	GetCaptured() int8
 	AddCaptured(int8)
 	SetHasWon(bool)
+	GetHasWon() bool
 }
 
 type DefaultPlayer struct {
@@ -47,4 +48,8 @@ func (dp *DefaultPlayer) AddCaptured(pawns int8) {
 
 func (dp *DefaultPlayer) SetHasWon(value bool) {
 	dp.HasWon = value
+}
+
+func (dp *DefaultPlayer) GetHasWon() bool {
+	return dp.HasWon
 }
