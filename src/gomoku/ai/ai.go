@@ -25,6 +25,7 @@ func NewAI(color int8) *AI {
 	return &AI{
 		arena.DefaultPlayer{
 			Color: color,
+			Pawns: 0,
 		},
 	}
 }
@@ -35,8 +36,9 @@ func (ai *AI) think(timeout time.Duration) (row int32, col int32) {
 }
 
 func (ai *AI) PlayMove() (row int32, col int32) {
+	row, col = ai.think(500 * time.Millisecond)
 	ai.AddPawns(1)
-	return ai.think(500 * time.Millisecond)
+	return
 }
 
 func (ai *AI) IsHuman() bool {

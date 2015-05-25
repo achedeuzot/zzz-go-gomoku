@@ -12,6 +12,7 @@ func NewHuman(color int8) *Human {
 	return &Human{
 		arena.DefaultPlayer{
 			Color: color,
+			Pawns: 0,
 		},
 	}
 }
