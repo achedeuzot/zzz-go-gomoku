@@ -116,6 +116,7 @@ func (s *Game) applyMove(row int32, col int32) {
 			arena.Gomoku.CurrPlayer.SetHasWon(true)
 			log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
 		}
+		arena.Gomoku.CurrPlayer.AddPawns(1)
 		arena.Gomoku.SwitchPlayers()
 	}
 }
