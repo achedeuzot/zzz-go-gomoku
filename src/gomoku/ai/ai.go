@@ -2,6 +2,7 @@ package ai
 
 import (
 	"gomoku/arena"
+	"math/rand"
 	"time"
 )
 
@@ -127,7 +128,7 @@ func generateNeighbors() [][]int32 {
 
 func score() int {
 	// heuristics moth*rfucker !
-	return 1
+	return rand.Int()
 }
 
 func hasWon() bool {
