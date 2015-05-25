@@ -2,7 +2,6 @@ package ai
 
 import (
 	"gomoku/arena"
-	"log"
 	"time"
 )
 
@@ -88,7 +87,6 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int) {
 func generateNeighbors() [][]int32 {
 	tab := make([][]int32, 0)
 	if hasPlay() == false {
-		log.Println("Not played yet")
 		for col := 7; col < 12; col++ {
 			for row := 7; row < 12; row++ {
 				if arena.Gomoku.Goban.GetElem(int32(row), int32(col)) == 0 {
@@ -101,7 +99,6 @@ func generateNeighbors() [][]int32 {
 		}
 		return tab
 	}
-	log.Println("Has played")
 	for col := 0; col < 19; col++ {
 		for row := 0; row < 19; row++ {
 			if arena.Gomoku.Goban.GetElem(int32(row), int32(col)) == 0 &&
