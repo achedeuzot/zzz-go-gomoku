@@ -3,7 +3,7 @@ package ai
 import (
 	"gomoku/arena"
 	"log"
-	"time"
+	// "time"
 )
 
 const (
@@ -38,7 +38,6 @@ func (ai *AI) think() []int32 {
 }
 
 func (ai *AI) PlayMove() (row int32, col int32) {
-
 	ch := make(chan []int32)
 	select {
 	case ch <- ai.think():
@@ -46,9 +45,9 @@ func (ai *AI) PlayMove() (row int32, col int32) {
 		log.Println("Though about something...")
 		ai.AddPawns(1)
 		return move[0], move[1]
-	case <-time.After(500 * time.Millisecond):
-		log.Println("Though about nothing...")
-		return -1, -1
+		// case <-time.After(500 * time.Millisecond):
+		// 	log.Println("Though about nothing...")
+		// 	return -1, -1
 	}
 }
 
@@ -58,14 +57,16 @@ func (ai *AI) IsHuman() bool {
 
 func minimax(depth int, isMaximizer bool) (int32, int32, int) {
 	if depth == 0 || hasWon() {
+		log.Println("I'm at the end.")
 		return -1, -1, score()
 	}
 	if isMaximizer == true {
 		bestValue := -5000
 		bestRow := int32(-1)
 		bestCol := int32(-1)
-		for _, move := range generateNeighbors() {
+		for idx, move := range generateNeighbors() {
 			arena.Gomoku.Goban.SetElem(move[0], move[1], arena.Gomoku.CurrPlayer.GetColor())
+			log.Printf("I'm trying a max neighbor [%d].\n", idx)
 			r, c, val := minimax(depth-1, !isMaximizer)
 			if bestValue <= val {
 				bestValue = val
@@ -83,8 +84,9 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int) {
 		bestValue := 5000
 		bestRow := int32(-1)
 		bestCol := int32(-1)
-		for _, move := range generateNeighbors() {
+		for idx, move := range generateNeighbors() {
 			arena.Gomoku.Goban.SetElem(move[0], move[1], arena.GetOpponentColor(arena.Gomoku.CurrPlayer.GetColor()))
+			log.Printf("I'm trying a min neighbor [%d].\n", idx)
 			r, c, val := minimax(depth-1, !isMaximizer)
 			if bestValue >= val {
 				bestValue = val
@@ -103,7 +105,9 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int) {
 
 func generateNeighbors() [][]int32 {
 	tab := make([][]int32, 0)
-	if hasPlay() == false {
+	log.Println("I'm generating a neighbor.")
+	if hasPlayed() == false {
+		log.Println("I'm generating a new move !")
 		for col := 7; col < 12; col++ {
 			for row := 7; row < 12; row++ {
 				if arena.Gomoku.Goban.GetElem(int32(row), int32(col)) == 0 {
@@ -144,7 +148,7 @@ func hasWon() bool {
 	return false
 }
 
-func hasPlay() bool {
+func hasPlayed() bool {
 	for _, player := range arena.Gomoku.Players {
 		if player.GetPawns() > 0 {
 			return true
