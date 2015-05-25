@@ -2,6 +2,7 @@ package ai
 
 import (
 	"gomoku/arena"
+	"log"
 	"time"
 )
 
@@ -29,13 +30,23 @@ func NewAI(color int8) *AI {
 	}
 }
 
-func (ai *AI) think(timeout time.Duration) (row int32, col int32) {
-	row, col, _ = minimax(minimax_depth, true)
-	return
+func (ai *AI) think() []int32 {
+	move := make([]int32, 2)
+	move[0], move[1], _ = minimax(minimax_depth, true)
+	return move
 }
 
 func (ai *AI) PlayMove() (row int32, col int32) {
-	return ai.think(500 * time.Millisecond)
+	ch := make(chan []int32)
+	select {
+	case ch <- ai.think():
+		move := <-ch
+		log.Println("Though about something...")
+		return move[0], move[1]
+	case <-time.After(500 * time.Millisecond):
+		log.Println("Though about nothing...")
+		return -1, -1
+	}
 }
 
 func (ai *AI) IsHuman() bool {
@@ -50,34 +61,38 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int) {
 		bestValue := -5000
 		bestRow := int32(-1)
 		bestCol := int32(-1)
-		for _, moves := range generateNeighbors() {
+		for _, move := range generateNeighbors() {
+			arena.Gomoku.Goban.SetElem(move[0], move[1], arena.Gomoku.CurrPlayer.GetColor())
 			r, c, val := minimax(depth-1, !isMaximizer)
 			if bestValue <= val {
 				bestValue = val
 				bestRow = r
 				bestCol = c
 				if r == -1 || c == -1 {
-					bestRow = moves[0]
-					bestCol = moves[1]
+					bestRow = move[0]
+					bestCol = move[1]
 				}
 			}
+			arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
 		}
 		return bestRow, bestCol, bestValue
 	} else {
 		bestValue := 5000
 		bestRow := int32(-1)
 		bestCol := int32(-1)
-		for _, moves := range generateNeighbors() {
+		for _, move := range generateNeighbors() {
+			arena.Gomoku.Goban.SetElem(move[0], move[1], arena.GetOpponentColor(arena.Gomoku.CurrPlayer.GetColor()))
 			r, c, val := minimax(depth-1, !isMaximizer)
 			if bestValue >= val {
 				bestValue = val
 				bestRow = r
 				bestCol = c
 				if r == -1 || c == -1 {
-					bestRow = moves[0]
-					bestCol = moves[1]
+					bestRow = move[0]
+					bestCol = move[1]
 				}
 			}
+			arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
 		}
 		return bestRow, bestCol, bestValue
 	}
