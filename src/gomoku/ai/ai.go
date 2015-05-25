@@ -2,6 +2,7 @@ package ai
 
 import (
 	"gomoku/arena"
+	"log"
 	"time"
 )
 
@@ -35,6 +36,7 @@ func (ai *AI) think(timeout time.Duration) (row int32, col int32) {
 }
 
 func (ai *AI) PlayMove() (row int32, col int32) {
+	ai.AddPawns(1)
 	return ai.think(500 * time.Millisecond)
 }
 
@@ -85,9 +87,25 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int) {
 
 func generateNeighbors() [][]int32 {
 	tab := make([][]int32, 0)
+	if hasPlay() == false {
+		log.Println("Not played yet")
+		for col := 7; col < 12; col++ {
+			for row := 7; row < 12; row++ {
+				if arena.Gomoku.Goban.GetElem(int32(row), int32(col)) == 0 {
+					move := make([]int32, 2)
+					move[0] = int32(row)
+					move[1] = int32(col)
+					tab = append(tab, move)
+				}
+			}
+		}
+		return tab
+	}
+	log.Println("Has played")
 	for col := 0; col < 19; col++ {
 		for row := 0; row < 19; row++ {
-			if arena.Gomoku.Goban.GetElem(int32(row), int32(col)) == 0 {
+			if arena.Gomoku.Goban.GetElem(int32(row), int32(col)) == 0 &&
+				arena.Gomoku.Goban.IsSurounded(int32(row), int32(col)) == true {
 				move := make([]int32, 2)
 				move[0] = int32(row)
 				move[1] = int32(col)
@@ -106,6 +124,15 @@ func score() int {
 func hasWon() bool {
 	for _, player := range arena.Gomoku.Players {
 		if player.GetHasWon() == true {
+			return true
+		}
+	}
+	return false
+}
+
+func hasPlay() bool {
+	for _, player := range arena.Gomoku.Players {
+		if player.GetPawns() > 0 {
 			return true
 		}
 	}

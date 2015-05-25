@@ -17,6 +17,7 @@ func NewHuman(color int8) *Human {
 }
 
 func (human *Human) PlayMove() (row int32, col int32) {
+	human.AddPawns(1)
 	return 0, 0
 }
 

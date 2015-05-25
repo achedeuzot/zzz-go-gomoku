@@ -96,3 +96,18 @@ func (goban *Goban) GetBottomRightElem(row int32, col int32) int8 {
 func (goban *Goban) SetElem(row int32, col int32, val int8) {
 	goban[row*19+col] = val
 }
+
+func (goban *Goban) IsSurounded(row int32, col int32) bool {
+	if goban.GetTopElem(row, col) > 0 ||
+		goban.GetTopElem(row, col) > 0 ||
+		goban.GetBottomElem(row, col) > 0 ||
+		goban.GetLeftElem(row, col) > 0 ||
+		goban.GetRightElem(row, col) > 0 ||
+		goban.GetTopLeftElem(row, col) > 0 ||
+		goban.GetTopRightElem(row, col) > 0 ||
+		goban.GetBottomLeftElem(row, col) > 0 ||
+		goban.GetBottomRightElem(row, col) > 0 {
+		return true
+	}
+	return false
+}
