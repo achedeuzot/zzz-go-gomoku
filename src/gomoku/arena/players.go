@@ -11,6 +11,8 @@ type Player interface {
 	GetColor() int8
 	GetCaptured() int8
 	AddCaptured(int8)
+	GetPawns() int8
+	AddPawns(int8)
 	SetHasWon(bool)
 	GetHasWon() bool
 }
@@ -20,6 +22,7 @@ type DefaultPlayer struct {
 	HasWon   bool
 	Color    int8
 	Captured int8
+	Pawns    int8
 }
 
 func (dp *DefaultPlayer) SetId(newid int) {
@@ -44,6 +47,14 @@ func (dp *DefaultPlayer) GetCaptured() int8 {
 
 func (dp *DefaultPlayer) AddCaptured(pawns int8) {
 	dp.Captured += pawns
+}
+
+func (dp *DefaultPlayer) GetPawns() int8 {
+	return dp.Pawns
+}
+
+func (dp *DefaultPlayer) AddPawns(pawns int8) {
+	dp.Pawns += pawns
 }
 
 func (dp *DefaultPlayer) SetHasWon(value bool) {

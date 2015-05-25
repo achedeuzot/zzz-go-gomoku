@@ -12,11 +12,13 @@ func NewHuman(color int8) *Human {
 	return &Human{
 		arena.DefaultPlayer{
 			Color: color,
+			Pawns: 0,
 		},
 	}
 }
 
 func (human *Human) PlayMove() (row int32, col int32) {
+	human.AddPawns(1)
 	return 0, 0
 }
 
