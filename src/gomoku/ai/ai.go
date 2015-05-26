@@ -92,7 +92,7 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int32) {
 		return -1, -1, score()
 	}
 	if isMaximizer == true {
-		var bestValue int32 = -5000
+		var bestValue int32 = -5000000
 		bestRow := int32(-1)
 		bestCol := int32(-1)
 		for _, move := range generateNeighbors() {
@@ -111,7 +111,7 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int32) {
 		}
 		return bestRow, bestCol, bestValue
 	} else {
-		var bestValue int32 = 5000
+		var bestValue int32 = 5000000
 		bestRow := int32(-1)
 		bestCol := int32(-1)
 		for _, move := range generateNeighbors() {
@@ -174,10 +174,6 @@ func score() (score int32) {
 		}
 	}
 	return score
-}
-
-func addCaptureScore(row int32, col int32) int32 {
-	return 1
 }
 
 func hasWon() bool {
