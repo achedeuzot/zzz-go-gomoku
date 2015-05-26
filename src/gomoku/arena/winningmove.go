@@ -1,12 +1,16 @@
 package arena
 
 func (goban *Goban) IsWinningMove() bool {
-	if Gomoku.CurrPlayer.GetCaptured() >= 10 {
+	return goban.IsWinningState(Gomoku.CurrPlayer)
+}
+
+func (goban *Goban) IsWinningState(player Player) bool {
+	if player.GetCaptured() >= 10 {
 		return true
 	}
 	for col := 0; col < 19; col++ {
 		for row := 0; row < 19; row++ {
-			currColor := Gomoku.CurrPlayer.GetColor()
+			currColor := player.GetColor()
 			if goban.GetElem(int32(row), int32(col)) == currColor {
 				if goban.IsWinningHorizontal(int32(row), int32(col)) ||
 					goban.IsWinningVertical(int32(row), int32(col)) ||

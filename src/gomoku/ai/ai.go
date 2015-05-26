@@ -2,6 +2,7 @@ package ai
 
 import (
 	"gomoku/arena"
+	"log"
 	"math"
 	"time"
 )
@@ -54,10 +55,10 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 	}
 
 	// Check if we’re done recursing
-	if depth == 0 || hasWon() {
-		if hasWon() {
-			return float64(math.Inf(1)), make([]int32, 2)
-		}
+	if hasWon(isMaximizer) {
+		return float64(math.Inf(1)), make([]int32, 2)
+	}
+	if depth == 0 {
 		return float64(score()), make([]int32, 2)
 	}
 
@@ -68,7 +69,7 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 		arena.Gomoku.Goban.SetElem(move[0], move[1], color)
 
 		// Recurse
-		recursedScore, _ := abNegamax(depth-1, -beta, -max(alpha, bestScore), isMaximizer)
+		recursedScore, _ := abNegamax(depth-1, -beta, -max(alpha, bestScore), !isMaximizer)
 		currentScore := -recursedScore
 
 		arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
@@ -93,14 +94,14 @@ func max(a, b float64) float64 {
 	return b
 }
 func minimax(depth int, isMaximizer bool) (int32, int32, int32) {
-	if depth == 0 || hasWon() {
-		if hasWon() {
-			return -1, -1, 5000000
-		}
+	if hasWon(isMaximizer) {
+		return -1, -1, 999999999
+	}
+	if depth == 0 {
 		return -1, -1, score()
 	}
 	if isMaximizer == true {
-		var bestValue int32 = -5000000
+		var bestValue int32 = -999999999
 		bestRow := int32(-1)
 		bestCol := int32(-1)
 		for _, move := range generateNeighbors() {
@@ -119,7 +120,7 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int32) {
 		}
 		return bestRow, bestCol, bestValue
 	} else {
-		var bestValue int32 = 5000000
+		var bestValue int32 = 999999999
 		bestRow := int32(-1)
 		bestCol := int32(-1)
 		for _, move := range generateNeighbors() {
@@ -184,11 +185,21 @@ func score() (score int32) {
 	return score
 }
 
-func hasWon() bool {
-	for _, player := range arena.Gomoku.Players {
-		if player.GetHasWon() == true {
-			return true
+func hasWon(isMaximizer bool) bool {
+	var player arena.Player
+	if isMaximizer == true {
+		player = arena.Gomoku.CurrPlayer
+	} else {
+		for _, tmpPlayer := range arena.Gomoku.Players {
+			if tmpPlayer != arena.Gomoku.CurrPlayer {
+				player = tmpPlayer
+				break
+			}
 		}
+	}
+	if arena.Gomoku.Goban.IsWinningState(player) == true {
+		log.Printf("%+v winning\n", player)
+		return true
 	}
 	return false
 }

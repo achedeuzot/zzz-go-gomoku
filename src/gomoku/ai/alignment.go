@@ -38,13 +38,13 @@ func addAsymetricAlignedScore(row int32, col int32) (score int32) {
 func addVerticalAlignedScore(row int32, col int32, currentColor int8) (score int32) {
 	score = 0
 	crow := row
-	flankedCount := 16
+	flankedCount := 6
 	for arena.Gomoku.Goban.GetTopElem(row, col) == currentColor {
 		row--
 		score += 1
 	}
 	if arena.Gomoku.Goban.GetTopElem(row, col) != 0 {
-		flankedCount = 8
+		flankedCount = 4
 	}
 	row = crow
 	for arena.Gomoku.Goban.GetBottomElem(row, col) == currentColor {
@@ -52,7 +52,7 @@ func addVerticalAlignedScore(row int32, col int32, currentColor int8) (score int
 		score += 1
 	}
 	if arena.Gomoku.Goban.GetBottomElem(row, col) != 0 {
-		flankedCount = 4
+		flankedCount = 2
 	}
 	score = int32(math.Pow(float64(flankedCount), float64(score)))
 	return
@@ -61,13 +61,13 @@ func addVerticalAlignedScore(row int32, col int32, currentColor int8) (score int
 func addHorizontalAlignedScore(row int32, col int32, currentColor int8) (score int32) {
 	score = 0
 	ccol := col
-	flankedCount := 16
+	flankedCount := 6
 	for arena.Gomoku.Goban.GetLeftElem(row, col) == currentColor {
 		col--
 		score += 1
 	}
 	if arena.Gomoku.Goban.GetLeftElem(row, col) != 0 {
-		flankedCount = 8
+		flankedCount = 4
 	}
 	col = ccol
 	for arena.Gomoku.Goban.GetRightElem(row, col) == currentColor {
@@ -75,7 +75,7 @@ func addHorizontalAlignedScore(row int32, col int32, currentColor int8) (score i
 		score += 1
 	}
 	if arena.Gomoku.Goban.GetRightElem(row, col) != 0 {
-		flankedCount = 4
+		flankedCount = 2
 	}
 	score = int32(math.Pow(float64(flankedCount), float64(score)))
 	return
@@ -85,14 +85,14 @@ func addDiagonal1AlignedScore(row int32, col int32, currentColor int8) (score in
 	score = 0
 	crow := row
 	ccol := col
-	flankedCount := 16
+	flankedCount := 6
 	for arena.Gomoku.Goban.GetTopLeftElem(row, col) == currentColor {
 		col--
 		row--
 		score += 1
 	}
 	if arena.Gomoku.Goban.GetTopLeftElem(row, col) != 0 {
-		flankedCount = 8
+		flankedCount = 4
 	}
 	row = crow
 	col = ccol
@@ -102,7 +102,7 @@ func addDiagonal1AlignedScore(row int32, col int32, currentColor int8) (score in
 		score += 1
 	}
 	if arena.Gomoku.Goban.GetBottomRightElem(row, col) != 0 {
-		flankedCount = 4
+		flankedCount = 2
 	}
 	score = int32(math.Pow(float64(flankedCount), float64(score)))
 	return
@@ -112,14 +112,14 @@ func addDiagonal2AlignedScore(row int32, col int32, currentColor int8) (score in
 	score = 0
 	crow := row
 	ccol := col
-	flankedCount := 16
+	flankedCount := 6
 	for arena.Gomoku.Goban.GetBottomLeftElem(row, col) == currentColor {
 		col--
 		row++
 		score += 1
 	}
 	if arena.Gomoku.Goban.GetBottomLeftElem(row, col) != 0 {
-		flankedCount = 8
+		flankedCount = 4
 	}
 	row = crow
 	col = ccol
@@ -129,7 +129,7 @@ func addDiagonal2AlignedScore(row int32, col int32, currentColor int8) (score in
 		score += 1
 	}
 	if arena.Gomoku.Goban.GetTopRightElem(row, col) != 0 {
-		flankedCount = 4
+		flankedCount = 2
 	}
 	score = int32(math.Pow(float64(flankedCount), float64(score)))
 	return
