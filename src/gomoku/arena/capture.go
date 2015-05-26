@@ -165,6 +165,23 @@ func (goban *Goban) canBeCaptured(row int32, col int32, currentColor int8) bool 
 	return false
 }
 
+func (goban *Goban) CountPossibleCaptures(row int32, col int32, currentColor int8) int32 {
+	count := int32(0)
+	if goban.canBeCapturedVertical(row, col, currentColor) {
+		count++
+	}
+	if goban.canBeCapturedHorizontal(row, col, currentColor) {
+		count++
+	}
+	if goban.canBeCapturedDiagonal_1(row, col, currentColor) {
+		count++
+	}
+	if goban.canBeCapturedDiagonal_2(row, col, currentColor) {
+		count++
+	}
+	return count
+}
+
 func (goban *Goban) canBeCapturedVertical(row int32, col int32, currentColor int8) bool {
 	opponentColor := GetOpponentColor(currentColor)
 	count := 1
