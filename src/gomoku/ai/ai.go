@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	minimax_depth = 2
+	minimax_depth = 3
 )
 
 type AI struct {
@@ -25,8 +25,8 @@ func NewAI(color int8) *AI {
 
 func (ai *AI) think() []int32 {
 	move := make([]int32, 2)
-	// negaScout(minimax_depth, math.Inf(-1), math.Inf(1), true)
-	move[0], move[1], _ = minimax(minimax_depth, true)
+	_, move = abNegamax(minimax_depth, math.Inf(-1), math.Inf(1), true)
+	// move[0], move[1], _ = minimax(minimax_depth, true)
 	return move
 }
 
@@ -45,37 +45,45 @@ func (ai *AI) IsHuman() bool {
 	return false
 }
 
-func negaScout(depth int, alpha float64, beta float64, isMaximizer bool) float64 {
-	if depth == 0 || hasWon() {
-		if hasWon() {
-			return float64(math.Inf(1))
-		}
-		return float64(score())
-	}
+func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float64, []int32) {
 	var color int8
-	var tmpScore float64
 	if isMaximizer == true {
 		color = arena.Gomoku.CurrPlayer.GetColor()
 	} else {
 		color = arena.GetOpponentColor(arena.Gomoku.CurrPlayer.GetColor())
 	}
-	for idx, move := range generateNeighbors() {
-		arena.Gomoku.Goban.SetElem(move[0], move[1], color)
-		if idx > 0 {
-			tmpScore = -negaScout(depth-1, -alpha-1, -alpha, !isMaximizer)
-			if alpha < tmpScore && tmpScore < beta {
-				tmpScore = -negaScout(depth-1, -beta, -tmpScore, !isMaximizer)
-			}
-		} else {
-			tmpScore = -negaScout(depth-1, -beta, -alpha, !isMaximizer)
+
+	// Check if we’re done recursing
+	if depth == 0 || hasWon() {
+		if hasWon() {
+			return float64(math.Inf(1)), make([]int32, 2)
 		}
-		alpha := max(alpha, tmpScore)
+		return float64(score()), make([]int32, 2)
+	}
+
+	// Otherwise bubble up values from below
+	bestMove := make([]int32, 2)
+	bestScore := math.Inf(-1)
+	for _, move := range generateNeighbors() {
+		arena.Gomoku.Goban.SetElem(move[0], move[1], color)
+
+		// Recurse
+		recursedScore, _ := abNegamax(depth-1, -beta, -max(alpha, bestScore), isMaximizer)
+		currentScore := -recursedScore
+
 		arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
-		if alpha >= beta {
-			break
+		// Update the best score
+		if currentScore > bestScore {
+			bestScore = currentScore
+			bestMove = move
+
+			// If we're outside the bounds, then prune: exit now !
+			if bestScore >= beta {
+				return bestScore, bestMove
+			}
 		}
 	}
-	return alpha
+	return bestScore, bestMove
 }
 
 func max(a, b float64) float64 {
