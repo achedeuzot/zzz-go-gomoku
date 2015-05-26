@@ -13,10 +13,10 @@ func addSimpleAlignedScore(row int32, col int32) (score int32) {
 	score += addDiagonal1AlignedScore(row, col, currentColor)
 	score += addDiagonal2AlignedScore(row, col, currentColor)
 	opponentColor := arena.GetOpponentColor(currentColor)
-	score += addVerticalAlignedScore(row, col, opponentColor)
-	score += addHorizontalAlignedScore(row, col, opponentColor)
-	score += addDiagonal1AlignedScore(row, col, opponentColor)
-	score += addDiagonal2AlignedScore(row, col, opponentColor)
+	score -= addVerticalAlignedScore(row, col, opponentColor)
+	score -= addHorizontalAlignedScore(row, col, opponentColor)
+	score -= addDiagonal1AlignedScore(row, col, opponentColor)
+	score -= addDiagonal2AlignedScore(row, col, opponentColor)
 	return
 }
 
@@ -28,10 +28,10 @@ func addAsymetricAlignedScore(row int32, col int32) (score int32) {
 	score += addDiagonal1AlignedScore(row, col, currentColor)
 	score += addDiagonal2AlignedScore(row, col, currentColor)
 	opponentColor := arena.GetOpponentColor(currentColor)
-	score += 2 * addVerticalAlignedScore(row, col, opponentColor)
-	score += 2 * addHorizontalAlignedScore(row, col, opponentColor)
-	score += 2 * addDiagonal1AlignedScore(row, col, opponentColor)
-	score += 2 * addDiagonal2AlignedScore(row, col, opponentColor)
+	score -= 2 * addVerticalAlignedScore(row, col, opponentColor)
+	score -= 2 * addHorizontalAlignedScore(row, col, opponentColor)
+	score -= 2 * addDiagonal1AlignedScore(row, col, opponentColor)
+	score -= 2 * addDiagonal2AlignedScore(row, col, opponentColor)
 	return
 }
 
