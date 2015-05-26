@@ -2,12 +2,14 @@ package ai
 
 import (
 	"gomoku/arena"
+	"log"
+	"math"
 	"math/rand"
 	"time"
 )
 
 const (
-	minimax_depth = 1
+	minimax_depth = 10
 )
 
 const (
@@ -33,7 +35,8 @@ func NewAI(color int8) *AI {
 
 func (ai *AI) think() []int32 {
 	move := make([]int32, 2)
-	move[0], move[1], _ = minimax(minimax_depth, true)
+	move[0], move[1], _ = negaScout(minimax_depth, math.Inf(-1), math.Inf(1), true)
+	log.Printf("%+v\n", move)
 	return move
 }
 
@@ -50,6 +53,54 @@ func (ai *AI) PlayMove() (row int32, col int32) {
 
 func (ai *AI) IsHuman() bool {
 	return false
+}
+
+func negaScout(depth int, alpha float64, beta float64, isMaximizer bool) (int32, int32, float64) {
+	if depth == 0 || hasWon() {
+		return -1, -1, float64(score())
+	}
+	var color int8
+	var tmpScore float64
+	var bestRow int32
+	var bestCol int32
+	var tmpRow int32
+	var tmpCol int32
+	if isMaximizer == true {
+		color = arena.Gomoku.CurrPlayer.GetColor()
+	} else {
+		color = arena.GetOpponentColor(arena.Gomoku.CurrPlayer.GetColor())
+	}
+	for idx, move := range generateNeighbors() {
+		arena.Gomoku.Goban.SetElem(move[0], move[1], color)
+		if idx > 0 {
+			tmpRow, tmpCol, tmpScore = negaScout(depth-1, -alpha-1, -alpha, !isMaximizer)
+			if alpha < tmpScore && tmpScore < beta {
+				tmpRow, tmpCol, tmpScore = negaScout(depth-1, -beta, -tmpScore, !isMaximizer)
+			}
+		} else {
+			tmpRow, tmpCol, tmpScore = negaScout(depth-1, -beta, -alpha, !isMaximizer)
+		}
+		alpha := max(alpha, tmpScore)
+		arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
+		if alpha >= beta {
+			if tmpRow == -1 && tmpCol == -1 {
+				bestRow = move[0]
+				bestCol = move[1]
+			} else {
+				bestRow = tmpRow
+				bestCol = tmpCol
+			}
+			break
+		}
+	}
+	return bestRow, bestCol, alpha
+}
+
+func max(a, b float64) float64 {
+	if a >= b {
+		return a
+	}
+	return b
 }
 
 func minimax(depth int, isMaximizer bool) (int32, int32, int) {
