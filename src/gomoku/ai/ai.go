@@ -2,19 +2,12 @@ package ai
 
 import (
 	"gomoku/arena"
+	"math"
 	"time"
 )
 
 const (
 	minimax_depth = 2
-)
-
-const (
-	situ_loosing     = -5000
-	situ_draw        = 0
-	situ_capture_two = 500
-	situ_aligned     = 1000
-	situ_winning     = 5000
 )
 
 type AI struct {
@@ -54,6 +47,9 @@ func (ai *AI) IsHuman() bool {
 
 func negaScout(depth int, alpha float64, beta float64, isMaximizer bool) float64 {
 	if depth == 0 || hasWon() {
+		if hasWon() {
+			return float64(math.Inf(1))
+		}
 		return float64(score())
 	}
 	var color int8
@@ -90,6 +86,9 @@ func max(a, b float64) float64 {
 }
 func minimax(depth int, isMaximizer bool) (int32, int32, int32) {
 	if depth == 0 || hasWon() {
+		if hasWon() {
+			return -1, -1, 5000000
+		}
 		return -1, -1, score()
 	}
 	if isMaximizer == true {
@@ -136,25 +135,25 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int32) {
 func generateNeighbors() [][]int32 {
 	tab := make([][]int32, 0)
 	if hasPlayed() == false {
-		for col := 7; col < 12; col++ {
-			for row := 7; row < 12; row++ {
-				if arena.Gomoku.Goban.GetElem(int32(row), int32(col)) == 0 {
+		for col := int32(7); col < 12; col++ {
+			for row := int32(7); row < 12; row++ {
+				if arena.Gomoku.Goban.GetElem(row, col) == 0 {
 					move := make([]int32, 2)
-					move[0] = int32(row)
-					move[1] = int32(col)
+					move[0] = row
+					move[1] = col
 					tab = append(tab, move)
 				}
 			}
 		}
 		return tab
 	}
-	for col := 0; col < 19; col++ {
-		for row := 0; row < 19; row++ {
-			if arena.Gomoku.Goban.GetElem(int32(row), int32(col)) == 0 &&
-				arena.Gomoku.Goban.IsSurounded(int32(row), int32(col)) == true {
+	for col := int32(0); col < 19; col++ {
+		for row := int32(0); row < 19; row++ {
+			if arena.Gomoku.Goban.GetElem(row, col) == 0 &&
+				arena.Gomoku.Goban.IsSurounded(row, col) == true {
 				move := make([]int32, 2)
-				move[0] = int32(row)
-				move[1] = int32(col)
+				move[0] = row
+				move[1] = col
 				tab = append(tab, move)
 			}
 		}
