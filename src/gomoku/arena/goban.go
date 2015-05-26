@@ -38,28 +38,28 @@ func (goban *Goban) GetElem(row int32, col int32) int8 {
 }
 
 func (goban *Goban) GetTopElem(row int32, col int32) int8 {
-	if row > 0 && row < 19 && col > 0 && col < 19 {
+	if row > 0 && row < 19 && col >= 0 && col < 19 {
 		return goban[(row-1)*19+col]
 	}
 	return -1
 }
 
 func (goban *Goban) GetBottomElem(row int32, col int32) int8 {
-	if row > 0 && row < 18 && col > 0 && col < 19 {
+	if row >= 0 && row < 18 && col >= 0 && col < 19 {
 		return goban[(row+1)*19+col]
 	}
 	return -1
 }
 
 func (goban *Goban) GetLeftElem(row int32, col int32) int8 {
-	if row > 0 && row < 19 && col > 0 && col < 19 {
+	if row >= 0 && row < 19 && col > 0 && col < 19 {
 		return goban[row*19+(col-1)]
 	}
 	return -1
 }
 
 func (goban *Goban) GetRightElem(row int32, col int32) int8 {
-	if row > 0 && row < 19 && col > 0 && col < 18 {
+	if row >= 0 && row < 19 && col >= 0 && col < 18 {
 		return goban[row*19+(col+1)]
 	}
 	return -1
@@ -73,21 +73,21 @@ func (goban *Goban) GetTopLeftElem(row int32, col int32) int8 {
 }
 
 func (goban *Goban) GetTopRightElem(row int32, col int32) int8 {
-	if row > 0 && row < 19 && col > 0 && col < 18 {
+	if row > 0 && row < 19 && col >= 0 && col < 18 {
 		return goban[(row-1)*19+(col+1)]
 	}
 	return -1
 }
 
 func (goban *Goban) GetBottomLeftElem(row int32, col int32) int8 {
-	if row > 0 && row < 18 && col > 0 && col < 19 {
+	if row >= 0 && row < 18 && col > 0 && col < 19 {
 		return goban[(row+1)*19+(col-1)]
 	}
 	return -1
 }
 
 func (goban *Goban) GetBottomRightElem(row int32, col int32) int8 {
-	if row > 0 && row < 18 && col > 0 && col < 18 {
+	if row >= 0 && row < 18 && col >= 0 && col < 18 {
 		return goban[(row+1)*19+(col+1)]
 	}
 	return -1

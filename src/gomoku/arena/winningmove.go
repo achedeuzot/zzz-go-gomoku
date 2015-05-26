@@ -1,12 +1,21 @@
 package arena
 
-func (goban *Goban) IsWinningMove(row int32, col int32) bool {
-	if Gomoku.CurrPlayer.GetCaptured() >= 10 ||
-		goban.IsWinningHorizontal(row, col) ||
-		goban.IsWinningVertical(row, col) ||
-		goban.IsWinningDiagonal_1(row, col) ||
-		goban.IsWinningDiagonal_2(row, col) {
+func (goban *Goban) IsWinningMove() bool {
+	if Gomoku.CurrPlayer.GetCaptured() >= 10 {
 		return true
+	}
+	for col := 0; col < 19; col++ {
+		for row := 0; row < 19; row++ {
+			currColor := Gomoku.CurrPlayer.GetColor()
+			if goban.GetElem(int32(row), int32(col)) == currColor {
+				if goban.IsWinningHorizontal(int32(row), int32(col)) ||
+					goban.IsWinningVertical(int32(row), int32(col)) ||
+					goban.IsWinningDiagonal_1(int32(row), int32(col)) ||
+					goban.IsWinningDiagonal_2(int32(row), int32(col)) {
+					return true
+				}
+			}
+		}
 	}
 	return false
 }
@@ -18,11 +27,11 @@ func (goban *Goban) IsWinningVertical(row int32, col int32) bool {
 		row--
 	}
 	for goban.GetBottomElem(row, col) == currentColor {
+		if goban.canBeCaptured(row, col, currentColor) == true {
+			count = 0
+		}
 		count++
 		row++
-		if goban.canBeCaptured(row, col, currentColor) {
-			return false
-		}
 	}
 	if count >= 5 {
 		return true
@@ -37,11 +46,11 @@ func (goban *Goban) IsWinningHorizontal(row int32, col int32) bool {
 		col--
 	}
 	for goban.GetRightElem(row, col) == currentColor {
+		if goban.canBeCaptured(row, col, currentColor) == true {
+			count = 0
+		}
 		count++
 		col++
-		if goban.canBeCaptured(row, col, currentColor) == true {
-			return false
-		}
 	}
 	if count >= 5 {
 		return true
@@ -57,12 +66,12 @@ func (goban *Goban) IsWinningDiagonal_1(row int32, col int32) bool {
 		row--
 	}
 	for goban.GetBottomRightElem(row, col) == currentColor {
+		if goban.canBeCaptured(row, col, currentColor) == true {
+			count = 0
+		}
 		count++
 		col++
 		row++
-		if goban.canBeCaptured(row, col, currentColor) {
-			return false
-		}
 	}
 	if count >= 5 {
 		return true
@@ -78,12 +87,12 @@ func (goban *Goban) IsWinningDiagonal_2(row int32, col int32) bool {
 		row--
 	}
 	for goban.GetBottomLeftElem(row, col) == currentColor {
+		if goban.canBeCaptured(row, col, currentColor) == true {
+			count = 0
+		}
 		count++
 		col--
 		row++
-		if goban.canBeCaptured(row, col, currentColor) {
-			return false
-		}
 	}
 	if count >= 5 {
 		return true

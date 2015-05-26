@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	minimax_depth = 1
+	minimax_depth = 2
 )
 
 const (
@@ -32,6 +32,7 @@ func NewAI(color int8) *AI {
 
 func (ai *AI) think() []int32 {
 	move := make([]int32, 2)
+	// negaScout(minimax_depth, math.Inf(-1), math.Inf(1), true)
 	move[0], move[1], _ = minimax(minimax_depth, true)
 	return move
 }
@@ -51,6 +52,42 @@ func (ai *AI) IsHuman() bool {
 	return false
 }
 
+func negaScout(depth int, alpha float64, beta float64, isMaximizer bool) float64 {
+	if depth == 0 || hasWon() {
+		return float64(score())
+	}
+	var color int8
+	var tmpScore float64
+	if isMaximizer == true {
+		color = arena.Gomoku.CurrPlayer.GetColor()
+	} else {
+		color = arena.GetOpponentColor(arena.Gomoku.CurrPlayer.GetColor())
+	}
+	for idx, move := range generateNeighbors() {
+		arena.Gomoku.Goban.SetElem(move[0], move[1], color)
+		if idx > 0 {
+			tmpScore = -negaScout(depth-1, -alpha-1, -alpha, !isMaximizer)
+			if alpha < tmpScore && tmpScore < beta {
+				tmpScore = -negaScout(depth-1, -beta, -tmpScore, !isMaximizer)
+			}
+		} else {
+			tmpScore = -negaScout(depth-1, -beta, -alpha, !isMaximizer)
+		}
+		alpha := max(alpha, tmpScore)
+		arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
+		if alpha >= beta {
+			break
+		}
+	}
+	return alpha
+}
+
+func max(a, b float64) float64 {
+	if a >= b {
+		return a
+	}
+	return b
+}
 func minimax(depth int, isMaximizer bool) (int32, int32, int32) {
 	if depth == 0 || hasWon() {
 		return -1, -1, score()

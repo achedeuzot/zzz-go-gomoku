@@ -112,7 +112,7 @@ func (s *Game) applyMove(row int32, col int32) {
 	if isAuthorizedMove(row, col) {
 		arena.Gomoku.Goban.SetElem(row, col, int8(arena.Gomoku.CurrPlayer.GetColor()))
 		arena.Gomoku.Goban.Capture(row, col)
-		if arena.Gomoku.Goban.IsWinningMove(row, col) {
+		if arena.Gomoku.Goban.IsWinningMove() {
 			arena.Gomoku.CurrPlayer.SetHasWon(true)
 			log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
 		}
