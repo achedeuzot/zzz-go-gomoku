@@ -2,7 +2,6 @@ package ai
 
 import (
 	"gomoku/arena"
-	"math/rand"
 	"time"
 )
 
@@ -52,12 +51,12 @@ func (ai *AI) IsHuman() bool {
 	return false
 }
 
-func minimax(depth int, isMaximizer bool) (int32, int32, int) {
+func minimax(depth int, isMaximizer bool) (int32, int32, int32) {
 	if depth == 0 || hasWon() {
 		return -1, -1, score()
 	}
 	if isMaximizer == true {
-		bestValue := -5000
+		var bestValue int32 = -5000
 		bestRow := int32(-1)
 		bestCol := int32(-1)
 		for _, move := range generateNeighbors() {
@@ -76,7 +75,7 @@ func minimax(depth int, isMaximizer bool) (int32, int32, int) {
 		}
 		return bestRow, bestCol, bestValue
 	} else {
-		bestValue := 5000
+		var bestValue int32 = 5000
 		bestRow := int32(-1)
 		bestCol := int32(-1)
 		for _, move := range generateNeighbors() {
@@ -126,9 +125,23 @@ func generateNeighbors() [][]int32 {
 	return tab
 }
 
-func score() int {
-	// heuristics moth*rfucker !
-	return rand.Int()
+func score() (score int32) {
+	score = 0
+	var col int32
+	var row int32
+	for col = 0; col < 19; col++ {
+		for row = 0; row < 19; row++ {
+			if arena.Gomoku.Goban.GetElem(row, col) != 0 {
+				score += addCaptureScore(row, col)
+				score += addAsymetricAlignedScore(row, col)
+			}
+		}
+	}
+	return score
+}
+
+func addCaptureScore(row int32, col int32) int32 {
+	return 1
 }
 
 func hasWon() bool {
