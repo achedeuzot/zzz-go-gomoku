@@ -108,7 +108,7 @@ func (s *Game) PlayScene() {
 	s.displayGame()
 
 	// Display Position in top left corner
-	pos := fmt.Sprintf("%2d-%2d", s.LastMousePos.X, s.LastMousePos.Y)
+	pos := fmt.Sprintf("%2d-%2d", s.LastMousePos.Y, s.LastMousePos.X)
 	postexture := GetTextureFromFont(0, pos, 70, sdl.Color{R: 255, G: 255, B: 255, A: 255})
 	Renderer.Copy(postexture.texture, &postexture.size, &sdl.Rect{X: 0, Y: 0, W: postexture.size.W, H: postexture.size.H})
 

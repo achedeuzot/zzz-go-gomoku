@@ -112,7 +112,7 @@ func isMouseButtonLeftUp(t *sdl.MouseButtonEvent) bool {
 func initFonts() {
 	ttf.Init()
 
-	font, err := ttf.OpenFont("data/fonts/TaiLeb.ttf", 30)
+	font, err := ttf.OpenFont("data/fonts/TaiLeb.ttf", 70)
 	if err != nil {
 		log.Fatalf("Failed to load font: %s\n", err)
 	}

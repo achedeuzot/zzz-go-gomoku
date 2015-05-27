@@ -2,13 +2,12 @@ package ai
 
 import (
 	"gomoku/arena"
-	"log"
 	"math"
 	"time"
 )
 
 const (
-	minimax_depth = 2
+	minimax_depth = 1
 )
 
 type AI struct {
@@ -48,7 +47,7 @@ func (ai *AI) IsHuman() bool {
 
 func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float64, []int32) {
 	var color int8
-	if isMaximizer == true {
+	if isMaximizer == false {
 		color = arena.Gomoku.CurrPlayer.GetColor()
 	} else {
 		color = arena.GetOpponentColor(arena.Gomoku.CurrPlayer.GetColor())
@@ -56,8 +55,7 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 
 	// Check if we’re done recursing
 	if hasWon(isMaximizer) {
-		log.Printf("Detect Winning State at depth %d\n", depth)
-		return float64(math.Inf(1)), make([]int32, 2)
+		return float64(math.Inf(-1)), make([]int32, 2)
 	}
 	if depth == 0 {
 		return float64(score()), make([]int32, 2)
@@ -73,12 +71,9 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 		recursedScore, _ := abNegamax(depth-1, -beta, -max(alpha, bestScore), !isMaximizer)
 		currentScore := -recursedScore
 
-		log.Printf("[%d] Set elem on %2d-%2d - recursedScore: %f | currentScore: %f\n", depth, move[0], move[1], recursedScore, currentScore)
-
 		arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
 		// Update the best score
 		if currentScore > bestScore {
-			log.Println("currentScore > bestScore")
 			bestScore = currentScore
 			bestMove = move
 
