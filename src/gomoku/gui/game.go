@@ -1,6 +1,7 @@
 package gui
 
 import (
+	"fmt"
 	"gomoku/arena"
 	"log"
 
@@ -75,6 +76,7 @@ func (s *Game) handleEvents() {
 			if i, j := s.XYInCell(t.X, t.Y); i >= 0 && j >= 0 {
 				s.LastMousePos.X = i
 				s.LastMousePos.Y = j
+
 			}
 		case *sdl.MouseButtonEvent:
 			if isMouseButtonLeftUp(t) && isEmptyCell(s.LastMousePos.Y, s.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
@@ -104,6 +106,11 @@ func (s *Game) PlayScene() {
 	}
 	s.displayCapturedPawns()
 	s.displayGame()
+
+	// Display Position in top left corner
+	pos := fmt.Sprintf("%2d-%2d", s.LastMousePos.X, s.LastMousePos.Y)
+	postexture := GetTextureFromFont(0, pos, 70, sdl.Color{R: 255, G: 255, B: 255, A: 255})
+	Renderer.Copy(postexture.texture, &postexture.size, &sdl.Rect{X: 0, Y: 0, W: postexture.size.W, H: postexture.size.H})
 
 	Renderer.Present()
 }

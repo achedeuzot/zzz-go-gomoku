@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
+	ttf "github.com/veandco/go-sdl2/sdl_ttf"
 )
 
 var (
@@ -12,6 +13,7 @@ var (
 	DisplayMode *sdl.DisplayMode
 	Renderer    *sdl.Renderer
 	Running     bool = true
+	Fonts       map[int8]*ttf.Font
 )
 
 func StartupGUI(fullscreen bool, width int, height int) {
@@ -64,6 +66,8 @@ func StartupGUI(fullscreen bool, width int, height int) {
 
 	// Setup scaling quality to linear
 	sdl.SetHintWithPriority(sdl.HINT_RENDER_SCALE_QUALITY, "1", sdl.HINT_OVERRIDE)
+
+	initFonts()
 }
 
 func ShutdownGUI() {
@@ -103,4 +107,17 @@ func isMouseButtonLeftUp(t *sdl.MouseButtonEvent) bool {
 		return true
 	}
 	return false
+}
+
+func initFonts() {
+	ttf.Init()
+
+	font, err := ttf.OpenFont("data/fonts/TaiLeb.ttf", 30)
+	if err != nil {
+		log.Fatalf("Failed to load font: %s\n", err)
+	}
+
+	Fonts = make(map[int8]*ttf.Font)
+
+	Fonts[0] = font
 }

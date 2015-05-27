@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	minimax_depth = 3
+	minimax_depth = 2
 )
 
 type AI struct {
@@ -56,6 +56,7 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 
 	// Check if we’re done recursing
 	if hasWon(isMaximizer) {
+		log.Printf("Detect Winning State at depth %d\n", depth)
 		return float64(math.Inf(1)), make([]int32, 2)
 	}
 	if depth == 0 {
@@ -72,9 +73,12 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 		recursedScore, _ := abNegamax(depth-1, -beta, -max(alpha, bestScore), !isMaximizer)
 		currentScore := -recursedScore
 
+		log.Printf("[%d] Set elem on %2d-%2d - recursedScore: %f | currentScore: %f\n", depth, move[0], move[1], recursedScore, currentScore)
+
 		arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
 		// Update the best score
 		if currentScore > bestScore {
+			log.Println("currentScore > bestScore")
 			bestScore = currentScore
 			bestMove = move
 
@@ -93,6 +97,7 @@ func max(a, b float64) float64 {
 	}
 	return b
 }
+
 func minimax(depth int, isMaximizer bool) (int32, int32, int32) {
 	if hasWon(isMaximizer) {
 		return -1, -1, 999999999
@@ -198,7 +203,6 @@ func hasWon(isMaximizer bool) bool {
 		}
 	}
 	if arena.Gomoku.Goban.IsWinningState(player) == true {
-		log.Printf("%+v winning\n", player)
 		return true
 	}
 	return false
