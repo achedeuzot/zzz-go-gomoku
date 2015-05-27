@@ -13,7 +13,7 @@ type Game struct {
 	Pawns        []*Texture
 	CellSize     sdl.Rect
 	LastMousePos sdl.Rect
-	Winner       *Texture
+	Winner       []*Texture
 }
 
 func NewGame() *Game {
@@ -51,6 +51,13 @@ func NewGame() *Game {
 	game.Pawns[arena.BlackPlayer].pos = game.CellSize
 	game.Pawns[arena.RedPawn].pos = game.CellSize
 	game.Pawns[arena.CapturePawn].pos = game.CellSize
+	game.Winner = make([]*Texture, 3)
+	winStrWhite := fmt.Sprint("Color white won.")
+	winStrBlack := fmt.Sprint("Color black won.")
+	game.Winner[arena.WhitePlayer] = GetTextureFromFont(0, winStrWhite, 70, sdl.Color{R: 255, G: 255, B: 255, A: 255})
+	game.Winner[arena.BlackPlayer] = GetTextureFromFont(0, winStrBlack, 70, sdl.Color{R: 255, G: 255, B: 255, A: 255})
+	game.Winner[arena.WhitePlayer].pos = sdl.Rect{X: DisplayMode.W/2 - (game.Winner[arena.WhitePlayer].size.W*DisplayMode.W/2560)/2, Y: DisplayMode.H / 7, W: game.Winner[arena.WhitePlayer].size.W * DisplayMode.W / 2560, H: game.Winner[arena.WhitePlayer].size.H * DisplayMode.H / 1440}
+	game.Winner[arena.BlackPlayer].pos = sdl.Rect{X: DisplayMode.W/2 - (game.Winner[arena.BlackPlayer].size.W*DisplayMode.W/2560)/2, Y: DisplayMode.H / 7, W: game.Winner[arena.BlackPlayer].size.W * DisplayMode.W / 2560, H: game.Winner[arena.WhitePlayer].size.H * DisplayMode.H / 1440}
 	return game
 }
 
@@ -73,7 +80,6 @@ func (s *Game) handleEvents() {
 			Running = false
 		case *sdl.KeyUpEvent:
 			if t.Keysym.Sym == sdl.K_ESCAPE {
-				s.Winner = nil
 				CurrScene = SceneMap["MenuMain"]
 			}
 		case *sdl.MouseMotionEvent:
@@ -83,7 +89,7 @@ func (s *Game) handleEvents() {
 
 			}
 		case *sdl.MouseButtonEvent:
-			if s.Winner == nil && isMouseButtonLeftUp(t) && isEmptyCell(s.LastMousePos.Y, s.LastMousePos.X) && arena.Gomoku.ActivePlayer.IsHuman() == true {
+			if arena.Gomoku.ActivePlayer.GetHasWon() == false && arena.Gomoku.OtherPlayer.GetHasWon() == false && isMouseButtonLeftUp(t) && isEmptyCell(s.LastMousePos.Y, s.LastMousePos.X) && arena.Gomoku.ActivePlayer.IsHuman() == true {
 				// check forbidden moves
 				row := s.LastMousePos.Y
 				col := s.LastMousePos.X
@@ -105,13 +111,15 @@ func (s *Game) PlayScene() {
 
 	s.handleEvents()
 
-	if s.Winner == nil {
+	if arena.Gomoku.ActivePlayer.GetHasWon() == true {
+		Renderer.Copy(s.Winner[arena.Gomoku.ActivePlayer.GetColor()].texture, &s.Winner[arena.Gomoku.ActivePlayer.GetColor()].size, &s.Winner[arena.Gomoku.ActivePlayer.GetColor()].pos)
+	} else if arena.Gomoku.OtherPlayer.GetHasWon() == true {
+		Renderer.Copy(s.Winner[arena.Gomoku.OtherPlayer.GetColor()].texture, &s.Winner[arena.Gomoku.OtherPlayer.GetColor()].size, &s.Winner[arena.Gomoku.OtherPlayer.GetColor()].pos)
+	} else {
 		if arena.Gomoku.ActivePlayer.IsHuman() == false {
 			row, col := arena.Gomoku.ActivePlayer.PlayMove()
 			s.applyMove(row, col)
 		}
-	} else {
-		s.displayWinner()
 	}
 	s.displayCapturedPawns(arena.Gomoku.ActivePlayer)
 	s.displayCapturedPawns(arena.Gomoku.OtherPlayer)
@@ -131,15 +139,10 @@ func (s *Game) applyMove(row int32, col int32) {
 		arena.Gomoku.Goban.Capture(row, col)
 		if arena.Gomoku.Goban.IsWinningMove() {
 			arena.Gomoku.ActivePlayer.SetHasWon(true)
-			s.generateWinnerTexture()
 		}
 		arena.Gomoku.ActivePlayer.AddPawns(1)
 		arena.Gomoku.SwitchPlayers()
 	}
-}
-
-func (s *Game) displayWinner() {
-	Renderer.Copy(s.Winner.texture, &s.Winner.size, &s.Winner.pos)
 }
 
 func (s *Game) displayCapturedPawns(player arena.Player) {
@@ -201,17 +204,6 @@ func (s *Game) displayGame() {
 			}
 		}
 	}
-}
-
-func (s *Game) generateWinnerTexture() {
-	var winStr string
-	if arena.Gomoku.ActivePlayer.GetColor() == 0 {
-		winStr = fmt.Sprint("Color white won.")
-	} else {
-		winStr = fmt.Sprint("Color black won.")
-	}
-	s.Winner = GetTextureFromFont(0, winStr, 70, sdl.Color{R: 255, G: 255, B: 255, A: 255})
-	s.Winner.pos = sdl.Rect{X: DisplayMode.W/2 - (s.Winner.size.W*DisplayMode.W/2560)/2, Y: DisplayMode.H / 7, W: s.Winner.size.W * DisplayMode.W / 2560, H: s.Winner.size.H * DisplayMode.H / 1440}
 }
 
 func isAuthorizedMove(row int32, col int32) bool {
