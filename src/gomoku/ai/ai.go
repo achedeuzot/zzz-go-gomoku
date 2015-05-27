@@ -61,6 +61,7 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 	bestScore := math.Inf(-1)
 	for _, move := range generateNeighbors(color) {
 		arena.Gomoku.Goban.SetElem(move[0], move[1], color)
+		capturedPositions := arena.Gomoku.Goban.Capture(move[0], move[1])
 
 		// Recurse
 		arena.Gomoku.SwitchPlayers()
@@ -68,6 +69,7 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 		currentScore := -recursedScore
 		arena.Gomoku.SwitchPlayers()
 
+		arena.Gomoku.Goban.UnCapture(capturedPositions, arena.Gomoku.OtherPlayer.GetColor())
 		arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
 		// Update the best score
 		if currentScore > bestScore {
