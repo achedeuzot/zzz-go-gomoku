@@ -1,8 +1,8 @@
 package arena
 
 func (goban *Goban) Capture(row int32, col int32) {
-	currentColor := Gomoku.CurrPlayer.GetColor()
-	opponentColor := GetOpponentColor(Gomoku.CurrPlayer.GetColor())
+	currentColor := Gomoku.ActivePlayer.GetColor()
+	opponentColor := Gomoku.OtherPlayer.GetColor()
 	var capturedPawns int8
 	capturedPawns += goban.tryCaptureUp(row, col, currentColor, opponentColor)
 	capturedPawns += goban.tryCaptureDown(row, col, currentColor, opponentColor)
@@ -12,7 +12,7 @@ func (goban *Goban) Capture(row int32, col int32) {
 	capturedPawns += goban.tryCaptureTopRight(row, col, currentColor, opponentColor)
 	capturedPawns += goban.tryCaptureBottomLeft(row, col, currentColor, opponentColor)
 	capturedPawns += goban.tryCaptureBottomRight(row, col, currentColor, opponentColor)
-	Gomoku.CurrPlayer.AddCaptured(capturedPawns)
+	Gomoku.ActivePlayer.AddCaptured(capturedPawns)
 }
 
 func (goban *Goban) tryCaptureUp(row int32, col int32, currentColor int8, opponentColor int8) int8 {

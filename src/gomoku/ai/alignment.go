@@ -5,9 +5,9 @@ import (
 	"math"
 )
 
-func addSimpleAlignedScore(row int32, col int32) (score int32) {
+func addSimpleAlignedScore(row int32, col int32, color int8) (score int32) {
 	score = 0
-	currentColor := arena.Gomoku.CurrPlayer.GetColor()
+	currentColor := color
 	score += addVerticalAlignedScore(row, col, currentColor)
 	score += addHorizontalAlignedScore(row, col, currentColor)
 	score += addDiagonal1AlignedScore(row, col, currentColor)
@@ -20,9 +20,9 @@ func addSimpleAlignedScore(row int32, col int32) (score int32) {
 	return
 }
 
-func addAsymetricAlignedScore(row int32, col int32) (score int32) {
+func addAsymetricAlignedScore(row int32, col int32, color int8) (score int32) {
 	score = 0
-	currentColor := arena.Gomoku.CurrPlayer.GetColor()
+	currentColor := color
 	score += addVerticalAlignedScore(row, col, currentColor)
 	score += addHorizontalAlignedScore(row, col, currentColor)
 	score += addDiagonal1AlignedScore(row, col, currentColor)

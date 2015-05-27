@@ -1,7 +1,7 @@
 package arena
 
 func (goban *Goban) IsWinningMove() bool {
-	return goban.IsWinningState(Gomoku.CurrPlayer)
+	return goban.IsWinningState(Gomoku.ActivePlayer)
 }
 
 func (goban *Goban) IsWinningState(player Player) bool {
