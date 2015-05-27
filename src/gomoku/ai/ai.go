@@ -119,7 +119,7 @@ func generateNeighbors(color int8) [][]int32 {
 	return tab
 }
 
-func score(color int8) (score int32) {
+func score(color int8) (score float64) {
 	opponentColor := arena.GetOpponentColor(color)
 	score = 0
 	var col int32
@@ -127,10 +127,10 @@ func score(color int8) (score int32) {
 	for col = 0; col < 19; col++ {
 		for row = 0; row < 19; row++ {
 			if arena.Gomoku.Goban.GetElem(row, col) == color {
-				score -= addCaptureScore(row, col, color)
+				score += float64(arena.Gomoku.OtherPlayer.GetCaptured()) * addCaptureScore(row, col, color)
 				score += addAlignedScore(row, col, color)
 			} else if arena.Gomoku.Goban.GetElem(row, col) == opponentColor {
-				score += addCaptureScore(row, col, opponentColor)
+				score -= float64(arena.Gomoku.ActivePlayer.GetCaptured()) * addCaptureScore(row, col, opponentColor)
 				score -= addAlignedScore(row, col, opponentColor)
 			}
 		}

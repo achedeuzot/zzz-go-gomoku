@@ -5,7 +5,8 @@ import (
 	"math"
 )
 
-func addSimpleAlignedScore(row int32, col int32, color int8) (score int32) {
+func addSimpleAlignedScore(row int32, col int32, color int8) float64 {
+	var score int32
 	score = 0
 	currentColor := color
 	score += addVerticalAlignedScore(row, col, currentColor)
@@ -17,10 +18,11 @@ func addSimpleAlignedScore(row int32, col int32, color int8) (score int32) {
 	score -= addHorizontalAlignedScore(row, col, opponentColor)
 	score -= addDiagonal1AlignedScore(row, col, opponentColor)
 	score -= addDiagonal2AlignedScore(row, col, opponentColor)
-	return
+	return float64(score)
 }
 
-func addAlignedScore(row int32, col int32, color int8) (score int32) {
+func addAlignedScore(row int32, col int32, color int8) float64 {
+	var score int32
 	score = 0
 	currentColor := color
 	score += addVerticalAlignedScore(row, col, currentColor)
@@ -32,7 +34,7 @@ func addAlignedScore(row int32, col int32, color int8) (score int32) {
 	// score -= 2 * addHorizontalAlignedScore(row, col, opponentColor)
 	// score -= 2 * addDiagonal1AlignedScore(row, col, opponentColor)
 	// score -= 2 * addDiagonal2AlignedScore(row, col, opponentColor)
-	return
+	return float64(score)
 }
 
 func addVerticalAlignedScore(row int32, col int32, currentColor int8) (score int32) {
