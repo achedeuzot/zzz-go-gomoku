@@ -155,7 +155,7 @@ func (goban *Goban) tryCaptureBottomRight(row int32, col int32, currentColor int
 	return 2
 }
 
-func (goban *Goban) canBeCaptured(row int32, col int32, currentColor int8) bool {
+func (goban *Goban) CanBeCaptured(row int32, col int32, currentColor int8) bool {
 	if goban.canBeCapturedVertical(row, col, currentColor) ||
 		goban.canBeCapturedHorizontal(row, col, currentColor) ||
 		goban.canBeCapturedDiagonal_1(row, col, currentColor) ||

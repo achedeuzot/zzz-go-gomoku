@@ -45,10 +45,12 @@ func NewGame() *Game {
 	game.Pawns[arena.WhitePlayer] = GetTextureFromImage("data/img/white.png")
 	game.Pawns[arena.BlackPlayer] = GetTextureFromImage("data/img/black.png")
 	game.Pawns[arena.RedPawn] = GetTextureFromImage("data/img/red.png")
+	game.Pawns[arena.CapturePawn] = GetTextureFromImage("data/img/capture.png")
 	game.CellSize = sdl.Rect{X: 0, Y: 0, W: game.Table.pos.W / 19, H: game.Table.pos.H / 19}
 	game.Pawns[arena.WhitePlayer].pos = game.CellSize
 	game.Pawns[arena.BlackPlayer].pos = game.CellSize
 	game.Pawns[arena.RedPawn].pos = game.CellSize
+	game.Pawns[arena.CapturePawn].pos = game.CellSize
 	return game
 }
 
@@ -186,6 +188,15 @@ func (s *Game) displayGame() {
 						Y: s.Table.pos.Y + 16 + s.Pawns[arena.RedPawn].pos.H*int32(row),
 						W: s.Pawns[arena.RedPawn].pos.W - 10,
 						H: s.Pawns[arena.RedPawn].pos.H - 10,
+					})
+			}
+			if arena.Gomoku.CurrPlayer.IsHuman() == true && currVal != 0 && arena.Gomoku.Goban.CanBeCaptured(int32(row), int32(col), currVal) {
+				Renderer.Copy(s.Pawns[arena.CapturePawn].texture, &s.Pawns[arena.CapturePawn].size,
+					&sdl.Rect{
+						X: s.Table.pos.X + 16 + s.Pawns[arena.CapturePawn].pos.W*int32(col),
+						Y: s.Table.pos.Y + 16 + s.Pawns[arena.CapturePawn].pos.H*int32(row),
+						W: s.Pawns[arena.CapturePawn].pos.W - 10,
+						H: s.Pawns[arena.CapturePawn].pos.H - 10,
 					})
 			}
 		}
