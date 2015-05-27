@@ -4,8 +4,7 @@ import (
 	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/sdl_image"
-	"github.com/veandco/go-sdl2/sdl_ttf"
+	img "github.com/veandco/go-sdl2/sdl_image"
 )
 
 type Texture struct {
@@ -39,13 +38,8 @@ func GetTextureFromImage(filename string) *Texture {
 	}
 }
 
-func GetTextureFromFont(fontname string, text string, size int, color sdl.Color) *Texture {
-	ttf.Init()
-
-	font, err := ttf.OpenFont(fontname, size)
-	if err != nil {
-		log.Fatalf("Failed to load font: %s\n", err)
-	}
+func GetTextureFromFont(fontId int8, text string, size int, color sdl.Color) *Texture {
+	font := Fonts[fontId]
 
 	text_rendered, err := font.RenderUTF8_Blended(text, color)
 	if err != nil {

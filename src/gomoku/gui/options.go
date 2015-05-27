@@ -6,7 +6,7 @@ import (
 	"gomoku/human"
 
 	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/sdl_ttf"
+	ttf "github.com/veandco/go-sdl2/sdl_ttf"
 )
 
 type Options struct {
@@ -21,10 +21,10 @@ type Options struct {
 func NewOptions() *Options {
 	menu := &Options{
 		Background:   GetTextureFromImage("data/img/bg.jpg"),
-		Title:        GetTextureFromFont("data/fonts/TaiLeb.ttf", "Options", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
-		AIvsHuman:    GetTextureFromFont("data/fonts/TaiLeb.ttf", "AI vs Human", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
-		HumanvsHuman: GetTextureFromFont("data/fonts/TaiLeb.ttf", "Human vs Human", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
-		AIvsAI:       GetTextureFromFont("data/fonts/TaiLeb.ttf", "AI vs AI", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
+		Title:        GetTextureFromFont(0, "Options", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
+		AIvsHuman:    GetTextureFromFont(0, "AI vs Human", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
+		HumanvsHuman: GetTextureFromFont(0, "Human vs Human", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
+		AIvsAI:       GetTextureFromFont(0, "AI vs AI", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
 	}
 
 	menu.Background.pos = sdl.Rect{X: 0, Y: 0, W: DisplayMode.W, H: DisplayMode.H}

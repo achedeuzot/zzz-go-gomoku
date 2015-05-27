@@ -2,7 +2,7 @@ package gui
 
 import (
 	"github.com/veandco/go-sdl2/sdl"
-	"github.com/veandco/go-sdl2/sdl_ttf"
+	ttf "github.com/veandco/go-sdl2/sdl_ttf"
 )
 
 type MenuMain struct {
@@ -17,7 +17,7 @@ type MenuMain struct {
 func NewMainMenu() *MenuMain {
 	menu := &MenuMain{
 		Background: GetTextureFromImage("data/img/bg.jpg"),
-		Title:      GetTextureFromFont("data/fonts/TaiLeb.ttf", "Gogomoku", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
+		Title:      GetTextureFromFont(0, "Gogomoku", 150, sdl.Color{R: 255, G: 255, B: 255, A: 255}),
 		Play:       GetTextureFromImage("data/img/button_play.png"),
 		Quit:       GetTextureFromImage("data/img/button_exit.png"),
 	}

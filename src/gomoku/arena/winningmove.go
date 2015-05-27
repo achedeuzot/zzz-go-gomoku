@@ -8,14 +8,14 @@ func (goban *Goban) IsWinningState(player Player) bool {
 	if player.GetCaptured() >= 10 {
 		return true
 	}
+	currColor := player.GetColor()
 	for col := 0; col < 19; col++ {
 		for row := 0; row < 19; row++ {
-			currColor := player.GetColor()
 			if goban.GetElem(int32(row), int32(col)) == currColor {
-				if goban.IsWinningHorizontal(int32(row), int32(col)) ||
-					goban.IsWinningVertical(int32(row), int32(col)) ||
-					goban.IsWinningDiagonal_1(int32(row), int32(col)) ||
-					goban.IsWinningDiagonal_2(int32(row), int32(col)) {
+				if goban.IsWinningHorizontal(int32(row), int32(col), currColor) ||
+					goban.IsWinningVertical(int32(row), int32(col), currColor) ||
+					goban.IsWinningDiagonal_1(int32(row), int32(col), currColor) ||
+					goban.IsWinningDiagonal_2(int32(row), int32(col), currColor) {
 					return true
 				}
 			}
@@ -24,14 +24,13 @@ func (goban *Goban) IsWinningState(player Player) bool {
 	return false
 }
 
-func (goban *Goban) IsWinningVertical(row int32, col int32) bool {
-	currentColor := Gomoku.CurrPlayer.GetColor()
+func (goban *Goban) IsWinningVertical(row int32, col int32, color int8) bool {
 	count := 1
-	for goban.GetTopElem(row, col) == currentColor {
+	for goban.GetTopElem(row, col) == color {
 		row--
 	}
-	for goban.GetBottomElem(row, col) == currentColor {
-		if goban.canBeCaptured(row, col, currentColor) == true {
+	for goban.GetBottomElem(row, col) == color {
+		if goban.canBeCaptured(row, col, color) == true {
 			count = 0
 		}
 		count++
@@ -43,14 +42,13 @@ func (goban *Goban) IsWinningVertical(row int32, col int32) bool {
 	return false
 }
 
-func (goban *Goban) IsWinningHorizontal(row int32, col int32) bool {
-	currentColor := Gomoku.CurrPlayer.GetColor()
+func (goban *Goban) IsWinningHorizontal(row int32, col int32, color int8) bool {
 	count := 1
-	for goban.GetLeftElem(row, col) == currentColor {
+	for goban.GetLeftElem(row, col) == color {
 		col--
 	}
-	for goban.GetRightElem(row, col) == currentColor {
-		if goban.canBeCaptured(row, col, currentColor) == true {
+	for goban.GetRightElem(row, col) == color {
+		if goban.canBeCaptured(row, col, color) == true {
 			count = 0
 		}
 		count++
@@ -62,15 +60,14 @@ func (goban *Goban) IsWinningHorizontal(row int32, col int32) bool {
 	return false
 }
 
-func (goban *Goban) IsWinningDiagonal_1(row int32, col int32) bool {
-	currentColor := Gomoku.CurrPlayer.GetColor()
+func (goban *Goban) IsWinningDiagonal_1(row int32, col int32, color int8) bool {
 	count := 1
-	for goban.GetTopLeftElem(row, col) == currentColor {
+	for goban.GetTopLeftElem(row, col) == color {
 		col--
 		row--
 	}
-	for goban.GetBottomRightElem(row, col) == currentColor {
-		if goban.canBeCaptured(row, col, currentColor) == true {
+	for goban.GetBottomRightElem(row, col) == color {
+		if goban.canBeCaptured(row, col, color) == true {
 			count = 0
 		}
 		count++
@@ -83,15 +80,14 @@ func (goban *Goban) IsWinningDiagonal_1(row int32, col int32) bool {
 	return false
 }
 
-func (goban *Goban) IsWinningDiagonal_2(row int32, col int32) bool {
-	currentColor := Gomoku.CurrPlayer.GetColor()
+func (goban *Goban) IsWinningDiagonal_2(row int32, col int32, color int8) bool {
 	count := 1
-	for goban.GetTopRightElem(row, col) == currentColor {
+	for goban.GetTopRightElem(row, col) == color {
 		col++
 		row--
 	}
-	for goban.GetBottomLeftElem(row, col) == currentColor {
-		if goban.canBeCaptured(row, col, currentColor) == true {
+	for goban.GetBottomLeftElem(row, col) == color {
+		if goban.canBeCaptured(row, col, color) == true {
 			count = 0
 		}
 		count++

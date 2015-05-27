@@ -2,7 +2,6 @@ package ai
 
 import (
 	"gomoku/arena"
-	"log"
 	"math"
 	"time"
 )
@@ -27,7 +26,6 @@ func NewAI(color int8) *AI {
 func (ai *AI) think() []int32 {
 	move := make([]int32, 2)
 	_, move = abNegamax(minimax_depth, math.Inf(-1), math.Inf(1), true)
-	// move[0], move[1], _ = minimax(minimax_depth, true)
 	return move
 }
 
@@ -48,7 +46,7 @@ func (ai *AI) IsHuman() bool {
 
 func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float64, []int32) {
 	var color int8
-	if isMaximizer == true {
+	if isMaximizer == false {
 		color = arena.Gomoku.CurrPlayer.GetColor()
 	} else {
 		color = arena.GetOpponentColor(arena.Gomoku.CurrPlayer.GetColor())
@@ -56,7 +54,7 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 
 	// Check if we’re done recursing
 	if hasWon(isMaximizer) {
-		return float64(math.Inf(1)), make([]int32, 2)
+		return float64(math.Inf(-1)), make([]int32, 2)
 	}
 	if depth == 0 {
 		return float64(score()), make([]int32, 2)
@@ -92,53 +90,6 @@ func max(a, b float64) float64 {
 		return a
 	}
 	return b
-}
-func minimax(depth int, isMaximizer bool) (int32, int32, int32) {
-	if hasWon(isMaximizer) {
-		return -1, -1, 999999999
-	}
-	if depth == 0 {
-		return -1, -1, score()
-	}
-	if isMaximizer == true {
-		var bestValue int32 = -999999999
-		bestRow := int32(-1)
-		bestCol := int32(-1)
-		for _, move := range generateNeighbors() {
-			arena.Gomoku.Goban.SetElem(move[0], move[1], arena.Gomoku.CurrPlayer.GetColor())
-			r, c, val := minimax(depth-1, !isMaximizer)
-			if bestValue <= val {
-				bestValue = val
-				bestRow = r
-				bestCol = c
-				if r == -1 || c == -1 {
-					bestRow = move[0]
-					bestCol = move[1]
-				}
-			}
-			arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
-		}
-		return bestRow, bestCol, bestValue
-	} else {
-		var bestValue int32 = 999999999
-		bestRow := int32(-1)
-		bestCol := int32(-1)
-		for _, move := range generateNeighbors() {
-			arena.Gomoku.Goban.SetElem(move[0], move[1], arena.GetOpponentColor(arena.Gomoku.CurrPlayer.GetColor()))
-			r, c, val := minimax(depth-1, !isMaximizer)
-			if bestValue >= val {
-				bestValue = val
-				bestRow = r
-				bestCol = c
-				if r == -1 || c == -1 {
-					bestRow = move[0]
-					bestCol = move[1]
-				}
-			}
-			arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
-		}
-		return bestRow, bestCol, bestValue
-	}
 }
 
 func generateNeighbors() [][]int32 {
@@ -198,7 +149,6 @@ func hasWon(isMaximizer bool) bool {
 		}
 	}
 	if arena.Gomoku.Goban.IsWinningState(player) == true {
-		log.Printf("%+v winning\n", player)
 		return true
 	}
 	return false
