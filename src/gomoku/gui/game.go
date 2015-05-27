@@ -3,7 +3,6 @@ package gui
 import (
 	"fmt"
 	"gomoku/arena"
-	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -14,6 +13,7 @@ type Game struct {
 	Pawns        []*Texture
 	CellSize     sdl.Rect
 	LastMousePos sdl.Rect
+	Winner       *Texture
 }
 
 func NewGame() *Game {
@@ -21,6 +21,7 @@ func NewGame() *Game {
 		Background: GetTextureFromImage("data/img/bg.jpg"),
 		Table:      GetTextureFromImage("data/img/board.png"),
 		Pawns:      make([]*Texture, arena.MaxGobanValue),
+		Winner:     nil,
 	}
 	// Display background to the right scale
 	var ratio float64
@@ -79,7 +80,7 @@ func (s *Game) handleEvents() {
 
 			}
 		case *sdl.MouseButtonEvent:
-			if isMouseButtonLeftUp(t) && isEmptyCell(s.LastMousePos.Y, s.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
+			if s.Winner == nil && isMouseButtonLeftUp(t) && isEmptyCell(s.LastMousePos.Y, s.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
 				// check forbidden moves
 				row := s.LastMousePos.Y
 				col := s.LastMousePos.X
@@ -100,9 +101,14 @@ func (s *Game) PlayScene() {
 	Renderer.Copy(s.Table.texture, &s.Table.size, &s.Table.pos)
 
 	s.handleEvents()
-	if arena.Gomoku.CurrPlayer.IsHuman() == false {
-		row, col := arena.Gomoku.CurrPlayer.PlayMove()
-		s.applyMove(row, col)
+
+	if s.Winner == nil {
+		if arena.Gomoku.CurrPlayer.IsHuman() == false {
+			row, col := arena.Gomoku.CurrPlayer.PlayMove()
+			s.applyMove(row, col)
+		}
+	} else {
+		s.displayWinner()
 	}
 	s.displayCapturedPawns()
 	s.displayGame()
@@ -121,11 +127,15 @@ func (s *Game) applyMove(row int32, col int32) {
 		arena.Gomoku.Goban.Capture(row, col)
 		if arena.Gomoku.Goban.IsWinningMove() {
 			arena.Gomoku.CurrPlayer.SetHasWon(true)
-			log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
+			s.generateWinnerTexture()
 		}
 		arena.Gomoku.CurrPlayer.AddPawns(1)
 		arena.Gomoku.SwitchPlayers()
 	}
+}
+
+func (s *Game) displayWinner() {
+	Renderer.Copy(s.Winner.texture, &s.Winner.size, &s.Winner.pos)
 }
 
 func (s *Game) displayCapturedPawns() {
@@ -180,6 +190,17 @@ func (s *Game) displayGame() {
 			}
 		}
 	}
+}
+
+func (s *Game) generateWinnerTexture() {
+	var winStr string
+	if arena.Gomoku.CurrPlayer.GetColor() == 0 {
+		winStr = fmt.Sprint("Color white won.")
+	} else {
+		winStr = fmt.Sprint("Color black won.")
+	}
+	s.Winner = GetTextureFromFont(0, winStr, 70, sdl.Color{R: 255, G: 255, B: 255, A: 255})
+	s.Winner.pos = sdl.Rect{X: DisplayMode.W/2 - (s.Winner.size.W*DisplayMode.W/2560)/2, Y: DisplayMode.H / 7, W: s.Winner.size.W * DisplayMode.W / 2560, H: s.Winner.size.H * DisplayMode.H / 1440}
 }
 
 func isAuthorizedMove(row int32, col int32) bool {
