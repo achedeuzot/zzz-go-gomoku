@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	minimax_depth = 3
+	minimax_depth = 4
 )
 
 type AI struct {

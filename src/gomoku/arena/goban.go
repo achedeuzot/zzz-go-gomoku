@@ -6,6 +6,7 @@ const (
 	WhitePlayer
 	BlackPlayer
 	RedPawn
+	CapturePawn
 	MaxGobanValue
 )
 

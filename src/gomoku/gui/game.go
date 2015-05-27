@@ -3,7 +3,6 @@ package gui
 import (
 	"fmt"
 	"gomoku/arena"
-	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -14,6 +13,7 @@ type Game struct {
 	Pawns        []*Texture
 	CellSize     sdl.Rect
 	LastMousePos sdl.Rect
+	Winner       *Texture
 }
 
 func NewGame() *Game {
@@ -21,6 +21,7 @@ func NewGame() *Game {
 		Background: GetTextureFromImage("data/img/bg.jpg"),
 		Table:      GetTextureFromImage("data/img/board.png"),
 		Pawns:      make([]*Texture, arena.MaxGobanValue),
+		Winner:     nil,
 	}
 	// Display background to the right scale
 	var ratio float64
@@ -44,10 +45,12 @@ func NewGame() *Game {
 	game.Pawns[arena.WhitePlayer] = GetTextureFromImage("data/img/white.png")
 	game.Pawns[arena.BlackPlayer] = GetTextureFromImage("data/img/black.png")
 	game.Pawns[arena.RedPawn] = GetTextureFromImage("data/img/red.png")
+	game.Pawns[arena.CapturePawn] = GetTextureFromImage("data/img/capture.png")
 	game.CellSize = sdl.Rect{X: 0, Y: 0, W: game.Table.pos.W / 19, H: game.Table.pos.H / 19}
 	game.Pawns[arena.WhitePlayer].pos = game.CellSize
 	game.Pawns[arena.BlackPlayer].pos = game.CellSize
 	game.Pawns[arena.RedPawn].pos = game.CellSize
+	game.Pawns[arena.CapturePawn].pos = game.CellSize
 	return game
 }
 
@@ -79,7 +82,7 @@ func (s *Game) handleEvents() {
 
 			}
 		case *sdl.MouseButtonEvent:
-			if isMouseButtonLeftUp(t) && isEmptyCell(s.LastMousePos.Y, s.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
+			if s.Winner == nil && isMouseButtonLeftUp(t) && isEmptyCell(s.LastMousePos.Y, s.LastMousePos.X) && arena.Gomoku.CurrPlayer.IsHuman() == true {
 				// check forbidden moves
 				row := s.LastMousePos.Y
 				col := s.LastMousePos.X
@@ -100,9 +103,14 @@ func (s *Game) PlayScene() {
 	Renderer.Copy(s.Table.texture, &s.Table.size, &s.Table.pos)
 
 	s.handleEvents()
-	if arena.Gomoku.CurrPlayer.IsHuman() == false {
-		row, col := arena.Gomoku.CurrPlayer.PlayMove()
-		s.applyMove(row, col)
+
+	if s.Winner == nil {
+		if arena.Gomoku.CurrPlayer.IsHuman() == false {
+			row, col := arena.Gomoku.CurrPlayer.PlayMove()
+			s.applyMove(row, col)
+		}
+	} else {
+		s.displayWinner()
 	}
 	s.displayCapturedPawns()
 	s.displayGame()
@@ -121,11 +129,15 @@ func (s *Game) applyMove(row int32, col int32) {
 		arena.Gomoku.Goban.Capture(row, col)
 		if arena.Gomoku.Goban.IsWinningMove() {
 			arena.Gomoku.CurrPlayer.SetHasWon(true)
-			log.Printf("Color %d win !\n", arena.Gomoku.CurrPlayer.GetColor())
+			s.generateWinnerTexture()
 		}
 		arena.Gomoku.CurrPlayer.AddPawns(1)
 		arena.Gomoku.SwitchPlayers()
 	}
+}
+
+func (s *Game) displayWinner() {
+	Renderer.Copy(s.Winner.texture, &s.Winner.size, &s.Winner.pos)
 }
 
 func (s *Game) displayCapturedPawns() {
@@ -178,8 +190,28 @@ func (s *Game) displayGame() {
 						H: s.Pawns[arena.RedPawn].pos.H - 10,
 					})
 			}
+			if arena.Gomoku.CurrPlayer.IsHuman() == true && currVal != 0 && arena.Gomoku.Goban.CanBeCaptured(int32(row), int32(col), currVal) {
+				Renderer.Copy(s.Pawns[arena.CapturePawn].texture, &s.Pawns[arena.CapturePawn].size,
+					&sdl.Rect{
+						X: s.Table.pos.X + 16 + s.Pawns[arena.CapturePawn].pos.W*int32(col),
+						Y: s.Table.pos.Y + 16 + s.Pawns[arena.CapturePawn].pos.H*int32(row),
+						W: s.Pawns[arena.CapturePawn].pos.W - 10,
+						H: s.Pawns[arena.CapturePawn].pos.H - 10,
+					})
+			}
 		}
 	}
+}
+
+func (s *Game) generateWinnerTexture() {
+	var winStr string
+	if arena.Gomoku.CurrPlayer.GetColor() == 0 {
+		winStr = fmt.Sprint("Color white won.")
+	} else {
+		winStr = fmt.Sprint("Color black won.")
+	}
+	s.Winner = GetTextureFromFont(0, winStr, 70, sdl.Color{R: 255, G: 255, B: 255, A: 255})
+	s.Winner.pos = sdl.Rect{X: DisplayMode.W/2 - (s.Winner.size.W*DisplayMode.W/2560)/2, Y: DisplayMode.H / 7, W: s.Winner.size.W * DisplayMode.W / 2560, H: s.Winner.size.H * DisplayMode.H / 1440}
 }
 
 func isAuthorizedMove(row int32, col int32) bool {
