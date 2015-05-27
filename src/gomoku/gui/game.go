@@ -73,6 +73,7 @@ func (s *Game) handleEvents() {
 			Running = false
 		case *sdl.KeyUpEvent:
 			if t.Keysym.Sym == sdl.K_ESCAPE {
+				s.Winner = nil
 				CurrScene = SceneMap["MenuMain"]
 			}
 		case *sdl.MouseMotionEvent:
