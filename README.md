@@ -10,3 +10,5 @@ Gomoku school project
 - [ ] abNegamax with memory
 - [ ] Hash of the board
 - [ ] Add zen music
+
+*__Bold__ items are required by the subject*
