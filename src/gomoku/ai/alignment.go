@@ -5,22 +5,6 @@ import (
 	"math"
 )
 
-func addSimpleAlignedScore(row int32, col int32, color int8) float64 {
-	var score int32
-	score = 0
-	currentColor := color
-	score += addVerticalAlignedScore(row, col, currentColor)
-	score += addHorizontalAlignedScore(row, col, currentColor)
-	score += addDiagonal1AlignedScore(row, col, currentColor)
-	score += addDiagonal2AlignedScore(row, col, currentColor)
-	opponentColor := arena.GetOpponentColor(currentColor)
-	score -= addVerticalAlignedScore(row, col, opponentColor)
-	score -= addHorizontalAlignedScore(row, col, opponentColor)
-	score -= addDiagonal1AlignedScore(row, col, opponentColor)
-	score -= addDiagonal2AlignedScore(row, col, opponentColor)
-	return float64(score)
-}
-
 func addAlignedScore(row int32, col int32, color int8) float64 {
 	var score int32
 	score = 0
