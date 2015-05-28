@@ -12,14 +12,17 @@ func (goban *Goban) Capture(row int32, col int32) [][]int32 {
 	capturedPawns = append(capturedPawns, goban.tryCaptureTopRight(row, col, currentColor, opponentColor)...)
 	capturedPawns = append(capturedPawns, goban.tryCaptureBottomLeft(row, col, currentColor, opponentColor)...)
 	capturedPawns = append(capturedPawns, goban.tryCaptureBottomRight(row, col, currentColor, opponentColor)...)
-	Gomoku.ActivePlayer.AddCaptured(int8(len(capturedPawns) * 2))
+	Gomoku.ActivePlayer.AddCaptured(int8(len(capturedPawns)))
 	return capturedPawns
 }
 
 func (goban *Goban) UnCapture(positions [][]int32, color int8) {
+	if len(positions) == 0 {
+		return
+	}
 	for _, pos := range positions {
 		goban.SetElem(pos[0], pos[1], color)
-		Gomoku.ActivePlayer.AddCaptured(-2)
+		Gomoku.ActivePlayer.AddCaptured(-1)
 	}
 }
 
