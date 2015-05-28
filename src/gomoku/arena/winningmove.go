@@ -25,11 +25,11 @@ func (goban *Goban) IsWinningState(player Player) bool {
 }
 
 func (goban *Goban) IsWinningVertical(row int32, col int32, color int8) bool {
-	count := 1
+	count := 0
 	for goban.GetTopElem(row, col) == color {
 		row--
 	}
-	for goban.GetBottomElem(row, col) == color {
+	for goban.GetElem(row, col) == color {
 		if goban.CanBeCaptured(row, col, color) == true {
 			count = 0
 		}
@@ -43,11 +43,11 @@ func (goban *Goban) IsWinningVertical(row int32, col int32, color int8) bool {
 }
 
 func (goban *Goban) IsWinningHorizontal(row int32, col int32, color int8) bool {
-	count := 1
+	count := 0
 	for goban.GetLeftElem(row, col) == color {
 		col--
 	}
-	for goban.GetRightElem(row, col) == color {
+	for goban.GetElem(row, col) == color {
 		if goban.CanBeCaptured(row, col, color) == true {
 			count = 0
 		}
@@ -61,12 +61,12 @@ func (goban *Goban) IsWinningHorizontal(row int32, col int32, color int8) bool {
 }
 
 func (goban *Goban) IsWinningDiagonal_1(row int32, col int32, color int8) bool {
-	count := 1
+	count := 0
 	for goban.GetTopLeftElem(row, col) == color {
 		col--
 		row--
 	}
-	for goban.GetBottomRightElem(row, col) == color {
+	for goban.GetElem(row, col) == color {
 		if goban.CanBeCaptured(row, col, color) == true {
 			count = 0
 		}
@@ -81,12 +81,12 @@ func (goban *Goban) IsWinningDiagonal_1(row int32, col int32, color int8) bool {
 }
 
 func (goban *Goban) IsWinningDiagonal_2(row int32, col int32, color int8) bool {
-	count := 1
+	count := 0
 	for goban.GetTopRightElem(row, col) == color {
 		col++
 		row--
 	}
-	for goban.GetBottomLeftElem(row, col) == color {
+	for goban.GetElem(row, col) == color {
 		if goban.CanBeCaptured(row, col, color) == true {
 			count = 0
 		}
