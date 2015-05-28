@@ -129,10 +129,10 @@ func score(color int8) (score float64) {
 	for col = 0; col < 19; col++ {
 		for row = 0; row < 19; row++ {
 			if arena.Gomoku.Goban.GetElem(row, col) == color {
-				score += float64((1+arena.Gomoku.OtherPlayer.GetCaptured())*27) * addCaptureScore(row, col, color)
+				score += float64((1+arena.Gomoku.OtherPlayer.GetCaptured())*25) * addCaptureScore(row, col, color)
 				score += addAlignedScore(row, col, color)
 			} else if arena.Gomoku.Goban.GetElem(row, col) == opponentColor {
-				score -= float64((1+arena.Gomoku.ActivePlayer.GetCaptured())*30) * addCaptureScore(row, col, opponentColor)
+				score -= float64((1+arena.Gomoku.ActivePlayer.GetCaptured())*25) * addCaptureScore(row, col, opponentColor)
 				score -= addAlignedScore(row, col, opponentColor)
 			}
 		}
