@@ -6,7 +6,7 @@ Gomoku school project
 - [ ] **Add timer** for players (one global & one for current turn)
 - [ ] **Move-suggestion** for human player
 - [ ] Display turns counter
-- [ ] Display draw (if it can happen)
+- [ ] **Display draw** (if it can happen)
 - [ ] abNegamax with memory
 - [ ] Hash of the board
 - [ ] Add zen music
