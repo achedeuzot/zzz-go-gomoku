@@ -13,14 +13,17 @@ type Player interface {
 	AddPawns(int8)
 	SetHasWon(bool)
 	GetHasWon() bool
+	AddTotalTurns()
+	GetTotalTurns() int8
 }
 
 type DefaultPlayer struct {
-	Id       int
-	HasWon   bool
-	Color    int8
-	Captured int8
-	Pawns    int8
+	Id         int
+	HasWon     bool
+	Color      int8
+	Captured   int8
+	Pawns      int8
+	TotalTurns int8
 }
 
 func (dp *DefaultPlayer) SetId(newid int) {
@@ -61,4 +64,12 @@ func (dp *DefaultPlayer) SetHasWon(value bool) {
 
 func (dp *DefaultPlayer) GetHasWon() bool {
 	return dp.HasWon
+}
+
+func (dp *DefaultPlayer) AddTotalTurns() {
+	dp.TotalTurns += 1
+}
+
+func (dp *DefaultPlayer) GetTotalTurns() int8 {
+	return dp.TotalTurns
 }

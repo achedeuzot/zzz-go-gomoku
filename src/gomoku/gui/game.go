@@ -124,11 +124,12 @@ func (s *Game) PlayScene() {
 	s.displayCapturedPawns(arena.Gomoku.ActivePlayer)
 	s.displayCapturedPawns(arena.Gomoku.OtherPlayer)
 	s.displayGame()
+	s.displayTurns()
 
 	// Display Position in top left corner
-	pos := fmt.Sprintf("%2d-%2d", s.LastMousePos.Y, s.LastMousePos.X)
-	postexture := GetTextureFromFont(0, pos, 70, sdl.Color{R: 255, G: 255, B: 255, A: 255})
-	Renderer.Copy(postexture.texture, &postexture.size, &sdl.Rect{X: 0, Y: 0, W: postexture.size.W, H: postexture.size.H})
+	// pos := fmt.Sprintf("%2d-%2d", s.LastMousePos.Y, s.LastMousePos.X)
+	// postexture := GetTextureFromFont(0, pos, 70, sdl.Color{R: 255, G: 255, B: 255, A: 255})
+	// Renderer.Copy(postexture.texture, &postexture.size, &sdl.Rect{X: 0, Y: 0, W: postexture.size.W, H: postexture.size.H})
 
 	Renderer.Present()
 }
@@ -141,6 +142,7 @@ func (s *Game) applyMove(row int32, col int32) {
 			arena.Gomoku.ActivePlayer.SetHasWon(true)
 		}
 		arena.Gomoku.ActivePlayer.AddPawns(1)
+		arena.Gomoku.ActivePlayer.AddTotalTurns()
 		arena.Gomoku.SwitchPlayers()
 	}
 }
@@ -162,6 +164,22 @@ func (s *Game) displayCapturedPawns(player arena.Player) {
 				H: s.Pawns[color].pos.W - 10,
 			})
 	}
+}
+
+func (s *Game) displayTurns() {
+	var blackPlayerTurns string
+	var whitePlayerTurns string
+	if arena.Gomoku.ActivePlayer.GetColor() == arena.BlackPlayer {
+		blackPlayerTurns = fmt.Sprintf("%d", arena.Gomoku.ActivePlayer.GetTotalTurns())
+		whitePlayerTurns = fmt.Sprintf("%d", arena.Gomoku.OtherPlayer.GetTotalTurns())
+	} else {
+		blackPlayerTurns = fmt.Sprintf("%d", arena.Gomoku.OtherPlayer.GetTotalTurns())
+		whitePlayerTurns = fmt.Sprintf("%d", arena.Gomoku.ActivePlayer.GetTotalTurns())
+	}
+	blackPlayerTurnsTexture := GetTextureFromFont(0, blackPlayerTurns, 30, sdl.Color{R: 0, G: 0, B: 0, A: 255})
+	whitePlayerTurnsTexture := GetTextureFromFont(0, whitePlayerTurns, 30, sdl.Color{R: 255, G: 255, B: 255, A: 255})
+	Renderer.Copy(blackPlayerTurnsTexture.texture, &blackPlayerTurnsTexture.size, &sdl.Rect{X: DisplayMode.W / 6, Y: 0, W: blackPlayerTurnsTexture.size.W, H: blackPlayerTurnsTexture.size.H})
+	Renderer.Copy(whitePlayerTurnsTexture.texture, &whitePlayerTurnsTexture.size, &sdl.Rect{X: ((DisplayMode.W / 6) * 5) - whitePlayerTurnsTexture.size.W, Y: 0, W: whitePlayerTurnsTexture.size.W, H: whitePlayerTurnsTexture.size.H})
 }
 
 func (s *Game) displayGame() {

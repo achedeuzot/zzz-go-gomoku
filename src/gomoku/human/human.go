@@ -11,8 +11,9 @@ type Human struct {
 func NewHuman(color int8) *Human {
 	return &Human{
 		arena.DefaultPlayer{
-			Color: color,
-			Pawns: 0,
+			Color:      color,
+			Pawns:      0,
+			TotalTurns: 0,
 		},
 	}
 }

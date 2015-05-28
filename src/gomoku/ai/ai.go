@@ -17,8 +17,9 @@ type AI struct {
 func NewAI(color int8) *AI {
 	return &AI{
 		arena.DefaultPlayer{
-			Color: color,
-			Pawns: 0,
+			Color:      color,
+			Pawns:      0,
+			TotalTurns: 0,
 		},
 	}
 }
