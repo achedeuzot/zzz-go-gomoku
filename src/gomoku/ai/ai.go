@@ -61,6 +61,7 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 	bestScore := math.Inf(-1)
 	for _, move := range generateNeighbors(color) {
 		arena.Gomoku.Goban.SetElem(move[0], move[1], color)
+		capturedPositions := arena.Gomoku.Goban.Capture(move[0], move[1])
 
 		// Recurse
 		arena.Gomoku.SwitchPlayers()
@@ -68,6 +69,7 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 		currentScore := -recursedScore
 		arena.Gomoku.SwitchPlayers()
 
+		arena.Gomoku.Goban.UnCapture(capturedPositions, arena.Gomoku.OtherPlayer.GetColor())
 		arena.Gomoku.Goban.SetElem(move[0], move[1], 0)
 		// Update the best score
 		if currentScore > bestScore {
@@ -127,10 +129,10 @@ func score(color int8) (score float64) {
 	for col = 0; col < 19; col++ {
 		for row = 0; row < 19; row++ {
 			if arena.Gomoku.Goban.GetElem(row, col) == color {
-				score += float64(arena.Gomoku.OtherPlayer.GetCaptured()) * addCaptureScore(row, col, color)
+				score += float64((1+arena.Gomoku.OtherPlayer.GetCaptured())*27) * addCaptureScore(row, col, color)
 				score += addAlignedScore(row, col, color)
 			} else if arena.Gomoku.Goban.GetElem(row, col) == opponentColor {
-				score -= float64(arena.Gomoku.ActivePlayer.GetCaptured()) * addCaptureScore(row, col, opponentColor)
+				score -= float64((1+arena.Gomoku.ActivePlayer.GetCaptured())*30) * addCaptureScore(row, col, opponentColor)
 				score -= addAlignedScore(row, col, opponentColor)
 			}
 		}

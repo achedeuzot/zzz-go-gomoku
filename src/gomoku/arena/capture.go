@@ -1,6 +1,6 @@
 package arena
 
-func (goban *Goban) Capture(row int32, col int32) {
+func (goban *Goban) Capture(row int32, col int32) [][]int32 {
 	currentColor := Gomoku.ActivePlayer.GetColor()
 	opponentColor := Gomoku.OtherPlayer.GetColor()
 	capturedPawns := make([][]int32, 0)
@@ -12,7 +12,15 @@ func (goban *Goban) Capture(row int32, col int32) {
 	capturedPawns = append(capturedPawns, goban.tryCaptureTopRight(row, col, currentColor, opponentColor)...)
 	capturedPawns = append(capturedPawns, goban.tryCaptureBottomLeft(row, col, currentColor, opponentColor)...)
 	capturedPawns = append(capturedPawns, goban.tryCaptureBottomRight(row, col, currentColor, opponentColor)...)
-	Gomoku.ActivePlayer.AddCaptured(int8(len(capturedPawns)))
+	Gomoku.ActivePlayer.AddCaptured(int8(len(capturedPawns) * 2))
+	return capturedPawns
+}
+
+func (goban *Goban) UnCapture(positions [][]int32, color int8) {
+	for _, pos := range positions {
+		goban.SetElem(pos[0], pos[1], color)
+		Gomoku.ActivePlayer.AddCaptured(-2)
+	}
 }
 
 func (goban *Goban) tryCaptureUp(row int32, col int32, currentColor int8, opponentColor int8) [][]int32 {
@@ -156,7 +164,7 @@ func (goban *Goban) tryCaptureTopRight(row int32, col int32, currentColor int8, 
 	pos[1] = make([]int32, 2)
 	pos[0][0] = row + 1
 	pos[0][1] = col - 1
-	pos[1][0] = row + 1
+	pos[1][0] = row + 2
 	pos[1][1] = col - 2
 	return pos
 }
