@@ -9,13 +9,15 @@ func (goban *Goban) IsWinningState(player Player) bool {
 		return true
 	}
 	currColor := player.GetColor()
-	for col := 0; col < 19; col++ {
-		for row := 0; row < 19; row++ {
-			if goban.GetElem(int32(row), int32(col)) == currColor {
-				if goban.IsWinningHorizontal(int32(row), int32(col), currColor) ||
-					goban.IsWinningVertical(int32(row), int32(col), currColor) ||
-					goban.IsWinningDiagonal_1(int32(row), int32(col), currColor) ||
-					goban.IsWinningDiagonal_2(int32(row), int32(col), currColor) {
+	col := int32(0)
+	row := int32(0)
+	for col = 0; col < 19; col++ {
+		for row = 0; row < 19; row++ {
+			if goban.GetElem(row, col) == currColor {
+				if goban.IsWinningHorizontal(row, col, currColor) ||
+					goban.IsWinningVertical(row, col, currColor) ||
+					goban.IsWinningDiagonal_1(row, col, currColor) ||
+					goban.IsWinningDiagonal_2(row, col, currColor) {
 					return true
 				}
 			}

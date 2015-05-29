@@ -1,13 +1,9 @@
 package ai
 
-import (
-	"gomoku/arena"
-	"math"
-)
+import "gomoku/arena"
 
 func addAlignedScore(row int32, col int32, color int8) float64 {
-	var score int32
-	score = 0
+	score := int32(0)
 	currentColor := color
 	score += addVerticalAlignedScore(row, col, currentColor)
 	score += addHorizontalAlignedScore(row, col, currentColor)
@@ -17,7 +13,6 @@ func addAlignedScore(row int32, col int32, color int8) float64 {
 }
 
 func addVerticalAlignedScore(row int32, col int32, currentColor int8) (score int32) {
-	score = 0
 	crow := row
 	flankedCount := int32(0)
 	for arena.Gomoku.Goban.GetTopElem(row, col) == currentColor {
@@ -35,7 +30,7 @@ func addVerticalAlignedScore(row int32, col int32, currentColor int8) (score int
 	if arena.Gomoku.Goban.GetBottomElem(row, col) != 0 {
 		flankedCount++
 	}
-	score = int32(math.Pow(4.0, float64(score)))
+	score = score * score * score * score
 	if flankedCount == 1 {
 		score = score / 2
 	} else if flankedCount == 2 {
@@ -45,7 +40,6 @@ func addVerticalAlignedScore(row int32, col int32, currentColor int8) (score int
 }
 
 func addHorizontalAlignedScore(row int32, col int32, currentColor int8) (score int32) {
-	score = 0
 	ccol := col
 	flankedCount := int32(0)
 	for arena.Gomoku.Goban.GetLeftElem(row, col) == currentColor {
@@ -63,7 +57,7 @@ func addHorizontalAlignedScore(row int32, col int32, currentColor int8) (score i
 	if arena.Gomoku.Goban.GetRightElem(row, col) != 0 {
 		flankedCount++
 	}
-	score = int32(math.Pow(4.0, float64(score)))
+	score = score * score * score * score
 	if flankedCount == 1 {
 		score = score / 2
 	} else if flankedCount == 2 {
@@ -73,7 +67,6 @@ func addHorizontalAlignedScore(row int32, col int32, currentColor int8) (score i
 }
 
 func addDiagonal1AlignedScore(row int32, col int32, currentColor int8) (score int32) {
-	score = 0
 	crow := row
 	ccol := col
 	flankedCount := int32(0)
@@ -95,7 +88,7 @@ func addDiagonal1AlignedScore(row int32, col int32, currentColor int8) (score in
 	if arena.Gomoku.Goban.GetBottomRightElem(row, col) != 0 {
 		flankedCount++
 	}
-	score = int32(math.Pow(4.0, float64(score)))
+	score = score * score * score * score
 	if flankedCount == 1 {
 		score = score / 2
 	} else if flankedCount == 2 {
@@ -105,7 +98,6 @@ func addDiagonal1AlignedScore(row int32, col int32, currentColor int8) (score in
 }
 
 func addDiagonal2AlignedScore(row int32, col int32, currentColor int8) (score int32) {
-	score = 0
 	crow := row
 	ccol := col
 	flankedCount := int32(0)
@@ -127,7 +119,7 @@ func addDiagonal2AlignedScore(row int32, col int32, currentColor int8) (score in
 	if arena.Gomoku.Goban.GetTopRightElem(row, col) != 0 {
 		flankedCount++
 	}
-	score = int32(math.Pow(4.0, float64(score)))
+	score = score * score * score * score
 	if flankedCount == 1 {
 		score = score / 2
 	} else if flankedCount == 2 {

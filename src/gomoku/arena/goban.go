@@ -32,10 +32,10 @@ func (goban *Goban) Copy() *Goban {
 }
 
 func (goban *Goban) GetElem(row int32, col int32) int8 {
-	if row*19+col > 361 || row*19+col < 0 {
-		return -1
+	if test := row*19 + col; test >= 0 && test <= 361 {
+		return goban[row*19+col]
 	}
-	return goban[row*19+col]
+	return -1
 }
 
 func (goban *Goban) GetTopElem(row int32, col int32) int8 {
@@ -100,7 +100,6 @@ func (goban *Goban) SetElem(row int32, col int32, val int8) {
 
 func (goban *Goban) IsSurounded(row int32, col int32) bool {
 	if goban.GetTopElem(row, col) > 0 ||
-		goban.GetTopElem(row, col) > 0 ||
 		goban.GetBottomElem(row, col) > 0 ||
 		goban.GetLeftElem(row, col) > 0 ||
 		goban.GetRightElem(row, col) > 0 ||

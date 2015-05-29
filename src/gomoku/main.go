@@ -4,6 +4,8 @@ import (
 	"flag"
 	"gomoku/gui"
 	"runtime"
+
+	"github.com/davecheney/profile"
 )
 
 var (
@@ -22,6 +24,7 @@ func init() {
 }
 
 func main() {
+	defer profile.Start(profile.CPUProfile).Stop()
 	gui.StartupGUI(flag_fullscreen, flag_width, flag_height)
 	defer gui.ShutdownGUI()
 

@@ -33,6 +33,9 @@ windowed: build
 test:
 	go test ./src/...
 
+benchmark:
+	go test -bench=. ./src/...
+
 profile:
 	go build -v -o ./bin/$(NAME) ./src/$(NAME)
 	GODEBUG=gctrace=1 ./bin/$(NAME) -prof=1

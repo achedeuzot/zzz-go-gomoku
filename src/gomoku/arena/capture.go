@@ -232,8 +232,7 @@ func (goban *Goban) CanBeCaptured(row int32, col int32, currentColor int8) bool 
 	return false
 }
 
-func (goban *Goban) CountPossibleCaptures(row int32, col int32, currentColor int8) int32 {
-	count := int32(0)
+func (goban *Goban) CountPossibleCaptures(row int32, col int32, currentColor int8) (count int32) {
 	if goban.canBeCapturedVertical(row, col, currentColor) {
 		count++
 	}
