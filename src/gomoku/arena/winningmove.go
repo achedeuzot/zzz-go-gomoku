@@ -32,10 +32,10 @@ func (goban *Goban) IsWinningVertical(row int32, col int32, color int8) bool {
 		row--
 	}
 	for goban.GetElem(row, col) == color {
+		count++
 		if goban.CanBeCaptured(row, col, color) == true {
 			count = 0
 		}
-		count++
 		row++
 	}
 	if count >= 5 {
@@ -50,10 +50,10 @@ func (goban *Goban) IsWinningHorizontal(row int32, col int32, color int8) bool {
 		col--
 	}
 	for goban.GetElem(row, col) == color {
+		count++
 		if goban.CanBeCaptured(row, col, color) == true {
 			count = 0
 		}
-		count++
 		col++
 	}
 	if count >= 5 {
@@ -69,10 +69,10 @@ func (goban *Goban) IsWinningDiagonal_1(row int32, col int32, color int8) bool {
 		row--
 	}
 	for goban.GetElem(row, col) == color {
+		count++
 		if goban.CanBeCaptured(row, col, color) == true {
 			count = 0
 		}
-		count++
 		col++
 		row++
 	}
@@ -89,10 +89,10 @@ func (goban *Goban) IsWinningDiagonal_2(row int32, col int32, color int8) bool {
 		row--
 	}
 	for goban.GetElem(row, col) == color {
+		count++
 		if goban.CanBeCaptured(row, col, color) == true {
 			count = 0
 		}
-		count++
 		col--
 		row++
 	}
