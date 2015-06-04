@@ -136,7 +136,7 @@ func (s *Game) PlayScene() {
 
 func (s *Game) applyMove(row int32, col int32) {
 	if isAuthorizedMove(row, col) {
-		arena.Gomoku.Goban.SetElem(row, col, int8(arena.Gomoku.ActivePlayer.GetColor()))
+		arena.Gomoku.Goban.SetElem(row, col, arena.Gomoku.ActivePlayer.GetColor())
 		arena.Gomoku.Goban.Capture(row, col)
 		if arena.Gomoku.Goban.IsWinningMove() {
 			arena.Gomoku.ActivePlayer.SetHasWon(true)
@@ -175,7 +175,10 @@ func (s *Game) displayTurns() {
 func (s *Game) displayGame() {
 	for col := 0; col < 19; col++ {
 		for row := 0; row < 19; row++ {
-			currVal := arena.Gomoku.Goban.GetElem(int32(row), int32(col))
+			currVal, ok := arena.Gomoku.Goban.GetElem(int32(row), int32(col))
+			if ok == false {
+				continue
+			}
 			if currVal > 0 && currVal < arena.MaxGobanValue {
 				Renderer.Copy(s.Pawns[currVal].texture, &s.Pawns[currVal].size,
 					&sdl.Rect{
@@ -215,11 +218,12 @@ func (s *Game) displayGame() {
 }
 
 func isAuthorizedMove(row int32, col int32) bool {
-	return arena.Gomoku.Goban.GetElem(row, col) == 0 && !arena.Gomoku.Goban.CheckTwoFreeThree(row, col, int8(arena.Gomoku.ActivePlayer.GetColor()))
+	val, ok := arena.Gomoku.Goban.GetElem(row, col)
+	return ok == true && val == 0 && !arena.Gomoku.Goban.CheckTwoFreeThree(row, col, arena.Gomoku.ActivePlayer.GetColor())
 }
 
 func isEmptyCell(x int32, y int32) bool {
-	if arena.Gomoku.Goban.GetElem(x, y) == 0 {
+	if val, ok := arena.Gomoku.Goban.GetElem(x, y); ok == true && val == 0 {
 		return true
 	}
 	return false

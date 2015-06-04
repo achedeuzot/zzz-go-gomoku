@@ -16,7 +16,7 @@ func (goban *Goban) Capture(row int32, col int32) [][]int32 {
 	return capturedPawns
 }
 
-func (goban *Goban) UnCapture(positions [][]int32, color int8) {
+func (goban *Goban) UnCapture(positions [][]int32, color byte) {
 	if len(positions) == 0 {
 		return
 	}
@@ -26,10 +26,10 @@ func (goban *Goban) UnCapture(positions [][]int32, color int8) {
 	}
 }
 
-func (goban *Goban) tryCaptureUp(row int32, col int32, currentColor int8, opponentColor int8) [][]int32 {
+func (goban *Goban) tryCaptureUp(row int32, col int32, currentColor byte, opponentColor byte) [][]int32 {
 	for idx := 0; idx < 3; idx++ {
-		topElem := goban.GetTopElem(row, col)
-		if topElem == 0 {
+		topElem, ok := goban.GetTopElem(row, col)
+		if ok == false || topElem == 0 {
 			return nil
 		} else if idx < 2 && topElem != opponentColor {
 			return nil
@@ -50,10 +50,10 @@ func (goban *Goban) tryCaptureUp(row int32, col int32, currentColor int8, oppone
 	return pos
 }
 
-func (goban *Goban) tryCaptureDown(row int32, col int32, currentColor int8, opponentColor int8) [][]int32 {
+func (goban *Goban) tryCaptureDown(row int32, col int32, currentColor byte, opponentColor byte) [][]int32 {
 	for idx := 0; idx < 3; idx++ {
-		bottomElem := goban.GetBottomElem(row, col)
-		if bottomElem == 0 {
+		bottomElem, ok := goban.GetBottomElem(row, col)
+		if ok == false || bottomElem == 0 {
 			return nil
 		} else if idx < 2 && bottomElem != opponentColor {
 			return nil
@@ -74,10 +74,10 @@ func (goban *Goban) tryCaptureDown(row int32, col int32, currentColor int8, oppo
 	return pos
 }
 
-func (goban *Goban) tryCaptureLeft(row int32, col int32, currentColor int8, opponentColor int8) [][]int32 {
+func (goban *Goban) tryCaptureLeft(row int32, col int32, currentColor byte, opponentColor byte) [][]int32 {
 	for idx := 0; idx < 3; idx++ {
-		leftElem := goban.GetLeftElem(row, col)
-		if leftElem == 0 {
+		leftElem, ok := goban.GetLeftElem(row, col)
+		if ok == false || leftElem == 0 {
 			return nil
 		} else if idx < 2 && leftElem != opponentColor {
 			return nil
@@ -98,10 +98,10 @@ func (goban *Goban) tryCaptureLeft(row int32, col int32, currentColor int8, oppo
 	return pos
 }
 
-func (goban *Goban) tryCaptureRight(row int32, col int32, currentColor int8, opponentColor int8) [][]int32 {
+func (goban *Goban) tryCaptureRight(row int32, col int32, currentColor byte, opponentColor byte) [][]int32 {
 	for idx := 0; idx < 3; idx++ {
-		rightElem := goban.GetRightElem(row, col)
-		if rightElem == 0 {
+		rightElem, ok := goban.GetRightElem(row, col)
+		if ok == false || rightElem == 0 {
 			return nil
 		} else if idx < 2 && rightElem != opponentColor {
 			return nil
@@ -122,10 +122,10 @@ func (goban *Goban) tryCaptureRight(row int32, col int32, currentColor int8, opp
 	return pos
 }
 
-func (goban *Goban) tryCaptureTopLeft(row int32, col int32, currentColor int8, opponentColor int8) [][]int32 {
+func (goban *Goban) tryCaptureTopLeft(row int32, col int32, currentColor byte, opponentColor byte) [][]int32 {
 	for idx := 0; idx < 3; idx++ {
-		topLeftElem := goban.GetTopLeftElem(row, col)
-		if topLeftElem == 0 {
+		topLeftElem, ok := goban.GetTopLeftElem(row, col)
+		if ok == false || topLeftElem == 0 {
 			return nil
 		} else if idx < 2 && topLeftElem != opponentColor {
 			return nil
@@ -147,10 +147,10 @@ func (goban *Goban) tryCaptureTopLeft(row int32, col int32, currentColor int8, o
 	return pos
 }
 
-func (goban *Goban) tryCaptureTopRight(row int32, col int32, currentColor int8, opponentColor int8) [][]int32 {
+func (goban *Goban) tryCaptureTopRight(row int32, col int32, currentColor byte, opponentColor byte) [][]int32 {
 	for idx := 0; idx < 3; idx++ {
-		topRightElem := goban.GetTopRightElem(row, col)
-		if topRightElem == 0 {
+		topRightElem, ok := goban.GetTopRightElem(row, col)
+		if ok == false || topRightElem == 0 {
 			return nil
 		} else if idx < 2 && topRightElem != opponentColor {
 			return nil
@@ -172,10 +172,10 @@ func (goban *Goban) tryCaptureTopRight(row int32, col int32, currentColor int8, 
 	return pos
 }
 
-func (goban *Goban) tryCaptureBottomLeft(row int32, col int32, currentColor int8, opponentColor int8) [][]int32 {
+func (goban *Goban) tryCaptureBottomLeft(row int32, col int32, currentColor byte, opponentColor byte) [][]int32 {
 	for idx := 0; idx < 3; idx++ {
-		bottomLeftElem := goban.GetBottomLeftElem(row, col)
-		if bottomLeftElem == 0 {
+		bottomLeftElem, ok := goban.GetBottomLeftElem(row, col)
+		if ok == false || bottomLeftElem == 0 {
 			return nil
 		} else if idx < 2 && bottomLeftElem != opponentColor {
 			return nil
@@ -197,10 +197,10 @@ func (goban *Goban) tryCaptureBottomLeft(row int32, col int32, currentColor int8
 	return pos
 }
 
-func (goban *Goban) tryCaptureBottomRight(row int32, col int32, currentColor int8, opponentColor int8) [][]int32 {
+func (goban *Goban) tryCaptureBottomRight(row int32, col int32, currentColor byte, opponentColor byte) [][]int32 {
 	for idx := 0; idx < 3; idx++ {
-		bottomRightElem := goban.GetBottomRightElem(row, col)
-		if bottomRightElem == 0 {
+		bottomRightElem, ok := goban.GetBottomRightElem(row, col)
+		if ok == false || bottomRightElem == 0 {
 			return nil
 		} else if idx < 2 && bottomRightElem != opponentColor {
 			return nil
@@ -222,7 +222,7 @@ func (goban *Goban) tryCaptureBottomRight(row int32, col int32, currentColor int
 	return pos
 }
 
-func (goban *Goban) CanBeCaptured(row int32, col int32, currentColor int8) bool {
+func (goban *Goban) CanBeCaptured(row int32, col int32, currentColor byte) bool {
 	if goban.canBeCapturedVertical(row, col, currentColor) ||
 		goban.canBeCapturedHorizontal(row, col, currentColor) ||
 		goban.canBeCapturedDiagonal_1(row, col, currentColor) ||
@@ -232,7 +232,7 @@ func (goban *Goban) CanBeCaptured(row int32, col int32, currentColor int8) bool 
 	return false
 }
 
-func (goban *Goban) CountPossibleCaptures(row int32, col int32, currentColor int8) (count int32) {
+func (goban *Goban) CountPossibleCaptures(row int32, col int32, currentColor byte) (count int32) {
 	if goban.canBeCapturedVertical(row, col, currentColor) {
 		count++
 	}
@@ -248,76 +248,88 @@ func (goban *Goban) CountPossibleCaptures(row int32, col int32, currentColor int
 	return count
 }
 
-func (goban *Goban) canBeCapturedVertical(row int32, col int32, currentColor int8) bool {
+func (goban *Goban) canBeCapturedVertical(row int32, col int32, currentColor byte) bool {
 	opponentColor := GetOpponentColor(currentColor)
 	count := 1
-	for goban.GetTopElem(row, col) == currentColor {
+	for val, _ := goban.GetTopElem(row, col); val == currentColor; val, _ = goban.GetTopElem(row, col) {
 		row--
 	}
-	upperCell := goban.GetTopElem(row, col)
-	for goban.GetBottomElem(row, col) == currentColor {
+	upperCell, okUp := goban.GetTopElem(row, col)
+	for val, _ := goban.GetBottomElem(row, col); val == currentColor; val, _ = goban.GetBottomElem(row, col) {
 		count++
 		row++
 	}
-	bottomCell := goban.GetBottomElem(row, col)
+	bottomCell, okBottom := goban.GetBottomElem(row, col)
+	if okUp == false || okBottom == false {
+		return false
+	}
 	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
 		return true
 	}
 	return false
 }
 
-func (goban *Goban) canBeCapturedHorizontal(row int32, col int32, currentColor int8) bool {
+func (goban *Goban) canBeCapturedHorizontal(row int32, col int32, currentColor byte) bool {
 	opponentColor := GetOpponentColor(currentColor)
 	count := 1
-	for goban.GetLeftElem(row, col) == currentColor {
+	for val, _ := goban.GetLeftElem(row, col); val == currentColor; val, _ = goban.GetLeftElem(row, col) {
 		col--
 	}
-	upperCell := goban.GetLeftElem(row, col)
-	for goban.GetRightElem(row, col) == currentColor {
+	upperCell, okUp := goban.GetLeftElem(row, col)
+	for val, _ := goban.GetRightElem(row, col); val == currentColor; val, _ = goban.GetRightElem(row, col) {
 		count++
 		col++
 	}
-	bottomCell := goban.GetRightElem(row, col)
+	bottomCell, okBottom := goban.GetRightElem(row, col)
+	if okUp == false || okBottom == false {
+		return false
+	}
 	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
 		return true
 	}
 	return false
 }
 
-func (goban *Goban) canBeCapturedDiagonal_1(row int32, col int32, currentColor int8) bool {
+func (goban *Goban) canBeCapturedDiagonal_1(row int32, col int32, currentColor byte) bool {
 	opponentColor := GetOpponentColor(currentColor)
 	count := 1
-	for goban.GetTopLeftElem(row, col) == currentColor {
+	for val, _ := goban.GetTopLeftElem(row, col); val == currentColor; val, _ = goban.GetTopLeftElem(row, col) {
 		col--
 		row--
 	}
-	upperCell := goban.GetTopLeftElem(row, col)
-	for goban.GetBottomRightElem(row, col) == currentColor {
+	upperCell, okUp := goban.GetTopLeftElem(row, col)
+	for val, _ := goban.GetBottomRightElem(row, col); val == currentColor; val, _ = goban.GetBottomRightElem(row, col) {
 		count++
 		col++
 		row++
 	}
-	bottomCell := goban.GetBottomRightElem(row, col)
+	bottomCell, okBottom := goban.GetBottomRightElem(row, col)
+	if okUp == false || okBottom == false {
+		return false
+	}
 	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
 		return true
 	}
 	return false
 }
 
-func (goban *Goban) canBeCapturedDiagonal_2(row int32, col int32, currentColor int8) bool {
+func (goban *Goban) canBeCapturedDiagonal_2(row int32, col int32, currentColor byte) bool {
 	opponentColor := GetOpponentColor(currentColor)
 	count := 1
-	for goban.GetTopRightElem(row, col) == currentColor {
+	for val, _ := goban.GetTopRightElem(row, col); val == currentColor; val, _ = goban.GetTopRightElem(row, col) {
 		col++
 		row--
 	}
-	upperCell := goban.GetTopRightElem(row, col)
-	for goban.GetBottomLeftElem(row, col) == currentColor {
+	upperCell, okUp := goban.GetTopRightElem(row, col)
+	for val, _ := goban.GetBottomLeftElem(row, col); val == currentColor; val, _ = goban.GetBottomLeftElem(row, col) {
 		count++
 		col--
 		row++
 	}
-	bottomCell := goban.GetBottomLeftElem(row, col)
+	bottomCell, okBottom := goban.GetBottomLeftElem(row, col)
+	if okUp == false || okBottom == false {
+		return false
+	}
 	if count == 2 && (upperCell == opponentColor && bottomCell == 0 || bottomCell == opponentColor && upperCell == 0) {
 		return true
 	}
