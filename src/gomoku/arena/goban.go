@@ -1,5 +1,10 @@
 package arena
 
+import (
+	"bytes"
+	"strconv"
+)
+
 // Set goban board values
 const (
 	_ = iota
@@ -29,6 +34,16 @@ func (goban *Goban) Copy() *Goban {
 		newgoban[idx] = val
 	}
 	return &newgoban
+}
+
+func (goban *Goban) GetHash() string {
+	var buffer bytes.Buffer
+
+	for _, val := range goban {
+		buffer.WriteString(strconv.Itoa(int(val)))
+	}
+
+	return buffer.String()
 }
 
 func (goban *Goban) GetElem(row int32, col int32) int8 {
