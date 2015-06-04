@@ -5,8 +5,8 @@ type Player interface {
 	IsHuman() bool
 	SetId(int)
 	GetId() int
-	SetColor(int8)
-	GetColor() int8
+	SetColor(byte)
+	GetColor() byte
 	GetCaptured() int8
 	AddCaptured(int8)
 	GetPawns() int8
@@ -20,7 +20,7 @@ type Player interface {
 type DefaultPlayer struct {
 	Id         int
 	HasWon     bool
-	Color      int8
+	Color      byte
 	Captured   int8
 	Pawns      int8
 	TotalTurns int8
@@ -34,11 +34,11 @@ func (dp *DefaultPlayer) GetId() int {
 	return dp.Id
 }
 
-func (dp *DefaultPlayer) SetColor(color int8) {
+func (dp *DefaultPlayer) SetColor(color byte) {
 	dp.Color = color
 }
 
-func (dp *DefaultPlayer) GetColor() int8 {
+func (dp *DefaultPlayer) GetColor() byte {
 	return dp.Color
 }
 

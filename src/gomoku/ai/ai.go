@@ -7,14 +7,17 @@ import (
 )
 
 const (
-	minimax_depth = 3
+	minimax_depth = 4
 )
+
+var Explored map[string]float64
 
 type AI struct {
 	arena.DefaultPlayer
 }
 
-func NewAI(color int8) *AI {
+func NewAI(color byte) *AI {
+	Explored = make(map[string]float64)
 	return &AI{
 		arena.DefaultPlayer{
 			Color:      color,
@@ -46,15 +49,25 @@ func (ai *AI) IsHuman() bool {
 }
 
 func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float64, []int32) {
-	var color int8
+	var color byte
 	color = arena.Gomoku.ActivePlayer.GetColor()
 
 	// Check if we’re done recursing
+	val, ok := Explored[arena.Gomoku.Goban.GetHash()]
+	if ok == true && val == math.Inf(1) {
+		return val, make([]int32, 2)
+	}
 	if hasWon() {
+		Explored[arena.Gomoku.Goban.GetHash()] = math.Inf(1)
 		return float64(math.Inf(1)), make([]int32, 2)
 	}
 	if depth == 0 {
-		return float64(score(color)), make([]int32, 2)
+		if ok == true {
+			return val, make([]int32, 2)
+		}
+		currScore := score(color)
+		Explored[arena.Gomoku.Goban.GetHash()] = currScore
+		return float64(currScore), make([]int32, 2)
 	}
 
 	// Otherwise bubble up values from below
@@ -93,12 +106,12 @@ func max(a, b float64) float64 {
 	return b
 }
 
-func generateNeighbors(color int8) [][]int32 {
+func generateNeighbors(color byte) [][]int32 {
 	tab := make([][]int32, 0)
 	if hasPlayed() == false {
 		for col := int32(7); col < 12; col++ {
 			for row := int32(7); row < 12; row++ {
-				if arena.Gomoku.Goban.GetElem(row, col) == 0 && !arena.Gomoku.Goban.CheckTwoFreeThree(row, col, color) {
+				if val, ok := arena.Gomoku.Goban.GetElem(row, col); ok == true && val == 0 && !arena.Gomoku.Goban.CheckTwoFreeThree(row, col, color) {
 					move := make([]int32, 2)
 					move[0] = row
 					move[1] = col
@@ -110,7 +123,7 @@ func generateNeighbors(color int8) [][]int32 {
 	}
 	for col := int32(0); col < 19; col++ {
 		for row := int32(0); row < 19; row++ {
-			if arena.Gomoku.Goban.GetElem(row, col) == 0 && !arena.Gomoku.Goban.CheckTwoFreeThree(row, col, color) &&
+			if val, ok := arena.Gomoku.Goban.GetElem(row, col); ok == true && val == 0 && !arena.Gomoku.Goban.CheckTwoFreeThree(row, col, color) &&
 				arena.Gomoku.Goban.IsSurounded(row, col) == true {
 				move := make([]int32, 2)
 				move[0] = row
@@ -122,18 +135,18 @@ func generateNeighbors(color int8) [][]int32 {
 	return tab
 }
 
-func score(color int8) (score float64) {
+func score(color byte) (score float64) {
 	opponentColor := arena.GetOpponentColor(color)
 	score = 0.0
 	var col int32
 	var row int32
 	for col = 0; col < 19; col++ {
 		for row = 0; row < 19; row++ {
-			if arena.Gomoku.Goban.GetElem(row, col) == color {
+			if val, ok := arena.Gomoku.Goban.GetElem(row, col); ok == true && val == color {
 				score += addCaptureScore(row, col, color)
 				score += float64(arena.Gomoku.ActivePlayer.GetCaptured())
 				score += addAlignedScore(row, col, color)
-			} else if arena.Gomoku.Goban.GetElem(row, col) == opponentColor {
+			} else if ok == true && val == opponentColor {
 				score -= addCaptureScore(row, col, opponentColor)
 				score -= float64(arena.Gomoku.OtherPlayer.GetCaptured())
 				score -= addAlignedScore(row, col, opponentColor)

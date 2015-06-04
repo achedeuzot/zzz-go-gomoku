@@ -1,7 +1,7 @@
 package arena
 
-func (goban *Goban) CheckTwoFreeThree(row int32, col int32, currentColor int8) bool {
-	if goban.GetElem(row, col) == 0 {
+func (goban *Goban) CheckTwoFreeThree(row int32, col int32, currentColor byte) bool {
+	if val, ok := goban.GetElem(row, col); ok == true && val == 0 {
 		// fake move
 		goban.SetElem(row, col, currentColor)
 		// count aligned elements
@@ -20,36 +20,36 @@ func (goban *Goban) CheckTwoFreeThree(row int32, col int32, currentColor int8) b
 	return false
 }
 
-func (goban *Goban) checkFreeThreeHorizontal(row int32, col int32, currentColor int8) int {
+func (goban *Goban) checkFreeThreeHorizontal(row int32, col int32, currentColor byte) int {
 	ccol := col
 	allowedEmptySpaces := 1
 	opponentColor := GetOpponentColor(currentColor)
 
 	count := 1
-	for goban.GetLeftElem(row, col) == currentColor ||
-		(goban.GetLeftElem(row, col) == 0 && allowedEmptySpaces > 0) {
-		if goban.GetLeftElem(row, col) == 0 {
+	for val, ok := goban.GetLeftElem(row, col); ok == true && (val == currentColor ||
+		(val == 0 && allowedEmptySpaces > 0)); val, ok = goban.GetLeftElem(row, col) {
+		if val == 0 {
 			allowedEmptySpaces--
-		} else if goban.GetLeftElem(row, col) == currentColor {
+		} else if val == currentColor {
 			count++
 		}
 		col--
 	}
-	if goban.GetLeftElem(row, col) == opponentColor {
+	if val, ok := goban.GetLeftElem(row, col); ok == true && val == opponentColor {
 		return 0
 	}
 	col = ccol
 	allowedEmptySpaces = 1
-	for goban.GetRightElem(row, col) == currentColor ||
-		(goban.GetRightElem(row, col) == 0 && allowedEmptySpaces > 0) {
-		if goban.GetRightElem(row, col) == 0 {
+	for val, ok := goban.GetRightElem(row, col); ok == true && (val == currentColor ||
+		(val == 0 && allowedEmptySpaces > 0)); val, ok = goban.GetRightElem(row, col) {
+		if val == 0 {
 			allowedEmptySpaces--
-		} else if goban.GetRightElem(row, col) == currentColor {
+		} else if val == currentColor {
 			count++
 		}
 		col++
 	}
-	if goban.GetRightElem(row, col) == opponentColor {
+	if val, ok := goban.GetRightElem(row, col); ok == true && val == opponentColor {
 		return 0
 	}
 	if count < 3 {
@@ -58,36 +58,36 @@ func (goban *Goban) checkFreeThreeHorizontal(row int32, col int32, currentColor 
 	return 1
 }
 
-func (goban *Goban) checkFreeThreeVertical(row int32, col int32, currentColor int8) int {
+func (goban *Goban) checkFreeThreeVertical(row int32, col int32, currentColor byte) int {
 	crow := row
 	allowedEmptySpaces := 1
 	opponentColor := GetOpponentColor(currentColor)
 
 	count := 1
-	for goban.GetTopElem(row, col) == currentColor ||
-		(goban.GetTopElem(row, col) == 0 && allowedEmptySpaces > 0) {
-		if goban.GetTopElem(row, col) == 0 {
+	for val, ok := goban.GetTopElem(row, col); ok == true && (val == currentColor ||
+		(val == 0 && allowedEmptySpaces > 0)); val, ok = goban.GetTopElem(row, col) {
+		if val == 0 {
 			allowedEmptySpaces--
-		} else if goban.GetTopElem(row, col) == currentColor {
+		} else if val == currentColor {
 			count++
 		}
 		row--
 	}
-	if goban.GetTopElem(row, col) == opponentColor {
+	if val, ok := goban.GetTopElem(row, col); ok == true && val == opponentColor {
 		return 0
 	}
 	row = crow
 	allowedEmptySpaces = 1
-	for goban.GetBottomElem(row, col) == currentColor ||
-		(goban.GetBottomElem(row, col) == 0 && allowedEmptySpaces > 0) {
-		if goban.GetBottomElem(row, col) == 0 {
+	for val, ok := goban.GetBottomElem(row, col); ok == true && (val == currentColor ||
+		(val == 0 && allowedEmptySpaces > 0)); val, ok = goban.GetBottomElem(row, col) {
+		if val == 0 {
 			allowedEmptySpaces--
-		} else if goban.GetBottomElem(row, col) == currentColor {
+		} else if val == currentColor {
 			count++
 		}
 		row++
 	}
-	if goban.GetBottomElem(row, col) == opponentColor {
+	if val, ok := goban.GetBottomElem(row, col); ok == true && val == opponentColor {
 		return 0
 	}
 	if count < 3 {
@@ -96,40 +96,40 @@ func (goban *Goban) checkFreeThreeVertical(row int32, col int32, currentColor in
 	return 1
 }
 
-func (goban *Goban) checkFreeThreeDiagonal_1(row int32, col int32, currentColor int8) int {
+func (goban *Goban) checkFreeThreeDiagonal_1(row int32, col int32, currentColor byte) int {
 	crow := row
 	ccol := col
 	allowedEmptySpaces := 1
 	opponentColor := GetOpponentColor(currentColor)
 
 	count := 1
-	for goban.GetTopLeftElem(row, col) == currentColor ||
-		(goban.GetTopLeftElem(row, col) == 0 && allowedEmptySpaces > 0) {
-		if goban.GetTopLeftElem(row, col) == 0 {
+	for val, ok := goban.GetTopLeftElem(row, col); ok == true && (val == currentColor ||
+		(val == 0 && allowedEmptySpaces > 0)); val, ok = goban.GetTopLeftElem(row, col) {
+		if val == 0 {
 			allowedEmptySpaces--
-		} else if goban.GetTopLeftElem(row, col) == currentColor {
+		} else if val == currentColor {
 			count++
 		}
 		row--
 		col--
 	}
-	if goban.GetTopLeftElem(row, col) == opponentColor {
+	if val, ok := goban.GetTopLeftElem(row, col); ok == true && val == opponentColor {
 		return 0
 	}
 	row = crow
 	col = ccol
 	allowedEmptySpaces = 1
-	for goban.GetBottomRightElem(row, col) == currentColor ||
-		(goban.GetBottomRightElem(row, col) == 0 && allowedEmptySpaces > 0) {
-		if goban.GetBottomRightElem(row, col) == 0 {
+	for val, ok := goban.GetBottomRightElem(row, col); ok == true && (val == currentColor ||
+		(val == 0 && allowedEmptySpaces > 0)); val, ok = goban.GetBottomRightElem(row, col) {
+		if val == 0 {
 			allowedEmptySpaces--
-		} else if goban.GetBottomRightElem(row, col) == currentColor {
+		} else if val == currentColor {
 			count++
 		}
 		row++
 		col++
 	}
-	if goban.GetBottomRightElem(row, col) == opponentColor {
+	if val, ok := goban.GetBottomRightElem(row, col); ok == true && val == opponentColor {
 		return 0
 	}
 	if count < 3 {
@@ -138,40 +138,40 @@ func (goban *Goban) checkFreeThreeDiagonal_1(row int32, col int32, currentColor 
 	return 1
 }
 
-func (goban *Goban) checkFreeThreeDiagonal_2(row int32, col int32, currentColor int8) int {
+func (goban *Goban) checkFreeThreeDiagonal_2(row int32, col int32, currentColor byte) int {
 	crow := row
 	ccol := col
 	allowedEmptySpaces := 1
 	opponentColor := GetOpponentColor(currentColor)
 
 	count := 1
-	for goban.GetTopRightElem(row, col) == currentColor ||
-		(goban.GetTopRightElem(row, col) == 0 && allowedEmptySpaces > 0) {
-		if goban.GetTopRightElem(row, col) == 0 {
+	for val, ok := goban.GetTopRightElem(row, col); ok == true && (val == currentColor ||
+		(val == 0 && allowedEmptySpaces > 0)); val, ok = goban.GetTopRightElem(row, col) {
+		if val == 0 {
 			allowedEmptySpaces--
-		} else if goban.GetTopRightElem(row, col) == currentColor {
+		} else if val == currentColor {
 			count++
 		}
 		row--
 		col++
 	}
-	if goban.GetTopRightElem(row, col) == opponentColor {
+	if val, ok := goban.GetTopRightElem(row, col); ok == true && val == opponentColor {
 		return 0
 	}
 	row = crow
 	col = ccol
 	allowedEmptySpaces = 1
-	for goban.GetBottomLeftElem(row, col) == currentColor ||
-		(goban.GetBottomLeftElem(row, col) == 0 && allowedEmptySpaces > 0) {
-		if goban.GetBottomLeftElem(row, col) == 0 {
+	for val, ok := goban.GetBottomLeftElem(row, col); ok == true && (val == currentColor ||
+		(val == 0 && allowedEmptySpaces > 0)); val, ok = goban.GetBottomLeftElem(row, col) {
+		if val == 0 {
 			allowedEmptySpaces--
-		} else if goban.GetBottomLeftElem(row, col) == currentColor {
+		} else if val == currentColor {
 			count++
 		}
 		row++
 		col--
 	}
-	if goban.GetBottomLeftElem(row, col) == opponentColor {
+	if val, ok := goban.GetBottomLeftElem(row, col); ok == true && val == opponentColor {
 		return 0
 	}
 	if count < 3 {

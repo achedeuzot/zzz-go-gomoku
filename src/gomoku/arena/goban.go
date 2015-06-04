@@ -10,13 +10,13 @@ const (
 	MaxGobanValue
 )
 
-type Goban [361]int8
+type Goban [361]byte
 
 func NewGoban() *Goban {
 	return &Goban{}
 }
 
-func GetOpponentColor(color int8) int8 {
+func GetOpponentColor(color byte) byte {
 	if color == WhitePlayer {
 		return BlackPlayer
 	}
@@ -31,82 +31,100 @@ func (goban *Goban) Copy() *Goban {
 	return &newgoban
 }
 
-func (goban *Goban) GetElem(row int32, col int32) int8 {
+func (goban *Goban) GetHash() string {
+	return string(goban[:])
+}
+
+func (goban *Goban) GetElem(row int32, col int32) (byte, bool) {
 	if test := row*19 + col; test >= 0 && test <= 360 {
-		return goban[row*19+col]
+		return goban[row*19+col], true
 	}
-	return -1
+	return 0, false
 }
 
-func (goban *Goban) GetTopElem(row int32, col int32) int8 {
+func (goban *Goban) GetTopElem(row int32, col int32) (byte, bool) {
 	if row > 0 && row < 19 && col >= 0 && col < 19 {
-		return goban[(row-1)*19+col]
+		return goban[(row-1)*19+col], true
 	}
-	return -1
+	return 0, false
 }
 
-func (goban *Goban) GetBottomElem(row int32, col int32) int8 {
+func (goban *Goban) GetBottomElem(row int32, col int32) (byte, bool) {
 	if row >= 0 && row < 18 && col >= 0 && col < 19 {
-		return goban[(row+1)*19+col]
+		return goban[(row+1)*19+col], true
 	}
-	return -1
+	return 0, false
 }
 
-func (goban *Goban) GetLeftElem(row int32, col int32) int8 {
+func (goban *Goban) GetLeftElem(row int32, col int32) (byte, bool) {
 	if row >= 0 && row < 19 && col > 0 && col < 19 {
-		return goban[row*19+(col-1)]
+		return goban[row*19+(col-1)], true
 	}
-	return -1
+	return 0, false
 }
 
-func (goban *Goban) GetRightElem(row int32, col int32) int8 {
+func (goban *Goban) GetRightElem(row int32, col int32) (byte, bool) {
 	if row >= 0 && row < 19 && col >= 0 && col < 18 {
-		return goban[row*19+(col+1)]
+		return goban[row*19+(col+1)], true
 	}
-	return -1
+	return 0, false
 }
 
-func (goban *Goban) GetTopLeftElem(row int32, col int32) int8 {
+func (goban *Goban) GetTopLeftElem(row int32, col int32) (byte, bool) {
 	if row > 0 && row < 19 && col > 0 && col < 19 {
-		return goban[(row-1)*19+(col-1)]
+		return goban[(row-1)*19+(col-1)], true
 	}
-	return -1
+	return 0, false
 }
 
-func (goban *Goban) GetTopRightElem(row int32, col int32) int8 {
+func (goban *Goban) GetTopRightElem(row int32, col int32) (byte, bool) {
 	if row > 0 && row < 19 && col >= 0 && col < 18 {
-		return goban[(row-1)*19+(col+1)]
+		return goban[(row-1)*19+(col+1)], true
 	}
-	return -1
+	return 0, false
 }
 
-func (goban *Goban) GetBottomLeftElem(row int32, col int32) int8 {
+func (goban *Goban) GetBottomLeftElem(row int32, col int32) (byte, bool) {
 	if row >= 0 && row < 18 && col > 0 && col < 19 {
-		return goban[(row+1)*19+(col-1)]
+		return goban[(row+1)*19+(col-1)], true
 	}
-	return -1
+	return 0, false
 }
 
-func (goban *Goban) GetBottomRightElem(row int32, col int32) int8 {
+func (goban *Goban) GetBottomRightElem(row int32, col int32) (byte, bool) {
 	if row >= 0 && row < 18 && col >= 0 && col < 18 {
-		return goban[(row+1)*19+(col+1)]
+		return goban[(row+1)*19+(col+1)], true
 	}
-	return -1
+	return 0, false
 }
 
-func (goban *Goban) SetElem(row int32, col int32, val int8) {
+func (goban *Goban) SetElem(row int32, col int32, val byte) {
 	goban[row*19+col] = val
 }
 
 func (goban *Goban) IsSurounded(row int32, col int32) bool {
-	if goban.GetTopElem(row, col) > 0 ||
-		goban.GetBottomElem(row, col) > 0 ||
-		goban.GetLeftElem(row, col) > 0 ||
-		goban.GetRightElem(row, col) > 0 ||
-		goban.GetTopLeftElem(row, col) > 0 ||
-		goban.GetTopRightElem(row, col) > 0 ||
-		goban.GetBottomLeftElem(row, col) > 0 ||
-		goban.GetBottomRightElem(row, col) > 0 {
+	if val, ok := goban.GetTopElem(row, col); ok == true && val > 0 {
+		return true
+	}
+	if val, ok := goban.GetBottomElem(row, col); ok == true && val > 0 {
+		return true
+	}
+	if val, ok := goban.GetLeftElem(row, col); ok == true && val > 0 {
+		return true
+	}
+	if val, ok := goban.GetRightElem(row, col); ok == true && val > 0 {
+		return true
+	}
+	if val, ok := goban.GetTopLeftElem(row, col); ok == true && val > 0 {
+		return true
+	}
+	if val, ok := goban.GetTopRightElem(row, col); ok == true && val > 0 {
+		return true
+	}
+	if val, ok := goban.GetBottomLeftElem(row, col); ok == true && val > 0 {
+		return true
+	}
+	if val, ok := goban.GetBottomRightElem(row, col); ok == true && val > 0 {
 		return true
 	}
 	return false
