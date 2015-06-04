@@ -53,15 +53,19 @@ func abNegamax(depth int, alpha float64, beta float64, isMaximizer bool) (float6
 	color = arena.Gomoku.ActivePlayer.GetColor()
 
 	// Check if we’re done recursing
+	val, ok := Explored[arena.Gomoku.Goban.GetHash()]
+	if ok == true && val == math.Inf(1) {
+		return val, make([]int32, 2)
+	}
 	if hasWon() {
-		if val, ok := Explored[arena.Gomoku.Goban.GetHash()]; ok == true {
+		if ok == true {
 			return val, make([]int32, 2)
 		}
 		Explored[arena.Gomoku.Goban.GetHash()] = math.Inf(1)
 		return float64(math.Inf(1)), make([]int32, 2)
 	}
 	if depth == 0 {
-		if val, ok := Explored[arena.Gomoku.Goban.GetHash()]; ok == true {
+		if ok == true {
 			return val, make([]int32, 2)
 		}
 		Explored[arena.Gomoku.Goban.GetHash()] = score(color)
