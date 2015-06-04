@@ -32,7 +32,7 @@ func (goban *Goban) Copy() *Goban {
 }
 
 func (goban *Goban) GetElem(row int32, col int32) int8 {
-	if test := row*19 + col; test >= 0 && test <= 361 {
+	if test := row*19 + col; test >= 0 && test <= 360 {
 		return goban[row*19+col]
 	}
 	return -1
