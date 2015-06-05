@@ -2,6 +2,7 @@
 Gomoku school project
 
 # TODO
+- [ ] Split the code: Server & Clients
 - [x] **Improve AI** by finding good weight for each heuristic calculations
 - [ ] **Add timer** for players (one global & one for current turn)
 - [ ] **Move-suggestion** for human player
