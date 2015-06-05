@@ -2,7 +2,7 @@
 Gomoku school project
 
 # TODO
-- [ ] **Split the** code: Server & Clients
+- [ ] **Split the code** (Server & Clients)
 - [ ] **Add timer** for players (one global & one for current turn)
 - [ ] **Move-suggestion** for human player
 - [ ] **Display draw** (if it can happen)
